@@ -1,0 +1,29 @@
+{
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.latex.autoBuild.run": "onSave",
+
+  "latex-workshop.latex.autoClean.run": "onBuilt",
+  "latex-workshop.latex.clean.fileTypes": [
+    "*.aux",
+    "*.log",
+    "*.out",
+    "*.toc",
+    "*.fls",
+    "*.fdb_latexmk",
+    "*.synctex.gz",
+    "*.xdv"
+  ],
+  "chat.tools.terminal.autoApprove": {
+    "pdflatex": true,
+    "latexmk": true,
+    "xelatex": true,
+    "/^python3 session4/session4_iris_template\\.py \\| head$/": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "/^python3 session4/session4_iris_model_answer\\.py \\| tail -n 8$/": {
+      "approve": true,
+      "matchCommandLine": true
+    }
+  }
+}
