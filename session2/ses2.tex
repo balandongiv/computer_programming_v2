@@ -1,17 +1,23 @@
 \chapter{Variables}
-
+\label{ch:variables}
 \section{Introduction}
 
 \begin{tcolorbox}[title=Goal]
-TODO similar to how we write in session5/ses5.tex
+\textbf{Practice} creating and updating Python variables, use basic operators and comparisons on one Iris flower sample, and build the stable variable names that later sessions will reuse.
 \end{tcolorbox}
 
 \begin{tcolorbox}[title=You will work in]
-TODO similar to how we write in session5/ses5.tex
+Use the following file for this session:
+\begin{itemize}
+    \item \texttt{session2/session2\_iris\_template.py} (main student file)
+\end{itemize}
+\textbf{How to run the file:} Always run this script from the project root using the terminal command: \\
+\texttt{python3 session2/session2\_iris\_template.py} \\
+\textbf{Do not edit other files.}
 \end{tcolorbox}
 
 \noindent
-This is \textbf{Session 2} of the course.
+This is \textbf{Session \ref{ch:variables}} of the course.
 This lab session starts our \textbf{one-dataset journey}: the \textbf{Iris dataset}.
 From session 2 until session 12, we will consistently use Iris only, while building programming skills step-by-step until we can build and compare simple classifiers. Programming becomes easier when you are comfortable changing values and observing outputs. Your goal for this session is to practice changing flower measurements and seeing how derived values and comparisons change.
 
@@ -102,8 +108,21 @@ This provides a structured way to store and access various attributes of the flo
 \section{Starter: One flower as variables}
 
 \noindent
+\begin{tcolorbox}[title=Task 1: Print Flower Summary]
+Run the script \texttt{session2/session2\_iris\_template.py}. 
+\end{tcolorbox}
+
 Open the file named \texttt{session2/session2\_iris\_template.py}. 
-Run the script by clicking the Green "Run" button at the top-right corner in VS Code. You should see a printed summary of the flower's ID.
+Run the script by clicking the Green "Run" button at the top-right corner in VS Code.The Run button looks like a green triangle (similar to a play button in media players) as shown in \ref{img:run_button}. When you click it, VS Code will execute the Python script and display the output in the terminal below.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{session2/image/run_button.png}
+    \caption{Green "Run" button in VS Code to execute the Python script.}
+    \label{img:run_button}
+\end{figure}
+
+You should see a printed summary of the flower's ID in the terminal.
 
 You should see the output as below:
 \begin{lstlisting}[language=Python]
@@ -111,12 +130,27 @@ You should see the output as below:
 ID: flower1
 \end{lstlisting}
 
-\subsection{Your Task: Experimenting with different Iris values}
+The terminal is located at the bottom of your VS Code window. If you don't see it, you can open it by going to the menu and selecting \texttt{View > Terminal} or using the shortcut \texttt{Ctrl + `} (Windows) or \texttt{Cmd + `} (Mac).
+The terminal should look like in the image \ref{img:terminal}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{session2/image/terminal_output.png}
+    \caption{Example terminal output after running the starter Iris script.}
+    \label{img:terminal}
+\end{figure}
+
+\subsection{Experimenting with different Iris values}
+
+\noindent
+\begin{tcolorbox}[title=Task 2: Change this to "flower\_2x]
+Change the value of the \texttt{id} variable from \texttt{"flower1"} to \texttt{"flower\_2x"}.
+\end{tcolorbox}
+
 
 As mentioned above, programming becomes easier when you are comfortable changing values and observing outputs.
 Your goal for this session is to practice changing flower Id.
 
-First, try changing the flower ID value from \texttt{"flower1"} to \texttt{"flower\_2x"} in the code.
+First, try changing the flower ID value from \texttt{id = "flower1"} to \texttt{id = "flower\_2x"} in the code.
 Run the script again and observe the output.
 
 You should see:
@@ -143,7 +177,14 @@ ID: my_flower
 
 Now, change it back to \texttt{"flower1"} for the next tasks.
 
-\subsection{Task 2: One Iris Flower as Variables}
+\subsection{One Iris Flower as Variables}
+
+\noindent
+\begin{tcolorbox}[title=Task 3: Define more variables for one Iris flower]
+Decomment some of the lines by removing the symbol $\#$ at the beginning of line and, change the variable values to represent the measurements and species of the flower as described in the instructions.
+\end{tcolorbox}
+
+
 Now that you have practiced changing the flower ID, let's add more variables to represent the flower's measurements and species. In the Python template, some of the variables are already defined for you. You just need to fill in the values.
 \begin{itemize}
     \item Let's set the \texttt{id} flower to \texttt{"flower1"}.
@@ -173,6 +214,12 @@ Check your variable names exactly: \texttt{sepal\_length} not \texttt{sepal\_len
 \end{tcolorbox}
 
 \section{Derived Variable with Operators}
+
+\begin{tcolorbox}[title=Task 4: Compute petal area]
+Place the variable {petal\_length} and \texttt{petal\_width}, but multiply them together to compute the petal area and store it in a new variable named \texttt{petal\_area}. 
+\end{tcolorbox}
+
+
 As we discussed in the lecture, you can compute new values using existing variables and operators.
 For example, you can compute the petal area by multiplying \texttt{petal\_length} and \texttt{petal\_width}.
 Add the following line to your code to compute \texttt{petal\_area}:
@@ -215,7 +262,7 @@ In mathematical notation, this can be expressed as:
 
 To prepare for this, we will define stable variable names for the rule settings.
 
-\subsubsection{Your Task: Create a threshold variable}
+\subsubsection{Create a threshold variable}
 \begin{enumerate}
     \item Create a variable \texttt{threshold} with value \texttt{2.0}.
     \item Compare \texttt{petal\_length} with \texttt{threshold}.
@@ -237,6 +284,12 @@ These variables are preparation for Session 3 classifier logic.
 Try different \texttt{petal\_length} values and observe how \texttt{True/False} changes.
 
 \subsection{Task 4: Comparison Result (No if-statement yet)}
+
+\begin{tcolorbox}[title=Task 5: Comparing with threshold]
+Create a boolean variable \texttt{is\_short\_petal} that checks if \texttt{petal\_length} is less than \texttt{threshold}. 
+\end{tcolorbox}
+
+
 Create and print:
 \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
 is_short_petal = petal_length < threshold
@@ -248,38 +301,38 @@ This gives a boolean output and prepares you for Session 3 conditionals.
 You should see \texttt{True} for the setosa sample since 1.4 < 2.0.
 \end{tcolorbox}
 
-\section{Type Conversion Practice}
+% \section{Type Conversion Practice}
 
-In real programs, you often read values as strings (for example, from a file).
-We will practice conversions safely.
+% In real programs, you often read values as strings (for example, from a file).
+% We will practice conversions safely.
 
-\subsection{Task 5: Type Conversion Practice}
-Practice string-number conversion:
-\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
-petal_length_text = str(petal_length)
-threshold_text = "2.0"
-threshold_number = float(threshold_text)
-\end{minted}
+% \subsection{Task 5: Type Conversion Practice}
+% Practice string-number conversion:
+% \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+% petal_length_text = str(petal_length)
+% threshold_text = "2.0"
+% threshold_number = float(threshold_text)
+% \end{minted}
 
-Print each value with \texttt{type(...)}.
+% Print each value with \texttt{type(...)}.
 
-\subsubsection{Your Task: Show conversions}
-\begin{enumerate}
-    \item Create \texttt{petal\_length\_text} using \texttt{str(petal\_length)}.
-    \item Create \texttt{threshold\_text} using \texttt{"2.0"} (a string).
-    \item Convert it into a float using \texttt{float(threshold\_text)}.
-    \item Print the values and their types using \texttt{type()}.
-\end{enumerate}
+% \subsubsection{Your Task: Show conversions}
+% \begin{enumerate}
+%     \item Create \texttt{petal\_length\_text} using \texttt{str(petal\_length)}.
+%     \item Create \texttt{threshold\_text} using \texttt{"2.0"} (a string).
+%     \item Convert it into a float using \texttt{float(threshold\_text)}.
+%     \item Print the values and their types using \texttt{type()}.
+% \end{enumerate}
 
-\begin{lstlisting}[language=Python]
-print("\n=== Conversions ===")
-\end{lstlisting}
+% \begin{lstlisting}[language=Python]
+% print("\n=== Conversions ===")
+% \end{lstlisting}
 
-\begin{tcolorbox}[title=Checkpoint]
-You should see type outputs such as \texttt{<class 'str'>} and \texttt{<class 'float'>}.
-\end{tcolorbox}
+% \begin{tcolorbox}[title=Checkpoint]
+% You should see type outputs such as \texttt{<class 'str'>} and \texttt{<class 'float'>}.
+% \end{tcolorbox}
 
-\section{Session Task: Add a Second Flower with \_2 Suffix}
+\section{Take Home Exercise: Add a Second Flower with \_2 Suffix}
 
 You are tasked to create a second flower based on the \textit{Iris setosa} shown in the image below. 
 Define the variables with the measurements (sepal length, sepal width, petal length, and petal width) exactly as displayed in the figure. 
