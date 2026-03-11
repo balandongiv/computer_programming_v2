@@ -1,0 +1,299 @@
+\chapter{Data Visualization and Experimentation (Iris)}
+
+\section{Introduction}
+In this session, we shift fully into an \textbf{Iris-only} workflow.
+Recall from Session 8 that we already produced NumPy arrays (\texttt{X}, \texttt{y}) and class centroids.
+Now, building on Session 8's outputs, we visualize classifier behavior and experiment results.
+
+\begin{tcolorbox}[title=You will work in]
+For this session, you will create or edit three files in the \texttt{session9/} folder:
+\begin{itemize}
+    \item \texttt{session9/iris\_eval.py} (helper functions for train/test split and accuracy)
+    \item \texttt{session9/session9\_iris\_template.py} (main experiment runner)
+    \item \texttt{session9/session9\_plot\_accuracy.py} (script for plotting)
+\end{itemize}
+\textbf{How to run:} From the project root: \\
+\texttt{python3 session9/session9\_iris\_template.py} \\
+\texttt{python3 session9/session9\_plot\_accuracy.py}
+\end{tcolorbox}
+
+You will work on two key tasks:
+\begin{enumerate}\setlength{\itemsep}{2pt}
+\item \textbf{Systematic parameter experiments:} run repeated experiments by changing a classifier setting (e.g., distance metric, threshold, or test size), and record the accuracy.
+\item \textbf{Visualization:} plot how performance changes across settings, using box plots and line plots.
+\end{enumerate}
+
+\noindent
+This tutorial is important because good data practice means:
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item running \textbf{multiple trials} to reduce randomness and draw reliable conclusions,
+\item saving results in a structured form (\textbf{list of dictionaries} $\rightarrow$ \textbf{DataFrame}),
+\item visualizing distributions (box plot) and trends (line plot).
+\end{itemize}
+
+\subsection{Prerequisites}
+You need:
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item \texttt{numpy}, \texttt{pandas}, \texttt{matplotlib}, \texttt{openpyxl}
+\item an \texttt{iris.csv} file
+\end{itemize}
+
+\noindent
+Install if needed:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{bash}
+pip install numpy pandas matplotlib openpyxl
+\end{minted}
+
+\newpage
+\subsection{Calculating Accuracy for Iris Experiments}
+
+In session 9, we combine prior ideas into an \textbf{experiment pipeline}:
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item load Iris into NumPy arrays,
+\item split the data into training and test sets,
+\item run a classifier,
+\item compute accuracy,
+\item repeat under different settings,
+\item store and visualize results.
+\end{itemize}
+
+\textbf{Important Parameters:}
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item \texttt{test\_size}: The proportion of data used for evaluating the model. A larger test size leaves less data for training.
+\item \texttt{seed}: Initializes the random number generator. Using a seed ensures our random data splits are reproducible.
+\item \texttt{metric}: The distance metric used by the centroid classifier (\texttt{"l2"} is Euclidean distance, \texttt{"l1"} is Manhattan distance).
+\end{itemize}
+
+\subsubsection{Your Task: Reuse session 8 Modules}
+Session 9 should import from Session 8 (e.g., \texttt{session8.iris\_session8\_utils} and \texttt{session8.iris\_session8\_models}) to preserve continuity.
+
+\newpage
+\subsection{Activity 1: Implement Train/Test Split and Accuracy}
+
+\begin{tcolorbox}[title=Do: Create \texttt{session9/iris\_eval.py}]
+We will write a custom split function using only NumPy:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+# session9/iris_eval.py
+import numpy as np
+
+def train_test_split(X, y, test_size=0.2, seed=1):
+    """
+    NumPy-only train/test split.
+    """
+    n = X.shape[0]
+    rng = np.random.default_rng(seed)
+    idx = np.arange(n)
+    rng.shuffle(idx)
+
+    test_n = int(n * test_size)
+    test_idx = idx[:test_n]
+    train_idx = idx[test_n:]
+
+    return X[train_idx], X[test_idx], y[train_idx], y[test_idx]
+
+def accuracy_score(y_true, y_pred):
+    return float(np.mean(y_true == y_pred))
+\end{minted}
+\end{tcolorbox}
+
+\newpage
+\subsection{Activity 2: Refactoring for Flexibility}
+
+A common beginner mistake is hardcoding values:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+# BAD PRACTICE (example)
+test_size = 0.2
+seed = 1
+metric = "l2"
+\end{minted}
+
+This makes it hard to run systematic experiments. Instead, we'll create a function that takes these as arguments.
+
+\begin{tcolorbox}[title=Do: Update \texttt{session9/session9\_iris\_template.py}]
+Create the main experiment runner:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+# session9/session9_iris_template.py
+import numpy as np
+from session8.iris_session8_utils import load_iris_csv
+from session9.iris_eval import train_test_split, accuracy_score
+from session8.iris_session8_models import NumpyCentroidClassifier
+
+def run_experiment(test_size=0.2, seed=1, metric="l2"):
+    X, y = load_iris_csv("iris.csv", skip_header=1)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, seed=seed)
+
+    model = NumpyCentroidClassifier(metric=metric)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred)
+    return acc
+
+if __name__ == "__main__":
+    acc = run_experiment(test_size=0.2, seed=1, metric="l2")
+    print(f"One run | test_size=0.2 | seed=1 | metric=l2 | accuracy={acc:.3f}")
+\end{minted}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Checkpoint]
+Run the file and ensure you get an accuracy output. Then, change the metric to \texttt{"l1"} and run it again to see if the accuracy changes.
+\end{tcolorbox}
+
+\newpage
+\subsection{Running Multiple Experiments Dynamically}
+
+Now we want to run multiple experiments with different parameter settings.
+
+\begin{tcolorbox}[title=Do: Implement Looped Output]
+Add this function inside \texttt{session9/session9\_iris\_template.py}:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+def run_single_setting_sweep(metrics, seeds, test_size=0.2):
+    print(f"--- Sweep: test_size={test_size} ---")
+    for metric in metrics:
+        for seed in seeds:
+            acc = run_experiment(test_size=test_size, seed=seed, metric=metric)
+            print(f"metric={metric} | seed={seed} | acc={acc:.3f}")
+\end{minted}
+
+Then call it in the main block with \texttt{metrics=["l1", "l2"]} and \texttt{seeds=[1, 2, 3, 4, 5]}.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Checkpoint]
+Run a small sweep. You should see 10 lines of output representing the combination of 2 metrics and 5 seeds.
+\end{tcolorbox}
+
+\newpage
+\subsection{Activity 3: Good Scientific Practice - Multiple Trials}
+
+We run \textbf{multiple trials} for each configuration because randomness in the train/test split can cause accuracy to fluctuate. Averaging over many trials yields more reliable estimates.
+
+\begin{tcolorbox}[title=Do: Implement \texttt{run\_multiple\_trials}]
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+def run_multiple_trials(metrics, test_sizes, num_trials):
+    """
+    Returns a list of dicts:
+    {'metric':..., 'test_size':..., 'trial':..., 'seed':..., 'accuracy':...}
+    """
+    results_list = []
+
+    for metric in metrics:
+        for test_size in test_sizes:
+            print(f"\n[Config] metric={metric} | test_size={test_size}")
+            for trial in range(1, num_trials + 1):
+                seed = trial  # simple choice: seed=1..num_trials
+                acc = run_experiment(test_size=test_size, seed=seed, metric=metric)
+
+                print(f"  Trial {trial}/{num_trials} | seed={seed} | acc={acc:.3f}")
+
+                run_data = {
+                    "metric": metric,
+                    "test_size": test_size,
+                    "trial": trial,
+                    "seed": seed,
+                    "accuracy": acc
+                }
+                results_list.append(run_data)
+
+    return results_list
+\end{minted}
+\end{tcolorbox}
+
+\newpage
+\subsection{Activity 4: Analyzing Results with Pandas}
+
+DataFrames allow us to group, summarize, and easily save tabular data.
+
+\begin{tcolorbox}[title=Do: Use Pandas to Process and Save Results]
+At the top of \texttt{session9\_iris\_template.py}, add:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+import pandas as pd
+\end{minted}
+
+In \texttt{main()}, after generating \texttt{all\_results\_data}:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+results_df = pd.DataFrame(all_results_data)
+print(results_df.head())
+
+output_filename = "iris_experiment_results.xlsx"
+results_df.to_excel(output_filename, index=False)
+print(f"Saved: {output_filename}")
+\end{minted}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Checkpoint]
+Check your project directory for the newly created \texttt{iris\_experiment\_results.xlsx} file.
+\end{tcolorbox}
+
+\section{Troubleshooting Imports and Excel}
+\begin{tcolorbox}[title=Common Mistakes \& Troubleshooting]
+\begin{itemize}
+    \item \textbf{ModuleNotFoundError:} Ensure you are running from the project root.
+    \item \textbf{PermissionError (Excel):} If you get a "file in use" error when running your script, make sure you close the Excel file before trying to overwrite it!
+\end{itemize}
+\end{tcolorbox}
+
+\newpage
+\subsection{Activity 5: Analyzing and Visualizing Results}
+
+\textbf{Box plots} show the distribution of accuracies, letting you see the median and variance. \textbf{Line plots} show the trend, such as how accuracy drops as test size increases.
+
+\begin{tcolorbox}[title=Do: Visualization with Matplotlib]
+Create \texttt{session9/session9\_plot\_accuracy.py}:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_excel("iris_experiment_results.xlsx")
+
+# Box plot: accuracy distribution by metric
+df.boxplot(column="accuracy", by="metric")
+plt.title("Accuracy Distribution by Distance Metric")
+plt.suptitle("")
+plt.xlabel("Metric")
+plt.ylabel("Accuracy")
+plt.grid(True)
+plt.savefig("session9_boxplot.png")
+plt.show()
+
+# Line plot: mean accuracy vs test_size
+avg = df.groupby(["metric", "test_size"])["accuracy"].mean().reset_index()
+
+plt.figure()
+for metric in sorted(avg["metric"].unique()):
+    sub = avg[avg["metric"] == metric]
+    plt.plot(sub["test_size"], sub["accuracy"], marker="o", label=metric)
+
+plt.title("Mean Accuracy vs Test Size")
+plt.xlabel("Test Size")
+plt.ylabel("Mean Accuracy")
+plt.grid(True)
+plt.legend()
+plt.savefig("session9_lineplot.png")
+plt.show()
+\end{minted}
+\end{tcolorbox}
+
+\section{Summary and Reflection}
+\textbf{Summary:}
+\begin{itemize}
+    \item We defined parameters like \texttt{test\_size} and \texttt{seed} to systematically test models.
+    \item \textbf{Pandas} helped us collect dictionaries into DataFrames for easy aggregation and export.
+    \item \textbf{Matplotlib} enabled us to visualize distributions and trends across metrics.
+\end{itemize}
+
+\textbf{Reflection Questions:}
+\begin{enumerate}
+    \item How does changing the \texttt{test\_size} impact the overall accuracy, according to your line plot?
+    \item Why do we randomize seeds instead of using the same seed for every trial?
+\end{enumerate}
+
+\subsection{Submission}
+Submit:
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item \texttt{session9/session9\_iris\_template.py}
+\item \texttt{session9/session9\_plot\_accuracy.py}
+\item \texttt{session9/iris\_eval.py}
+\item \texttt{iris\_experiment\_results.xlsx}
+\item screenshots of plots (box plot + line plot)
+\end{itemize}

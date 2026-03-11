@@ -1,0 +1,114 @@
+\chapter{Positional and Keyword Arguments}
+
+\section{Introduction}
+
+\begin{tcolorbox}[title=Goal]
+\textbf{Refactor} your Session 4 functions to accept optional parameters, understand the difference between parameters and arguments, and learn how to run the same pipeline in multiple modes.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=You will work in]
+Use the following files for this session:
+\begin{itemize}
+    \item \texttt{session5/session5\_iris\_template.py} (main student file)
+    \item \texttt{session5/iris\_data.csv} (dataset)
+    \item \texttt{session5/helper/iris\_utils.py} (provided helper module)
+\end{itemize}
+\textbf{How to run the file:} Always run this script from the project root using the terminal command: \\
+\texttt{python3 session5/session5\_iris\_template.py} \\
+\textbf{Do not edit the helper module} (\texttt{iris\_utils.py}).
+\end{tcolorbox}
+
+In the previous sessions, you wrote several \textbf{functions} and called them from a \texttt{main()} function.
+That already gave you a powerful skill: you can break a larger program into smaller, reusable pieces.
+
+In Session 5 we keep that same idea, but we make your functions \textbf{more flexible} by controlling them through \textbf{arguments} when you call them.
+
+\begin{tcolorbox}[title=Why this matters (Real-World Hook)]
+Parameterizing functions is akin to how APIs expose configuration options (e.g., passing options to a machine-learning model). It allows users to control the behavior of your code without having to rewrite its internal logic.
+\end{tcolorbox}
+
+\noindent
+\textbf{Parameters vs. arguments (a common beginner confusion).}
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item A \textbf{parameter} is the name written in the function definition (the "slot" the function expects).
+    \item An \textbf{argument} is the actual value you provide when calling the function (what gets put into the slot).
+\end{itemize}
+
+\noindent
+Example:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+def greet(name, punctuation="!"):   # name and punctuation are parameters
+    print("Hello", name + punctuation)
+
+greet("Ada")                        # "Ada" is an argument
+greet(name="Ada", punctuation="?")  # both are arguments (keyword style)
+\end{minted}
+
+\noindent
+In this session's tutorial, we focus on \textbf{two} ways of providing arguments:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item \textbf{Positional arguments:} values are matched to parameters by \textit{order}.
+    \item \textbf{Keyword arguments:} values are matched to parameters by \textit{name}.
+\end{itemize}
+
+Understanding these techniques matters because they directly affect:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item how easy your code is to read (especially for someone else),
+    \item how easy it is to change your code later (refactoring without breaking calls),
+    \item how likely you are to introduce subtle bugs (wrong value in the wrong slot).
+\end{itemize}
+
+
+
+\section{What You Will Learn:}
+
+Upon completing this tutorial, you'll be able to:
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \textbf{Positional arguments:} How Python matches arguments to parameters by position, and why the order matters.
+    \item \textbf{Keyword arguments:} How naming parameters in a call improves readability and lets you override only what you need.
+    \item \textbf{Default values:} How "optional" parameters work, how \texttt{None} is commonly used as a "not provided" marker, and how defaults interact with positional and keyword calls.
+    \item \textbf{Beginner-safe debugging:} How to recognize and fix common argument errors such as "missing required argument" or "multiple values for argument".
+\end{itemize}
+
+\subsection{Important framing:}
+\noindent
+\textbf{} Session 5 does not replace the session 4 classifier.
+Instead, it extends the same function set so you can \textit{control the behavior} through function arguments
+instead of rewriting the classifier logic each time you want a small change.
+This is a key refactoring mindset: \textbf{keep the core rule stable, make the interface flexible}.
+
+
+
+\begin{enumerate}
+    \item keep session 4 function names and core classifier behavior unchanged,
+    \item add positional parameters so a caller can override key values \textit{in order},
+    \item add keyword parameters with sensible defaults so a caller can override values \textit{by name},
+    \item learn how to import a helper function from another file (your first step toward multi-file projects),
+    \item call your pipeline like a small API from \texttt{main()} to demonstrate different configurations clearly.
+\end{enumerate}
+\noindent
+If you achieve these goals, you will have a program that can run the same pipeline in multiple modes without duplicating code.
+
+\subsection{Hands-on Files for This Session}
+Use:
+\begin{itemize}
+    \item \texttt{session5/session5\_iris\_template.py} (your main working file for this session)
+    \item \texttt{session5/iris\_data.csv} (the dataset you will load and classify)
+    \item \texttt{session5/helper/iris\_utils.py} (provided helper: a simple ``fit'' function for learning a threshold)
+\end{itemize}
+\noindent
+\textbf{What you are starting with:} a mostly-complete session 5 template where the core classifier functions already exist.
+\textbf{What you will modify:} function signatures and call sites so the pipeline can be configured using arguments.
+
+\section{Session 4 vs Session 5 (Function-by-Function Changes)}
+Session 5 is a refactor focused on \textbf{interfaces}, not new logic. Keep the same core classifier rule.
+
+\subsection{Canonical Function Set (Session 5)}
+Complete these functions in \texttt{session5\_iris\_template.py}. The table below shows the mapping:
+
+\input{session5/tab5.tex}
+
+
+\input{session5/ses5_positional_argument.tex}
+\input{session5/ses5_keyword_argument.tex}
+\input{session5/other.tex}

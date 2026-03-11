@@ -1,0 +1,83 @@
+"""session 3 student template: Iris rule classifier with lists, loops, and conditionals."""
+
+
+# Session 2 continuity variables. No need to change these.
+threshold = 2.0
+feature_name = "petal_length"
+positive_label = "setosa"
+negative_label = "not_setosa"
+label_key = "species"
+correct = 0
+wrong = 0
+total = 0
+y_pred_list = []
+
+
+# Task 0: Replacing sequential variable with dict
+"""
+dict(id="flower2", 
+sepal_length=5.1,
+ ???=3.5, 
+ # I deliberately drop two variables, and you should read the instructions in the template to add them back in. 
+ petal_width=???, 
+ species="setosa")
+"""
+# Dataset for session 3 sequential classifier (no functions yet)
+dataset = [
+    {
+        "id": "flower1",
+        "sepal_length": 5.1,
+        "sepal_width": 3.5,
+        "petal_length": 1.4,
+        "petal_width": 0.2,
+        "species": "setosa",
+    },
+    {
+        "id": "flower2",
+        "sepal_length": 4.9,
+        "sepal_width": 3.0,
+        "petal_length": 1.4,
+        "petal_width": 0.2,
+        "species": "setosa",
+    },
+    # add more samples...
+]
+
+# Task: Generate a for loop over the dataset.
+"""
+You should replace the ??? with the correct variable names to loop over the dataset and print out the id, petal_length, and species for each sample.
+
+ the for loop, something like
+for ??? in ???:
+    print(sample["ID"], sample["petal_length"], sample["species"])
+"""
+# Decomment me
+# for ??? in ???:
+# print(sample["ID"], sample["petal_length"], sample["species"])
+
+#   Task: Add if-else condition to classify each sample as setosa or not_setosa based on petal_length and threshold.
+
+#   Task: Add code to convert true species to binary y_true label (setosa or not_setosa) and update the correct/wrong counters and prediction list.
+
+
+# Hint: Everthing should be under the for loop, and you can use the same if-else condition to determine both y_pred and y_true.
+
+
+# TODO 1: initialize counters and prediction list
+
+print("\n=== Start session 3 Prediction Loop ===")
+
+
+for sample in dataset:
+    if sample[feature_name] < threshold:
+        y_pred = positive_label
+    else:
+        y_pred = negative_label
+    y_pred_list.append(y_pred)
+
+    print(
+        f"id={sample['id']} | pred={y_pred} | "
+        f"petal_length={sample['petal_length']}"
+    )
+
+

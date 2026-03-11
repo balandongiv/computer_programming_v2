@@ -1,0 +1,106 @@
+\section{Positional Arguments}
+Positional arguments are the most common way to pass values to functions. You've already been using them without explicitly realizing it since session 3 of our tutorial session.
+ 
+In positional arguments, the order of the arguments provided in the function call directly corresponds to the order defined in the function signature.
+
+\subsection{Loading Iris Data with a Single Positional Argument}
+
+Take for example when we are loading data from a file using the \texttt{load\_iris\_data} function. When we pass the file path \texttt{('..session4/\_iris\_data.csv')} as an argument to the function, we're utilizing what's known as a positional argument.
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def setup_application(filepath):
+    """Load, configure, and run prediction pipeline."""
+    dataset = load_iris_data(filepath)
+
+\end{minted}
+
+The corresponding function definition is:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def load_iris_data(filepath):
+    dataset = []
+    with open(filepath, "r", encoding="utf-8", newline="") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            dataset.append(
+                {
+                    "id": row["id"],
+                    "sepal_length": float(row["sepal_length"]),
+                    "sepal_width": float(row["sepal_width"]),
+                    "petal_length": float(row["petal_length"]),
+                    "petal_width": float(row["petal_width"]),
+                    "species": row["species"],
+                }
+            )
+\end{minted}
+
+
+Here, the parameter \texttt{filepath} is a positional argument, which means the order matters. The first argument passed during the function call will always be matched with the first parameter defined in the function signature.
+
+
+\subsection{Initializing initialize predictions with Two Positional Arguments}
+
+Another example is the function \texttt{initialize\_prediction}, defined with two positional parameters: \texttt{dataset} and \texttt{setting}.
+When invoking this function, you must ensure that the arguments are provided in the correct sequence. Swapping these arguments inadvertently will cause unexpected behavior or errors in your program.
+
+Thus, clear parameter naming and detailed documentation are essential to prevent such issues.
+
+
+
+Calling \texttt{initialize\_robots(canvas, data)} with the \texttt{canvas} and \texttt{data} in the correct order is crucial. Swapping these arguments would lead to errors. Hence, careful naming and detail doct string can help prevent such mistakes.
+
+\subsection{ Update metrics Using Multiple Positional Arguments}
+% update_metrics(metrics, y_pred, y_true)
+
+Let's examine a function that requires multiple positional arguments, \texttt{update\_metrics}, which is responsible for rendering robots on the canvas:
+
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def update_metrics(metrics, y_pred, y_true):
+    """Update correct/wrong/total counters and append predictions.
+    
+    Args:
+        metrics (dict): The metrics dictionary tracking accuracy.
+        y_pred (str): The predicted label.
+        y_true (str): The true label.
+        
+    Side Effects:
+        Modifies the `metrics` dictionary in place.
+    """
+    is_correct = evaluate_prediction(y_pred, y_true)
+    if is_correct:
+        metrics["correct"] += 1
+    else:
+        metrics["wrong"] += 1
+    
+    # ALWAYS increment metrics["total"] for every sample.
+    metrics["total"] += 1
+    metrics["y_pred_list"].append(y_pred)
+
+\end{minted}
+
+This function is built to accept three positional arguments. Each argument plays a specific role in how the robot is drawn:
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \texttt{i}: \\ An index or identifier for the robot.
+    \item \texttt{canvas}: \\  The digital space where the robot will appear.
+    \item \texttt{config}: \\ Configuration details for the robot's appearance.
+    \item \texttt{colors}: \\  A collection of colors used for different parts of the robot.
+    \item \texttt{body\_color}: \\  The specific color for the robot's body.
+    \item \texttt{antenna\_color}: \\ The color for the robot's antenna.
+\end{itemize}
+
+\subsection{Best Practices: Enhancing Code Clarity with Descriptive Names and Docstrings}
+
+In scenarios with multiple positional arguments (2 or more), the significance of clear \texttt{docstring} and clear naming variables becomes even more importance. These practices help prevent confusion and errors, ensuring that anyone using the function (e.g., update\_metrics), understands what each argument represents and in what order they should be provided.
+
+Yet, it's important to recognize that mistakes can still occur. Users might inadvertently supply incorrect input or mix up the order of arguments. So, I hope this higlight the important ensuring supplying the right value and order for correct operation of the function's operation.
+
+\subsection{Self Reflection: Your Experience with Positional Arguments}
+Nevertheless, either you realise it or not, but you actually have been working with the concept of positional arguments since the third session of our tutorials. So Kudos to you for that. Therefore, I did not design any specific task for this section, as I believe you already have a good grasp of how positional arguments work in \texttt{Python} functions.
+
+
+
+
+
+
+\newpage

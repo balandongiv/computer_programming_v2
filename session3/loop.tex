@@ -1,0 +1,353 @@
+\subsection{Loop Programming}
+
+So far, we've accessed flower sample dictionaries sequentially, which works fine for a small number of samples. For example, we can print the values for the first two samples like this:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+# Accessing each value by key for sample 1
+print("sepal_length:", dataset[0]['sepal_length'])
+print("sepal_width:", dataset[0]['sepal_width'])
+print("petal_length:", dataset[0]['petal_length'])
+print("petal_width:", dataset[0]['petal_width'])
+print("species:", dataset[0]['species'])
+print("id:", dataset[0]['id'])
+
+# Accessing each value by key for sample 2
+print("sepal_length:", dataset[1]['sepal_length'])
+print("sepal_width:", dataset[1]['sepal_width'])
+print("petal_length:", dataset[1]['petal_length'])
+print("petal_width:", dataset[1]['petal_width'])
+print("species:", dataset[1]['species'])
+print("id:", dataset[1]['id'])
+\end{minted}
+
+However, what if you had to manage ten, twenty, or even hundreds of samples? Repeating this code for each sample would become tedious and error-prone.
+
+Loops allow you to automate repetitive tasks, making your code more efficient, concise, and easier to maintain.
+
+\subsubsection{The Problem with Sequential Code for Repetitive Tasks}
+
+Continuing to write code sequentially for each sample quickly becomes inefficient and impractical, especially when dealing with larger datasets. Imagine having to add or modify one printed field for all samples; you would need to update many repeated lines.
+
+Organizing samples in a list allows us to leverage the power of iteration. \textbf{Iteration} means going through each item in a list one by one.
+
+Python offers two primary loop types for iteration: the \textbf{\texttt{for} loop} and the \textbf{\texttt{while} loop}. For iterating through a dataset where we want to process each sample once, the \texttt{for} loop is generally the most natural choice.
+
+For this tutorial, we focus on \texttt{for} loops to appreciate the beauty of iteration.
+
+\subsubsection{Iterating Through a List with a \texttt{for} Loop}
+\label{sec:iteratinglist}
+Here's how you can use a \texttt{for} loop to iterate through each sample dictionary in \texttt{dataset}:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true,
+frame=lines,
+label=code:iterateLoop]{python}
+for sample in dataset:
+    # Access and process each sample dictionary here
+    print(sample)  # For now, print the whole dictionary
+\end{minted}
+
+In this \texttt{for} loop:
+
+\begin{minted}[fontsize=\small]{python}
+for sample in dataset:
+\end{minted}
+
+The loop iterates over each item in the \texttt{dataset} list. In each iteration, the current sample dictionary is assigned to \texttt{sample}, and the indented code block runs.
+
+\begin{minted}[fontsize=\small]{python}
+print(sample)
+\end{minted}
+
+The above line prints the entire dictionary representing the current sample.
+
+\vspace{0.5cm}
+
+\subsubsection{Let's Refine This Loop (Code:iterateLoop)}
+\label{sec:refineloop}
+Instead of printing the whole dictionary, we can print selected fields for clearer output.
+
+\begin{minted}[linenos]{python}
+for sample in dataset:
+    print("sepal_length:", sample['sepal_length'])
+    print("sepal_width:", sample['sepal_width'])
+    # you may continue here for other variables
+    print("---")  # separate each sample for readability
+\end{minted}
+
+This loop iterates through \texttt{dataset}. In each iteration, the current dictionary is assigned to \texttt{sample}, and we print specific fields.
+
+\paragraph{Your Task: Print All Variables Using a Loop}
+\label{sec:print_all_config}
+To test your understanding of loops (Section \ref{sec:refineloop}) and dictionary access, complete the loop in Code:iterateLoop to print the values for \textbf{all} keys in each sample dictionary. Extend the loop to print these keys:
+
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item id
+    \item sepal\_length
+    \item sepal\_width
+    \item petal\_length
+    \item petal\_width
+    \item species
+\end{itemize}
+
+Start with the snippet below and add the necessary lines within the loop:
+
+\begin{minted}[linenos]{python}
+for sample in dataset:
+    print("sepal_length:", sample['sepal_length'])
+    print("sepal_width:", sample['sepal_width'])
+    # ... Add lines here to print the rest of the fields ...
+    print("---")
+\end{minted}
+
+\paragraph{Optional Task: Enhanced Output Formatting with Sample IDs}
+
+This is an optional task for those who want to further enhance output formatting.
+
+To make the output more informative, include each sample's \texttt{id} in every printed line. This is useful when reading output for many samples.
+
+Modify your loop to produce output in the following format:
+
+\texttt{Sample <sample\_id>: <key>: <value>}
+
+For example, for two samples the output could look like:
+
+\begin{verbatim}
+Sample flower1: sepal_length: 5.1
+Sample flower1: sepal_width: 3.5
+Sample flower1: petal_length: 1.4
+Sample flower1: petal_width: 0.2
+Sample flower1: species: setosa
+---
+Sample flower2: sepal_length: 6.0
+Sample flower2: sepal_width: 2.9
+Sample flower2: petal_length: 4.5
+Sample flower2: petal_width: 1.5
+Sample flower2: species: versicolor
+\end{verbatim}
+
+To achieve this, access \texttt{id} from \texttt{sample} and incorporate it into print statements using f-strings.
+
+\newpage
+\subsection{Decision Control Statements: Making Choices in Your Code}
+
+Decision control statements are fundamental constructs in programming that allow your code to make decisions and execute different actions based on specified conditions. By evaluating logical expressions, these statements determine which code segments to run.
+
+\subsubsection{if-else statement in the Iris classifier}
+In this section, we'll use \textbf{decision control statements} (\texttt{if-else}) to make predictions from flower features.
+
+Let's define a simple decision rule:
+\[
+    \texttt{petal\_length < 2.0} \Rightarrow \texttt{"setosa"} \quad \text{else} \quad \texttt{"not\_setosa"}
+\]
+
+We will loop through the dataset and apply this rule to each sample.
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+threshold = 2.0
+
+for sample in dataset:
+    petal_length = sample['petal_length']
+
+    # Decision control with if-else
+    if petal_length < threshold:
+        y_pred = "setosa"
+    else:
+        y_pred = "not_setosa"
+
+    print(f"Sample {sample['id']} -> petal_length: {petal_length}, pred: {y_pred}")
+\end{minted}
+
+In this code:
+
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \item \texttt{threshold = 2.0}: We set a cutoff value for decision-making.
+    \item \texttt{for sample in dataset:} We iterate through all samples in the dataset.
+    \item \texttt{petal\_length = sample['petal\_length']}: We extract the feature used by the rule.
+    \item \texttt{if petal\_length < threshold:}: If true, we predict \texttt{"setosa"}.
+    \item \texttt{else:}: Otherwise, we predict \texttt{"not\_setosa"}.
+    \item \texttt{print(...)}: We print sample id, feature value, and prediction for clarity.
+\end{itemize}
+
+Try changing \texttt{threshold} to \texttt{1.8} and \texttt{2.2}, then rerun. Observe how predictions change.
+
+\subsubsection{Part B: Single-sample prediction demo}
+
+Add this block after dataset definition if you want a quick single-sample test:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+threshold = 2.0
+
+# Example: predict for the first sample only
+petal_length = dataset[0]["petal_length"]
+
+if petal_length < threshold:
+    pred = "setosa"
+else:
+    pred = "not_setosa"
+
+print("\nSingle prediction demo")
+print("petal_length:", petal_length, "| pred:", pred)
+\end{minted}
+
+\subsubsection{Your Task: Change threshold and observe}
+\begin{enumerate}
+    \item Change \texttt{threshold} to \texttt{1.8} and run again.
+    \item Change \texttt{threshold} to \texttt{2.2} and run again.
+    \item Observe how prediction may change.
+\end{enumerate}
+
+\newpage
+\subsection{Part C: Loop Through the Dataset and Classify All Samples}
+
+Writing prediction code for each flower manually is repetitive. Use a \textbf{for-loop} to process every sample automatically.
+
+\subsubsection{Loop + prediction + counting}
+
+Add this block:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+print("\n=== Predict all samples ===")
+
+correct = 0
+total = 0
+
+for sample in dataset:
+    # 1) extract feature
+    petal_length = sample["petal_length"]
+
+    # 2) rule-based prediction
+    if petal_length < threshold:
+        y_pred = "setosa"
+    else:
+        y_pred = "not_setosa"
+
+    # 3) convert true label into setosa vs not_setosa
+    if sample["species"] == "setosa":
+        y_true = "setosa"
+    else:
+        y_true = "not_setosa"
+
+    # 4) compare and count
+    if y_pred == y_true:
+        correct += 1
+
+    total += 1
+
+    # 5) print one line per sample
+    print("true:", y_true, "| pred:", y_pred, "| petal_length:", petal_length)
+
+accuracy = (correct / total) * 100
+print("\nCorrect:", correct, "/", total)
+print("Accuracy (%):", accuracy)
+\end{minted}
+
+\subsubsection{Your Task: Add misclassification counter}
+\begin{enumerate}
+    \item Create a variable \texttt{wrong = 0}.
+    \item Every time \texttt{y\_pred != y\_true}, increase \texttt{wrong}.
+    \item Print \texttt{wrong} at the end.
+\end{enumerate}
+
+\newpage
+\subsection{Part D: (Optional) Store Predictions in a List}
+
+Sometimes we want to keep outputs for later analysis. We can store predictions in a list.
+
+\subsubsection{Optional Task: Build \texttt{y\_pred\_list}}
+\begin{enumerate}
+    \item Before the loop, create \texttt{y\_pred\_list = []}.
+    \item In each iteration, append \texttt{y\_pred}.
+    \item Print the list at the end.
+\end{enumerate}
+
+Starter snippet:
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+y_pred_list = []
+
+for sample in dataset:
+    # ... produce y_pred ...
+    y_pred_list.append(y_pred)
+
+print("All predictions:", y_pred_list)
+\end{minted}
+
+\newpage
+\subsection{Name Label for Submission}
+
+Your output must include your identity label.
+
+\subsubsection{Your Task: Add your label}
+\begin{enumerate}
+    \item Add two string variables:
+    \texttt{student\_id} and \texttt{full\_name}.
+    \item Print them near the top of your output.
+\end{enumerate}
+
+\begin{minted}[fontsize=\small, linenos]{python}
+print("=== Student Label ===")
+student_id = "YOUR_ID_HERE"
+full_name = "YOUR_FULL_NAME_HERE"
+print("Student ID:", student_id)
+print("Full Name:", full_name)
+\end{minted}
+
+\vspace{2.5cm}
+\begin{center}
+{\color{red} \Large Submission Requirement (Graded)}
+\end{center}
+
+\noindent
+Submit:
+\begin{enumerate}
+    \item Your Python file: \texttt{session3\_rule\_classifier.py}
+    \item A screenshot (or PDF) showing your terminal output that includes:
+    \begin{itemize}
+        \item student label (ID + full name),
+        \item the printed per-sample lines (true vs pred),
+        \item total correct, total wrong, and accuracy.
+    \end{itemize}
+\end{enumerate}
+
+\newpage
+\subsection{Optional: Data Visualization (Sepal vs Petal)}
+
+If you want to visualize your dataset, you can produce a quick 2D scatter plot with \texttt{matplotlib}.
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+import matplotlib.pyplot as plt
+
+x = []  # sepal_length
+y = []  # petal_length
+c = []  # color by species
+
+for sample in dataset:
+    x.append(sample['sepal_length'])
+    y.append(sample['petal_length'])
+    if sample['species'] == 'setosa':
+        c.append('blue')
+    else:
+        c.append('orange')
+
+plt.scatter(x, y, c=c)
+plt.xlabel('Sepal Length')
+plt.ylabel('Petal Length')
+plt.title('Iris Samples: Sepal vs Petal')
+plt.show()
+\end{minted}
+
+\subsection{Extra Exercise: Dynamic Prediction Rule Based on Sepal Length}
+
+For an extra challenge, create a new logic where the prediction threshold depends on \texttt{sepal\_length}.
+
+\textbf{Dynamic Rule Based on Sepal Length:}
+
+\begin{itemize}
+    \item Define a threshold value: \texttt{my\_th = 5.5}.
+    \item For each sample in \texttt{dataset}, check if \texttt{sepal\_length} is greater than or equal to \texttt{my\_th}.
+    \item If \texttt{sepal\_length} $\geq$ 5.5, use \texttt{petal\_length < 2.2} as the setosa rule.
+    \item If \texttt{sepal\_length} $<$ 5.5, use \texttt{petal\_length < 2.0} as the setosa rule.
+\end{itemize}
+
+After determining the prediction based on this dynamic logic, print per-sample results and compare with the true class (setosa vs not\_setosa). This combines loops, conditionals, and dictionary access in a more advanced exercise.

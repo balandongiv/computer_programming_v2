@@ -1,0 +1,110 @@
+\begin{landscape}
+\small
+\renewcommand{\arraystretch}{0.3}
+
+\begin{longtable}{|p{0.3\linewidth}|p{0.4\linewidth}|p{0.2\linewidth}|}
+\caption{Session 5 canonical functions: what to implement, what changed from Session 4, and where fit-style threshold learning is introduced.} \\
+\hline
+\textbf{Section / Function} & \textbf{Code to put inside the function} & \textbf{Session 5 note / modification} \\
+\hline
+\endfirsthead
+
+\multicolumn{3}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline
+\textbf{Section / Function} & \textbf{Code to put inside the function} & \textbf{Session 5 note / modification} \\
+\hline
+\endhead
+
+\hline \multicolumn{3}{|r|}{{Continued on next page}} \\ \hline
+\endfoot
+
+\hline \hline
+\endlastfoot
+
+\texttt{make\_print\_status(status\_text)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+print(f"[STATUS] {status_text}")
+\end{minted}
+& Same as Session 4. \\
+\hline
+\texttt{determine\_true\_binary\_label(sample, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+if sample[settings["label_key"]] == settings["positive_label"]:
+	return settings["positive_label"]
+return settings["negative_label"]
+\end{minted}
+& Same as Session 4. \\
+\hline
+\texttt{evaluate\_prediction(y\_pred, y\_true)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+return y_pred == y_true
+\end{minted}
+& Same as Session 4. \\
+\hline
+\texttt{update\_metrics(metrics, y\_pred, y\_true)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+is_correct = evaluate_prediction(y_pred, y_true)
+if is_correct:
+	metrics["correct"] += 1
+else:
+	metrics["wrong"] += 1
+metrics["total"] += 1
+metrics["y_pred_list"].append(y_pred)
+\end{minted}
+& Same as Session 4. \\
+\hline
+\texttt{classify\_sample(sample, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+return determine_binary_label(sample, settings)
+\end{minted}
+& Same as Session 4. \\
+\hline
+\texttt{load\_iris\_data(filepath=None)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+if filepath is None:
+	print("[WARNING] No filepath provided. Using default.")
+	filepath = "session5/iris_data.csv"
+dataset = []
+with open(filepath, "r", encoding="utf-8", newline="") as csv_file:
+	reader = csv.DictReader(csv_file)
+	for row in reader:
+		dataset.append(...)
+return dataset
+\end{minted}
+& \textbf{Refactor in S5:} To accept default argument. If no path is given, show a warning and use a default path. \\
+\hline
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\texttt{get\_default\_settings()} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+return {"threshold": 2.0, "feature_name": "petal_length", ...}
+\end{minted}
+& Same as Session 4. \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hline
+\texttt{initialize\_predictions(dataset, settings, print\_each=True)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+for sample in dataset:
+	y_pred = classify_sample(sample, settings)
+	y_true = determine_true_binary_label(sample, settings)
+	update_metrics(metrics, y_pred, y_true)
+	if print_each:
+		print(...)
+\end{minted}
+& \textbf{New in S5:} Rather than always print, we offer optional per-sample printing control using \texttt{print\_each}. \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hline
+\texttt{setup\_application(filepath=None, threshold=None, print\_each=True, use\_fit=False)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+dataset = load_iris_data(filepath)
+settings = get_default_settings()
+if use_fit:
+	settings["threshold"] = fit_th_from_setosa(dataset, settings["threshold"])
+elif threshold is not None:
+	settings["threshold"] = threshold
+result = initialize_predictions(dataset, settings, print_each=print_each)
+return settings, dataset, result
+\end{minted}
+& \textbf{New in S5:} API-style orchestration + optional fit-based threshold. \\
+\hline
+\texttt{main()} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+run default call
+run positional override call
+run keyword override call
+run fit-based call (use_fit=True)
+\end{minted}
+& \textbf{New in S5:} demonstrates all invocation styles in one script. \\
+\hline
+\end{longtable}
+\end{landscape}

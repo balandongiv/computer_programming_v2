@@ -1,0 +1,24 @@
+\begin{landscape}
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{0.3}
+
+\begin{tabular}{|p{0.30\textwidth}|p{0.30\textwidth}|p{0.35\textwidth}|}
+\hline
+\textbf{Session 5 (Functions + Settings Dict)} & \textbf{Session 6 (Class + Self State)} & \textbf{Explanation of Change} \\
+\hline
+\texttt{get\_default\_settings()} returns a dict: \texttt{\{"threshold": 2.0, \dots\}} & \texttt{\_\_init\_\_(self, threshold=2.0)} & Instead of passing a dictionary around, we store \texttt{self.threshold} inside the object when it is created. \\
+\hline
+\texttt{determine\_binary\_label(sample, settings)} & \texttt{predict(self, sample)} & The function now belongs to the class. It uses \texttt{self.threshold} instead of \texttt{settings["threshold"]}. \\
+\hline
+\texttt{determine\_true\_binary\_label(sample, settings)} & \textit{(Helper method or part of evaluate)} & Typically logic that calculates "truth" can be a method like \texttt{\_get\_true\_label(self, sample)} or inside evaluation. \\
+\hline
+\texttt{initialize\_predictions(dataset, settings, print\_each)} & \texttt{evaluate(self, dataset, print\_each)} & The evaluation loop is now a method of the classifier. It iterates over data using its own prediction logic. \\
+\hline
+\texttt{setup\_application(filepath, ...)} & \texttt{main()} block creating an instance & We replace the procedural setup function with object instantiation: \texttt{clf = IrisRuleClassifier(...)}. \\
+\hline
+\end{tabular}
+\caption{Refactoring Map: From Session 5 Functional Style to Session 6 Object-Oriented Style.}
+\end{table}
+\end{landscape}

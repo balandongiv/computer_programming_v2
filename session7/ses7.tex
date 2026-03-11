@@ -1,0 +1,231 @@
+\chapter{Inheritance and Polymorphism}
+
+\section{Introduction}
+In session 6, we bundled our code into a single class: \texttt{IrisRuleClassifier}.
+It had two main jobs:
+\begin{enumerate}
+    \item \textbf{Decide:} Does the sample have \texttt{petal\_length < threshold}? (This is specific to this rule).
+    \item \textbf{Evaluate:} Loop through the dataset and calculate accuracy. (This is general).
+\end{enumerate}
+
+\begin{tcolorbox}[title=You will work in]
+Use the following file for this session:
+\begin{itemize}
+    \item \texttt{session7/session7\_iris\_template.py} (main student file)
+\end{itemize}
+\textbf{How to run the file:} Always run this script from the project root using the terminal command: \\
+\texttt{python3 session7/session7\_iris\_template.py} \\
+\end{tcolorbox}
+
+So far, having one class is already an improvement over passing a \texttt{settings} dictionary everywhere.
+But a new design problem appears as soon as you want \textbf{more than one type} of classifier.
+
+\noindent
+What if we want to create a new classifier, such as a \texttt{NearestCentroidClassifier} (a different prediction strategy) or even a simple \texttt{RandomGuessClassifier}?
+With the session 6 design, every new class would need:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item its own \texttt{predict(...)} logic (different for each classifier type),
+    \item and a copy of the same \texttt{evaluate(...)} loop (identical across classifier types).
+\end{itemize}
+
+\noindent
+\textbf{Why is that a problem?}
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item Copy-paste creates duplication. Duplication increases bugs.
+    \item If you fix a mistake in \texttt{evaluate()}, you must remember to fix it in every class.
+    \item Adding a new classifier becomes "rewrite everything again" instead of "write only what is different".
+\end{itemize}
+
+This session (Session 7), we introduce \textbf{Inheritance}.
+We will extract the shared logic (evaluation) into a \textbf{Parent Class} (Base), and keep only the specific logic (prediction rules) in the \textbf{Child Classes}.
+\noindent
+\textbf{Why introduce inheritance now?} Because you now have enough experience to see the repeating pattern:
+many classifiers differ in \texttt{predict()}, but they can share \texttt{evaluate()}.
+Inheritance is one clean way to reuse that shared behavior.
+
+\begin{tcolorbox}[title=Real-World Hook]
+Inheritance is like defining a base concept of a "Vehicle" that has wheels and moves, and then defining child concepts like "Car" and "Bike" that inherit the basic behaviors but add their own specific rules (like having an engine vs. pedals).
+\end{tcolorbox}
+
+\subsection{Key Terms}
+Before we write code, remember these concepts:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item \textbf{Sample:} A dictionary representing one flower, e.g., \texttt{\{"petal\_length": 1.4, "species": "setosa"\}}. Notice that keys like \texttt{"petal\_length"} and \texttt{"species"} are strings.
+    \item \textbf{Dataset:} A list of sample dictionaries.
+\end{itemize}
+
+\subsection{Transition Map: Session 6 Class $\rightarrow$ Session 7 Inheritance}
+
+\input{session7/tab7.tex}
+
+\section{The Parent Class}
+
+\begin{tcolorbox}[title=Do: Create the Parent Class (\texttt{ClassifierBase})]
+This class will hold the logic that is \textit{shared} by all classifiers.
+For us, that is the \texttt{evaluate} method. It doesn't know \textit{how} to predict yet, but it knows how to \textit{score} predictions.
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+class ClassifierBase:
+    def __init__(self):
+        pass
+
+    def predict(self, sample):
+        # The parent doesn't know how to predict!
+        # Child classes MUST replace this method with their own logic.
+        raise NotImplementedError("Child class must implement predict()")
+
+    def evaluate(self, dataset):
+        # This logic is shared! It calls self.predict(), provided by the child.
+        correct = 0
+        total = 0
+        
+        for sample in dataset:
+            prediction = self.predict(sample)
+            
+            # Simple binary truth check
+            truth = "setosa" if sample["species"] == "setosa" else "not_setosa"
+            
+            if prediction == truth:
+                correct += 1
+            total += 1  # BUG FIX: Ensure total increments unconditionally!
+            
+        return correct / total if total > 0 else 0.0
+\end{minted}
+
+\textbf{Task:} Copy this parent class into your file.
+\end{tcolorbox}
+
+\noindent
+\textbf{Before you code (reasoning):} decide what should be shared across classifiers.
+Evaluation is shared (loop, counting, accuracy). Prediction is not shared (rules differ), so the parent class should \textit{not} try to implement it. What would happen if you forgot to override \texttt{predict()} in a child class? You would get a \texttt{NotImplementedError}!
+
+\begin{tcolorbox}[title=Checkpoint]
+Create an instance of \texttt{ClassifierBase} and call \texttt{evaluate(dataset)} on a small dataset. You should get a \texttt{NotImplementedError} because \texttt{predict()} is not implemented.
+\end{tcolorbox}
+
+\section{Inheritance and Child Classes}
+
+\begin{tcolorbox}[title=Do: The First Child (\texttt{RuleClassifier})]
+Now we recreate our session 6 classifier, but this time it \textbf{inherits} from \texttt{ClassifierBase}.
+It only needs to provide the \texttt{\_\_init\_\_} and \texttt{predict} logic. It gets \texttt{evaluate} for free!
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+class RuleClassifier(ClassifierBase):  # <--- Inherits from ClassifierBase
+    def __init__(self, threshold=2.0):
+        super().__init__()  # Initialize the parent
+        self.threshold = threshold
+
+    def predict(self, sample):
+        # Specific logic for THIS classifier
+        if sample["petal_length"] < self.threshold:
+            return "setosa"
+        return "not_setosa"
+\end{minted}
+
+\textbf{Task:}
+\begin{enumerate}
+    \item Define this class below \texttt{ClassifierBase}.
+    \item Create an instance: \texttt{rule\_clf = RuleClassifier(2.0)}
+    \item Call \texttt{print(rule\_clf.evaluate(dataset))}
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Checkpoint]
+Notice that you can call \texttt{rule\_clf.evaluate(dataset)} even though you did not write \texttt{evaluate} inside \texttt{RuleClassifier}. That is the practical benefit of inheritance.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Do: The Second Child (\texttt{NearestCentroidClassifier})]
+We can add a completely different classifier without rewriting the evaluation loop. This classifier classifies a sample by comparing its \texttt{petal\_length} to two target values and picking the closer one.
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+class NearestCentroidClassifier(ClassifierBase):
+    def __init__(self, setosa_target=1.4, non_setosa_target=4.5):
+        super().__init__()
+        self.setosa_target = setosa_target     # Target petal_length for setosa
+        self.non_setosa_target = non_setosa_target # Target for others
+
+    def predict(self, sample):
+        # Logic: Which target value is the sample's petal_length closer to?
+        val = sample["petal_length"]
+        dist_to_setosa = abs(val - self.setosa_target)
+        dist_to_non = abs(val - self.non_setosa_target)
+
+        if dist_to_setosa < dist_to_non:
+            return "setosa"
+        return "not_setosa"
+\end{minted}
+
+\textbf{Task:}
+\begin{enumerate}
+    \item Define this class.
+    \item Create an instance: \texttt{centroid\_clf = NearestCentroidClassifier()}
+    \item Call \texttt{print(centroid\_clf.evaluate(dataset))}
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Checkpoint]
+Evaluate this classifier on the same dataset without writing any new evaluation code!
+\end{tcolorbox}
+
+\section{Polymorphism}
+
+\begin{tcolorbox}[title=Do: Putting it all together]
+We can loop through a list of \textit{different types} of classifiers and treat them all the same because they share the same Parent Interface. This is called \textbf{polymorphism}.
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+# Create a list of different classifiers
+classifiers = [
+    RuleClassifier(threshold=2.0),
+    NearestCentroidClassifier(),
+]
+
+# Evaluate them all in one loop
+print("=== Model Comparison ===")
+for clf in classifiers:
+    acc = clf.evaluate(dataset)
+    # Uses the class name to identify which one ran
+    print(f"{clf.__class__.__name__}: Accuracy = {acc}")
+\end{minted}
+\end{tcolorbox}
+
+\textbf{What is happening conceptually?}
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item Each object has a different \texttt{predict()} implementation.
+    \item They all share the same \texttt{evaluate()} implementation from the parent class.
+    \item The loop does not need to know the exact class type. It only needs to know that the object supports \texttt{evaluate()}.
+\end{itemize}
+
+\section{Troubleshooting}
+\begin{tcolorbox}[title=Common Mistakes \& Troubleshooting]
+\begin{itemize}
+    \item \textbf{Forgetting to inherit:} If you accidentally write \texttt{class RuleClassifier:} (missing \texttt{(ClassifierBase)}), you will not get \texttt{evaluate()} for free. Python will raise an \texttt{AttributeError}.
+    \item \textbf{Forgetting \texttt{super().\_\_init\_\_()}:} Always initialize the parent class in the child's constructor!
+    \item \textbf{Label mismatches:} If your \texttt{predict()} returns "SETOSA" instead of "setosa", it won't match the \texttt{evaluate()} loop's logic, and you'll get 0\% accuracy.
+\end{itemize}
+\end{tcolorbox}
+
+\section{Review and Next Steps}
+
+\textbf{Summary:}
+\begin{itemize}
+    \item \textbf{Inheritance} allows child classes to reuse code from a parent class, eliminating duplication.
+    \item \textbf{Polymorphism} allows you to treat different objects uniformly if they share a common interface.
+    \item Shared logic lives in one place (\texttt{ClassifierBase.evaluate}), while new classifier types only implement what is unique (\texttt{predict()}).
+\end{itemize}
+
+\textbf{Reflection Questions:}
+\begin{enumerate}
+    \item How does polymorphism allow you to add new classifiers easily?
+    \item What happens if the parent class does not raise \texttt{NotImplementedError} and a child forgets to define \texttt{predict()}?
+\end{enumerate}
+
+\textbf{Optional Exercise (RandomGuessClassifier):}
+Implement a third classifier called \texttt{RandomGuessClassifier} that inherits from \texttt{ClassifierBase}. It should ignore the sample entirely and randomly return "setosa" or "not\_setosa". Add it to your \texttt{classifiers} list in \texttt{main()} and observe its accuracy!
+
+\subsection{Submission Requirement}
+Add your student label at the end:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+print("=== Student Label ===")
+print("ID: ...")
+\end{minted}
+Run the script passing the dataset to both classifiers.

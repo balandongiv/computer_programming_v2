@@ -1,0 +1,470 @@
+
+\section{List, Loops, Conditional}
+
+
+
+This tutorial is designed to help you grasp fundamental programming concepts in Python, including \textbf{lists} for organizing data, \textbf{loops} for automating repetitive tasks, and \textbf{conditional statements} to introduce decision-making into your programs. Mastering these concepts will significantly enhance your ability to write efficient and dynamic Python code.
+
+\subsection{What You Will Learn:}
+
+By the end of this tutorial, you will be able to:
+
+\begin{enumerate}
+\item \textbf{Store and Access Data in Lists and Dictionaries:} Learn to effectively organize collections of data using Python lists and dictionaries. This will enable you to manage complex information sets in a structured manner.
+\item \textbf{Implement Loop Programming:} Understand how to transform repetitive sequences of code into efficient loops. This will save you time, reduce code redundancy, and minimize potential errors.
+\item \textbf{Utilize Decision Control Statements:} Master the use of conditional statements to enable your code to make decisions. This will allow your programs to respond dynamically to different inputs and situations, making them more versatile and intelligent.
+\end{enumerate}
+
+\subsection{Tools and Setup}
+
+In this tutorial, we will focus on code clarity and conceptual understanding. Therefore, code output rendering will not be directly embedded within this document. This means you won't see visual outputs (pop up box) like animations or images generated directly from the code snippets here.
+
+However, for your tutorial submission, it is \textbf{required} that you execute the code snippets, render the output, and submit a completed version. This step is crucial for effective review and assessment of your work. Rendering the output will demonstrate that you have successfully run the code and understood its behavior.
+
+
+
+
+\subsection{List}
+\label{Sec:list}
+You can read about list on your own. But this tutorial, lets focus on dictionary instead which is accessible at Section \ref{sec:dictionaries}.
+
+\subsubsection{Understanding Python Lists}
+
+A list in Python is a versatile data structure used to store collections of items. Lists are ordered, mutable (you can change their contents), and can contain any type of data, such as numbers, strings, or even other lists.
+
+Here's an example of a list containing numerical values, representing points or coordinates that we'll use for our robot tasks:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines, label=code:RobotPoints]{python}
+robot_points = [
+    293.9, 478.4,
+    300.4, 538.1,
+    360.1, 531.6,
+    353.6, 471.9,
+]
+\end{minted}
+
+In this example:
+
+\begin{itemize}
+    \item The variable \texttt{robot\_points} stores multiple floating-point numbers.
+    \item These numbers can represent coordinates on a 2-dimensional plane (e.g., x and y pairs).
+    \item Each pair of numbers could correspond to one point: 
+    \begin{itemize}
+        \item Point 1: (293.9, 478.4)
+        \item Point 2: (300.4, 538.1)
+        \item Point 3: (360.1, 531.6)
+        \item Point 4: (353.6, 471.9)
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Accessing items in a list:}
+\label{sec:access_item_in_list}
+
+
+Python lists are indexed starting from zero. To access individual items, you can use square brackets. For example:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+first_x_coordinate = robot_points[0]  # 293.9
+first_y_coordinate = robot_points[1]  # 478.4
+\end{minted}
+
+\subsubsection{Changing list items:}
+
+Lists are mutable, meaning you can modify their values:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+robot_points[0] = 295.0  # Changes the first x-coordinate to 295.0
+\end{minted}
+
+\subsubsection{Adding items to a list:}
+
+You can append new coordinates to the list easily:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+robot_points.append(400.5)  # Adds a new value at the end
+robot_points.append(500.2)  # Adds another new value
+\end{minted}
+
+Now you have a basic understanding of Python lists, which you'll use extensively throughout this lab and future programming exercises.
+
+
+
+\subsection{Dictionaries}
+\label{sec:dictionaries}
+\subsubsection{Introduction to Dictionaries}
+
+Dictionaries are a fundamental data structure in Python used for storing collections of \textbf{key-value pairs}. Unlike lists, which are ordered sequences accessed by numerical index, dictionaries are unordered collections where you access data using \textbf{keys}. Think of a real-world dictionary: you look up a word (the key) to find its definition (the value).
+
+Dictionaries are incredibly useful when you need to associate pieces of information with specific labels or identifiers, making your code more readable and maintainable.
+
+
+In our previous sessions, we've seen how to store individual pieces of information using variables. For example, to represent the positions of components for a robot, we might do something as per the  \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/session3_robot_template.py}{code snippet}:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines, label=code:Robot1Position]{python}
+    # positions for robot 1 components
+    center_x1 = 327
+    center_y1 = 505
+    wheel1_x1 = 330.3
+    wheel1_y1 = 534.8
+    wheel2_x1 = 323.7
+    wheel2_y1 = 475.2
+    sensor1_x1 = 354.6
+    sensor1_y1 = 481.8
+    sensor2_x1 = 359.0
+    sensor2_y1 = 521.6
+\end{minted}
+
+While this works for a small amount of data, it quickly becomes cumbersome and difficult to manage as the complexity grows. Imagine dealing with configurations for multiple robots or robots with many more components!
+
+
+Python provides more powerful and organized data structures like \textbf{lists} and \textbf{dictionaries} to handle complex data effectively. Dictionaries are particularly well-suited for grouping related pieces of information under meaningful names.
+
+\subsubsection{Creating Dictionaries}
+\label{subsubsec:creating_dicts}
+There are several ways to define a dictionary in Python. Let's explore three common methods:
+
+\begin{itemize}
+\item \textbf{Literal syntax} ({}) - This is the most direct and common way to create dictionaries.
+\item \textbf{Using \texttt{dict([])} with tuples} - This method involves passing a list of tuples, where each tuple represents a key-value pair, to the dict() constructor.
+\item \textbf{Using \texttt{dict()} with keyword arguments} - This approach uses the dict() constructor and assigns key-value pairs using keyword-like syntax.
+\end{itemize}
+
+Let's consider storing the configuration details for a robot's components as an example. Instead of using individual variables, we can use a dictionary to organize this information in a clear and accessible way.
+
+For instance, we can represent the configuration for 'robot1' using these different dictionary creation methods.
+
+\paragraph{Literal Syntax \texttt{{}}}
+This is the most straightforward way to create a dictionary. You enclose key-value pairs within curly braces \texttt{{}}. Each key-value pair is separated by a colon \texttt{:}, and pairs are separated by commas \texttt{,}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines, label=code:Robot1Configuration]{python}
+robot_configuration = {
+    "id": "robot1",
+    "center": {"x": 327, "y": 505},
+    "wheels": [
+        {"x": 330.3, "y": 534.8},
+        {"x": 323.7, "y": 475.2}
+    ],
+    "sensors": [
+        {"x": 354.6, "y": 481.8},
+        {"x": 359.0, "y": 521.6}
+    ],
+    "robot_points": [
+        (293.9, 478.4),
+        (300.4, 538.1),
+        (360.1, 531.6),
+        (353.6, 471.9),
+    ]
+}
+\end{minted}
+
+In this example, "id", "center", "wheels", "sensors", and "robot\_points" are keys, and their corresponding values are the data associated with each key. Notice that values can be of different types, including strings, nested dictionaries, and lists.
+
+\paragraph{\texttt{dict([])} with Tuples}
+
+You can also create a dictionary by passing a list of tuples to the \texttt{dict()} constructor. Each tuple should contain two elements: the first element is the key, and the second is the value.
+
+\begin{minted}[linenos]{python}
+robot_parts = dict([
+    ("center_x", 327),
+    ("center_y", 505),
+    ("wheel1_x", 330.3),
+    ("wheel1_y", 534.8),
+    ("wheel2_x", 323.7),
+    ("wheel2_y", 475.2)
+])
+\end{minted}
+This method can be useful when you have your data already structured as key-value pairs in tuples.
+
+\paragraph{\texttt{dict()} with Keyword Arguments}
+
+The \texttt{dict()} function can also be used with keyword arguments. In this case, the keys are treated as keywords, and the values are assigned to them. This method is often considered more readable when creating dictionaries with string keys.
+
+
+
+\begin{minted}[fontsize=\small, linenos]{python}
+robot_configuration1 = dict(
+    id="robot1",
+    center_x=327,
+    center_y=505,
+    wheel1_x=330.3,
+    wheel1_y=534.8,
+    wheel2_x=323.7,
+    wheel2_y=475.2,
+    sensor1_x=354.6,
+    sensor1_y=481.8,
+    sensor2_x=359.0,
+    sensor2_y=521.6,
+    robot_points=[
+        293.9, 478.4,
+        300.4, 538.1,
+        360.1, 531.6,
+        353.6, 471.9,
+    ]
+)
+\end{minted}
+
+
+While all three methods are valid for creating dictionaries, I recommend using the \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/robot1_coordinates.py}{\texttt{dict()}} for its readability and simplicity.
+
+Regardless of the method you choose, the variable \texttt{robot\_configurations} now holds a dictionary representing a robot's configuration. This dictionary provides a structured way to store and access various attributes of the robot, including:
+
+\begin{enumerate}
+    \item \textbf{Central Position:} \texttt{center\_x}, \texttt{center\_y} coordinates of the robot's center.
+    \item \textbf{Wheel Locations:} Positions of the two wheels — \texttt{wheel1\_x}, \texttt{wheel1\_y}, \texttt{wheel2\_x}, \texttt{wheel2\_y}.
+    \item \textbf{Sensor Placements:} Locations of two sensors — \texttt{sensor1\_x}, \texttt{sensor1\_y}, \texttt{sensor2\_x}, \texttt{sensor2\_y}.
+    \item \textbf{Robot ID:} A unique identifier for the robot (\texttt{id}).
+    \item \textbf{Robot Perimeter Points:} A list of coordinates (\texttt{robot\_points}) defining the robot's shape or key structural points.
+\end{enumerate}
+
+
+\paragraph{Your Task: Replacing sequential variable declaration with dict}
+
+For the first task, open the file \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/session3_robot_template.py}{session3\_robot\_template.py}, (also available in the \texttt{session3} folder of your cloned repository). Remove the existing declaration of the Robot 1 component from lines 3 through 12. Replace this section with the dictionary provided in the file \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/robot1_coordinates.py}{robot1\_coordinates.py}.
+From this point onward, any further changes we make should be directly applied to the file \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/session3_robot_template.py}{session3\_robot\_template.py}
+
+
+\subsubsection{Accessing Data from Dictionaries}
+
+Once you have created a dictionary, you need to know how to retrieve the information stored within it. You access values in a dictionary using their corresponding \textbf{keys}.
+
+\paragraph*{Approach 1: Direct Key Access}
+
+To access a value, you use square brackets \texttt{[]} with the key name inside. For example, to retrieve the \texttt{robot\_points} from our \texttt{robot\_configuration1} dictionary, you would do the following:
+
+\begin{minted}[fontsize=\small, linenos]{python}
+print(robot_configuration1 ['robot_points'])
+\end{minted}
+% ## When executed, this code will print the 'robot_points' value from the dictionary.
+\noindent
+Executing this code will print the value associated with the key \texttt{'robot\_points'}:
+
+ \begin{sloppypar}
+[293.9, 478.4, 300.4, 538.1, 360.1, 531.6, 353.6, 471.9]
+\end{sloppypar}
+
+
+
+\paragraph*{Approach 2: Assigning to a Variable}
+
+For improved readability or when you need to access dictionary values multiple times, you can assign the dictionary to a variable first.
+
+
+\begin{minted}[fontsize=\small, linenos]{python}
+config = robot_configuration1
+print(config['robot_points'])
+\end{minted}
+This approach is functionally equivalent to the first but can make your code cleaner, especially when working with complex dictionaries.
+
+\paragraph{Your Task:  Accessing Different Keys}
+\label{par:task_accesing_diff_key}
+Let's check your understanding. Below is code that prints the \texttt{id} of the robot.
+\begin{minted}[linenos]{python}
+print(robot_configuration1['id']) # Print the id of the robot
+\end{minted}
+
+Now, modify the code below (see also the hint below) to print the values associated with the keys \texttt{center\_x} and \texttt{wheel1\_x} from the \texttt{robot\_configuration1} dictionary.
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+print(robot_configuration1['xx'           # Print the x coordinate of wheel of the robot
+print(robot_configuration1 ????'])        # Print the x centre of the robot
+\end{minted}
+
+\textbf{Hint:} Replace xx and ???? with the correct keys to access the desired values. If you find this task straightforward, great! If you are stuck, don't spend too long on it; the following sections contain more challenging and crucial concepts.
+
+\subsection{List of Dictionary}
+
+In the previous section, we learned how to store the configuration of a single robot using a dictionary. Now, let's explore how to manage configurations for multiple robots. A powerful way to do this is by creating a \textbf{list of dictionaries}. Basically, this the combination of Section \ref{Sec:list} and \ref{sec:dictionaries}
+
+\subsubsection{Defining list of Dictionaries}
+In the previous example, we demonstrated how to store a single robot’s configuration using a
+dictionary. However, it’s also possible to organize the dictionaries within a list
+For instance, let’s consider storing the configuration of Robot 1. This configuration can be placed
+as the first dictionary within a list named robot\_configurations, as shown below:
+
+
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+robot_configurations=[      # Start of the list of robot configurations
+    dict(                   # Configuration for Robot One, as indicated by the dictionary keyword
+    id= "robot1",
+    center_x=327,
+    center_y=505,
+    wheel1_x=330.3,
+    wheel1_y=534.8,
+    wheel2_x=323.7,
+    wheel2_y=475.2,
+    sensor1_x=354.6,
+    sensor1_y=481.8,
+    sensor2_x=359.0,
+    sensor2_y=521.6,
+    robot_points=[
+        293.9, 478.4,
+        300.4, 538.1,
+        360.1, 531.6,
+        353.6, 471.9,
+    ]
+)                         # End of the configuration for Robot One
+]                         # End of the list of robot configurations 
+                          # as indicated by the closing square bracket
+\end{minted}
+
+
+
+After defining the configuration this way, we can create a master list that stores our dictionaries for easier management and scalability:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+robot_configurations = [robot_configuration1]
+\end{minted}
+
+Using this structure allows us to conveniently manage multiple robot configurations in one place which we will discuss in detail in section \ref{sec:managing_multiple_configuration}.
+
+
+
+\subsubsection{Accessing Elements in a List of Dictionaries}
+
+Now that you have a list of robot configurations, how do you access the configuration of a specific robot?
+
+In Python, you access elements within a list using their \textbf{index}, starting from \texttt{0} for the first element. This is similar to how we access any other list as we discuss in Section \ref{sec:access_item_in_list}.
+
+Therefore, to access the dictionary representing the configuration of the first robot in the \texttt{robot\_configurations} list, you would use the index \texttt{0} as shown below:
+
+\begin{verbatim}
+robot_configurations[0]
+\end{verbatim}
+
+
+Let's print the entire configuration dictionary for the first robot:
+
+\begin{minted}[linenos]{python}
+print(robot_configurations[0])
+\end{minted}
+
+This will output the dictionary containing all the configuration details for the first robot.
+
+
+
+\paragraph{Optional Reading:}
+
+Should you have time, do read the following, otherwise, move on to the next task.
+
+While printing the entire configuration dictionary is useful, you often need to access specific details within a robot's configuration, such as \texttt{center\_x}, \texttt{center\_y}, \texttt{wheel1\_x}, \texttt{wheel1\_y}, \texttt{wheel2\_x}, \texttt{wheel2\_y}, \texttt{sensor1\_x}, \texttt{sensor1\_y}, \texttt{sensor2\_x}, \texttt{sensor2\_y}, \texttt{id}, and \texttt{robot\_points}
+
+To access a specific value within a dictionary that is inside a list, you combine list indexing with dictionary key access. The syntax is \texttt{robot\_configurations[index]['key']}, where \texttt{index} refers to the position of the robot's dictionary in the list, and \texttt{'key'} is the name of the specific detail you want to retrieve.
+
+For example, to get the \texttt{center\_x} value of the first robot, you would use:
+
+\begin{verbatim}
+center_x_first_robot = robot_configurations[0]['center_x']
+print(center_x_first_robot)
+\end{verbatim}
+
+You can access all the individual configuration values for the first robot using this approach.
+
+
+
+This approach allows you to directly access each value by its key. Although this method is straightforward, it can become cumbersome and less efficient when dealing with a large number of keys, as it requires a separate access statement for each key.
+
+\begin{minted}[fontsize=\small, linenos]{python}
+# Accessing each value by its key
+print("center_x:", robot_configurations[0]['center_x'])
+print("center_y:", robot_configurations[0]['center_y'])
+print("wheel1_x:", robot_configurations[0]['wheel1_x'])
+print("wheel1_y:", robot_configurations[0]['wheel1_y'])
+print("wheel2_x:", robot_configurations[0]['wheel2_x'])
+print("wheel2_y:", robot_configurations[0]['wheel2_y'])
+print("sensor1_x:", robot_configurations[0]['sensor1_x'])
+print("sensor1_y:", robot_configurations[0]['sensor1_y'])
+print("sensor2_x:", robot_configurations[0]['sensor2_x'])
+print("sensor2_y:", robot_configurations[0]['sensor2_y'])
+print("id:", robot_configurations[0]['id'])
+print("robot_points:", robot_configurations[0]['robot_points'])
+\end{minted}
+
+\newpage
+
+\subsection{Storing Multiple Configurations}
+
+\subsubsection{Introduction to Managing Multiple Configurations}
+\label{sec:managing_multiple_configuration}
+When dealing with multiple entities that require specific settings, efficient configuration management becomes crucial. Each entity might have unique parameters tailored to its function or environment. Whether it's devices in a network, characters in a game, or different modules in a software system, keeping these configurations organized is essential for easy access, updates, and debugging. Proper configuration management becomes increasingly important as the number of configurable entities grows or the system complexity increases.
+
+Structuring configurations as a list of dictionaries offers a clean, scalable, and manageable approach. This method ensures each entity's configuration is isolated, easily identifiable, and ready for streamlined processing. Whether you need to adjust settings for a single item or apply batch updates across a group, this structured approach provides the flexibility and clarity needed for robust system development.
+
+\subsection{Structuring Robot Configurations as a List of Dictionaries}
+To apply configuration management to robots specifically, we can use a list where each element is a dictionary representing a single robot's configuration. This structure keeps your robot data organized and simplifies accessing and modifying settings for individual robots.
+
+Here's how to structure robot configurations using a list of dictionaries:
+
+\begin{minted}[fontsize=\small, linenos]{python}
+robot_configurations = [
+    robot_configurations1,  # Configuration for Robot 1
+    robot_configurations2,  # Configuration for Robot 2
+    robot_configurations3,  # Configuration for Robot 3
+    # Add more configurations as needed
+]
+\end{minted}
+
+In this example, the \texttt{robot\_configuration\_dict1}, \texttt{robot\_configuration\_dict2}, and \texttt{robot\_configuration\_dict3} are dictionary variables holding the configurations for \texttt{Robot 1}, \texttt{Robot 2}, and \texttt{Robot 3}, respectively. By placing them within the \texttt{robot\_configurations} list, we create a flexible collection that can be easily expanded by adding more dictionaries for additional robots.
+
+\subsubsection{Task: Adding Robot Two's Configuration to the List}
+
+You are provided with the \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/robot2_configuration.py}{dictionary below}, which contains the configuration for Robot Two. Your task is to append this dictionary to the \texttt{session3\_robot\_template}, which currently holds the configuration for Robot One (the task that you did at Section \ref{par:task_accesing_diff_key})
+%Add the configuration for Robot Two into
+
+\begin{minted}[fontsize=\small, linenos]{python}
+    robot_configurations2=
+    dict(
+    id= "robot2",
+    center_x=627,
+    center_y=505,
+    wheel1_x=630.3,
+    wheel1_y=534.8,
+    wheel2_x=623.7,
+    wheel2_y=475.2,
+    sensor1_x=654.6,
+    sensor1_y=481.8,
+    sensor2_x=659.0,
+    sensor2_y=521.6,
+    robot_points=[
+        593.9, 478.4,
+        600.4, 538.1,
+        660.1, 531.6,
+        653.6, 471.9,
+    ]
+)
+\end{minted}
+
+After completing this task, printing the \texttt{robot\_configurations} list should display the configurations for both Robot One and Robot Two, similar to the output below:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+[{'id': 'robot1', 'center_x': 327, 'center_y': 505, 'wheel1_x': 330.3, 'wheel1_y': 534.8, 'wheel2_x': 323.7, 'wheel2_y': 475.2, 'sensor1_x': 354.6, 'sensor1_y': 481.8, 'sensor2_x': 359.0, 'sensor2_y': 521.6, 'robot_points': [293.9, 478.4, 300.4, 538.1, 360.1, 531.6, 353.6, 471.9]}, {'id': 'robot2', 'center_x': 627, 'center_y': 505, 'wheel1_x': 630.3, 'wheel1_y': 534.8, 'wheel2_x': 623.7, 'wheel2_y': 475.2, 'sensor1_x': 654.6, 'sensor1_y': 481.8, 'sensor2_x': 659.0, 'sensor2_y': 521.6, 'robot_points': [593.9, 478.4, 600.4, 538.1, 660.1, 531.6, 653.6, 471.9]}]
+\end{minted}
+
+
+\subsubsection{Optional Exercise: Accessing the Second Robot's Configuration}
+
+If you have time, try this exercise to practice accessing elements within a list of dictionaries.
+
+As shown earlier, \texttt{robot\_configurations[0]} accesses the first robot's configuration. To further your understanding, modify the code below to print the configuration details for the \textbf{second} robot. Replace \texttt{\_\_xx\_\_} with the correct index to retrieve the second robot's configuration and then print each configuration detail.
+
+
+
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+# Accessing each value by its key
+print("center_x:", robot_configurations[xx]['center_x'])
+print("center_y:", robot_configurations[xx]['center_y'])
+print("wheel1_x:", robot_configurations[xx]['wheel1_x'])
+print("wheel1_y:", robot_configurations[xx]['wheel1_y'])
+print("wheel2_x:", robot_configurations[xx]['wheel2_x'])
+print("wheel2_y:", robot_configurations[xx]['wheel2_y'])
+print("sensor1_x:", robot_configurations[xx]['sensor1_x'])
+print("sensor1_y:", robot_configurations[xx]['sensor1_y'])
+print("sensor2_x:", robot_configurations[xx]['sensor2_x'])
+print("sensor2_y:", robot_configurations[xx]['sensor2_y'])
+print("label:", robot_configurations[xx]['id'])
+print("robot_points:", robot_configurations[0]['robot_points'])
+\end{minted}
+
+\newpage
+

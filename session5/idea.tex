@@ -1,0 +1,286 @@
+
+% Since no code writing, student will answer their observation in itel, we yet to set the question in itel
+
+\section{Positional and Keyword Argument}
+
+\subsection{Introduction}
+As discussed in the previous lectures, functions are fundamental building blocks in \texttt{Python}. They help you organize your code into reusable, manageable, and logical chunks, improving both readability and maintainability.
+
+In this session's tutorial, we are going to discuss  more two important methods for passing arguments to functions: positional arguments and keyword arguments. Understanding these techniques is crucial, as they enhance code clarity, robustness, and flexibility, which are essential for building complex and efficient programs.
+
+
+
+\subsection{What You Will Learn:}
+
+Upon completing this tutorial, you'll be able to:
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Positional Arguments: Discover how to use positional arguments, which depend on the order in which you provide them to functions. This knowledge will enable you to create functions requiring specific sequences of inputs, enhancing your grasp of how functions are structured.
+    \item Keyword Arguments: Learn about keyword arguments and their role in making your function calls clearer and more adaptable.
+\end{itemize}
+
+\subsection{Important Remark}
+
+For tutorial 5, you do not need to write any code. Instead, you will record or confirm your observations by answering in \href{https://itel.ums.edu.my/mod/quiz/view.php?id=1013117}{Itel}.
+
+For each observation task, make sure to jot down your observations on a piece of paper or in a digital note, as related questions will be asked in the quiz section.
+
+
+
+
+
+\subsection{Positional Arguments}
+Positional arguments are the most common way to pass values to functions. You've already been using them without explicitly realizing it since session 3 of our tutorial session.
+ 
+In positional arguments, the order of the arguments provided in the function call directly corresponds to the order defined in the function signature.
+
+
+\subsubsection{Loading Robot Data with a Single Positional Argument}
+
+Take for example when we are loading data from a file using the \texttt{load\_robot\_data} function. When we pass the file path \texttt{('../robot\_data.json')} as an argument to the function, we're utilizing what's known as a positional argument.
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+data = load_robot_data('../robot_data.json')
+\end{minted}
+
+
+The corresponding function definition is:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def load_robot_data(filepath):
+    with open(filepath, 'r') as json_file:
+        data = json.load(json_file)
+    return data
+\end{minted}
+
+
+Here, the parameter \texttt{filepath} is a positional argument, which means the order matters. The first argument passed during the function call will always be matched with the first parameter defined in the function signature.
+
+
+% \paragraph{Important Note:}
+% Incorrect argument ordering or missing required positional arguments will lead to runtime errors.
+
+
+\subsubsection{Initializing Robots with Two Positional Arguments}
+
+Another example is the function \texttt{initialize\_robots}, defined with two positional parameters: \texttt{canvas} and \texttt{data}.
+When invoking this function, you must ensure that the arguments are provided in the correct sequence. Swapping these arguments inadvertently will cause unexpected behavior or errors in your program.
+
+Thus, clear parameter naming and detailed documentation are essential to prevent such issues.
+
+
+
+Calling \texttt{initialize\_robots(canvas, data)} with the \texttt{canvas} and \texttt{data} in the correct order is crucial. Swapping these arguments would lead to errors. Hence, careful naming and detail doct string can help prevent such mistakes.
+
+\subsubsection{ Drawing Robots Using Multiple Positional Arguments}
+
+Let's examine a function that requires multiple positional arguments, \texttt{draw\_robot}, which is responsible for rendering robots on the canvas:
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def draw_robot(i, canvas, config, colors, body_color, antenna_color):
+    #  The details of how the robot is drawn is omitted for clarity
+\end{minted}
+This function is built to accept six positional arguments. Each argument plays a specific role in how the robot is drawn:
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item \texttt{i}: \\ An index or identifier for the robot.
+    \item \texttt{canvas}: \\  The digital space where the robot will appear.
+    \item \texttt{config}: \\ Configuration details for the robot's appearance.
+    \item \texttt{colors}: \\  A collection of colors used for different parts of the robot.
+    \item \texttt{body\_color}: \\  The specific color for the robot's body.
+    \item \texttt{antenna\_color}: \\ The color for the robot's antenna.
+\end{itemize}
+
+\subsubsection{Best Practices: Enhancing Code Clarity with Descriptive Names and Docstrings}
+
+In scenarios with multiple positional arguments (2 or more), the significance of clear \texttt{docstring} and clear naming variables becomes even more importance. These practices help prevent confusion and errors, ensuring that anyone using the function (e.g., draw\_robot), understands what each argument represents and in what order they should be provided.
+
+Yet, it's important to recognize that mistakes can still occur. Users might inadvertently supply incorrect input or mix up the order of arguments. So, I hope this higlight the important ensuring supplying the right value and order for correct operation of the function's operation.
+
+\subsubsection{Self Reflection: Your Experience with Positional Arguments}
+Nevertheless, either you realise it or not, but you actually have been working with the concept of positional arguments since the third session of our tutorials. So Kudos to you for that. Therefore, I did not design any specific task for this section, as I believe you already have a good grasp of how positional arguments work in \texttt{Python} functions.
+
+
+\newpage
+
+\subsection{Keywords Arguments}
+Keyword arguments offer an alternative way to provide values to function parameters explicitly by their names, regardless of the order. Unlike positional arguments, keyword arguments allow you to specify exactly which parameter is being assigned a value, enhancing readability and reducing errors.
+
+
+\subsubsection{Advantages of Keyword Arguments:}
+
+There are several advantages:
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Enhanced readability and clarity in function calls.
+    \item Flexible argument ordering, reducing potential errors.
+    \item Easy handling of optional parameters with default values.
+\end{itemize}
+
+\subsubsection{Keyword Argument Syntax}
+When you use keyword arguments, you specify the name of the parameter followed by an equal sign and the value it should receive within the function call. For example,
+\begin{center}
+    width=1000
+\end{center}
+
+\noindent
+The benefit of this approach is that you can rearrange the order of arguments when calling the function without affecting its behavior, as long as all required arguments are provided.
+
+\subsubsection{Self-Reflection: Spotting Keyword Arguments in Your Existing Code}
+Now you have an idea about it, take a seat back, lean back and careful with the SmartRoom chair, and look elsewhere, and think. do you think if you have been using the keyword argument in the previous code.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{session5/thinking.png}
+\end{figure}
+
+
+\noindent
+ok, stop thinking and continue read this text. Actually, since the beginning when we start developing our robot code, we've already encountered the use of keyword arguments.
+
+\noindent
+Specifically within the \texttt{setup\_application} function,
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def setup_application():
+    root = tk.Tk()
+    root.title("Customizable Robots")
+    root.resizable(False, False)
+    canvas = tk.Canvas(root, width=1000, height=1000)
+    canvas.pack()
+    return root, canvas
+\end{minted}
+
+In this snippet, the parameters \texttt{width=1000} and \texttt{height=1000} for the \texttt{tk.Canvas} function are perfect examples of keyword arguments. Here, we're specifying the canvas size directly by naming the parameters and their desired values. This approach gives us clarity and control over the canvas dimensions without much thought about changing them later on.
+
+\subsubsection{Your Task: Observing the Impact of Canvas Size Changes}
+But, let's ponder a bit: what if we didn't set these values? What would happen if you adjusted the code to simply use:
+
+\noindent
+\textbf{Situation 1}
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+canvas = tk.Canvas(root)
+\end{minted}
+
+\noindent
+Or even changed the canvas dimensions to:
+
+\noindent\textbf{Situation 2}
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+canvas = tk.Canvas(root, width=500, height=500)
+\end{minted}
+
+\noindent
+Try to experiment with these changes and observe the results. What happens when you don't provide the values? What about when you set the dimensions to 500?
+
+\paragraph{Your Task – Submit to ITEL: Analyze Tkinter's Default Behavior When Keyword Arguments Are Omitted} 
+
+Note to Module Convener: Students should complete this quiz during Session 5.
+
+\subsubsection{Your Task (Optional): Refactoring Code for Flexibility Using Keyword Arguments}
+
+As an extension of the last session topic about conditional statement (if-else), I have create another scenario where we can apply the if-else statement to determines the antenna color of a robot based on its center\_x coordinate and a threshold value. Here is \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session5/session5_robot_template.py#L43}{one way} on how to solve it:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def determine_antenna_color(i, colors, config, my_th):
+    if config["center_x"] >= my_th:
+        return "purple"
+    else:
+        return colors[f"robot{i + 1}"]["light_color"]
+\end{minted}
+
+In this part of the code, we initially set the value of \texttt{my\_th} to \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session5/session5_robot_template.py#L135}{500}, and this value was defined within the \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session5/session5_robot_template.py#L121}{function} as shown below:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def initialize_robots(canvas, data):
+    colors = data["colors"]
+    robot_configurations = data["robot_configurations"]
+    condition = True
+    my_th = 500
+    for i, config in enumerate(robot_configurations):
+        create_robot(i, canvas, config, condition, colors, my_th)
+\end{minted}
+However, hardcoding values, such as \texttt{my\_th}, is generally not a best practice in the real-world programming. This is because if the threshold value needs to be changed, you would have to manually update the code each time. A more flexible approach is to pass \texttt{my\_th} as a parameter. This method allows you to easily adjust the threshold value without needing to alter the code directly.
+
+There are several ways to implement this improvement. For clarity and to focus on understanding keyword arguments, let's make changes starting from the \texttt{main()} function. Here's a step-by-step guide on how to refactor the code:
+
+\paragraph{Step-by-Step Instructions}
+Since, this is the first time you are doing this, I will guide you in extra detail on how to do this. There are two main steps
+
+\paragraph*{Modify the \texttt{main()} Function:}
+Start by adjusting the \texttt{main()} function to accept \texttt{my\_th} as a keyword argument with a default value of \texttt{500}.
+
+As for our unit test in CodeRunner, let print the my\_th
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+# In the main function
+def main(my_th=500):
+    # Your main code here, including the call to initialize_robots with my_th as an argument
+    initialize_robots(canvas, data, my_th=my_th)
+    # Do not execute this cell as some of the code is omitted
+\end{minted}
+
+This allows you to specify a different threshold value when calling the function, without needing to alter the function's code.
+
+\paragraph*{Update the initialize\_robots() Function Signature:}
+Similarly, change the signature of the \texttt{initialize\_robots()} function to include \texttt{my\_th} as a keyword argument, also with a default value of \texttt{500}.
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+# Example Changes
+# Updated function signature with my_th as a keyword argument
+def initialize_robots(canvas, data, my_th=500):
+    # Function body remains the same, now using the passed my_th value
+    # Do not execute this cell as some of the code is omitted
+\end{minted}
+
+This ensures that when \texttt{initialize\_robots()} is called, it can receive the threshold value directly, making the function more flexible.
+
+By doing this, we now ensure the code's maintainability and make it easier to adjust the \texttt{my\_th} value as needed, without having to dig into and modify the function definitions. This approach exemplifies a best practice in programming, making your code more adaptable to changes.
+
+
+\newpage
+\subsubsection{Adding Default Values with Keyword Arguments}
+
+So far, the function \texttt{load\_robot\_data} has been using positional arguments. However, we can improve its flexibility by using keyword arguments.
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def load_robot_data(filepath):
+    # Function body omitted for brevity
+\end{minted}
+
+So, our next task is to modify the \texttt{load\_robot\_data} function to use a keyword argument. Specifically, you need to specify a default value of \texttt{'../robot\_data.json'} for the \texttt{filepath} parameter, using the structure
+
+\begin{center}
+    \texttt{def function\_name(parameter=default\_value)}.
+\end{center}
+
+
+Similarly, you should update the \texttt{main()} function to call \texttt{load\_robot\_data} with the keyword argument.
+
+Here is how you can do it:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def main(my_th=500, file_path='../robot_data.json'):
+    # Necessary changes applied here
+    # Note that, most of the code is retained, but there is only one line of code that needs to be changed
+\end{minted}
+
+
+By specifying \texttt{filepath='../robot\_data.json'} in the function declaration, we define a default value for the filepath argument. This default value is used if no argument is passed when the function is called. This change enhances the function in two significant ways
+
+\subsubsection{Optional: Why Use Default Values in Keyword Arguments?}
+
+As you can, the structure that we modify in activity two seems redundant. You may ask why we need to specify the default value two times.
+
+I plan to discuss this topic in detail during session 10. However, if you're eager to learn more now, here's a simple explanation of why using keyword arguments can be beneficial.
+Consider a scenario where we set a default value, such as \texttt{None}, for a function parameter. If no value is provided by the user, we can check if the parameter is \texttt{None} and then take appropriate actions based on that.
+
+For instance, in the following \texttt{Python} code:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def load_robot_data(filepath=None):
+    if filepath is None:
+        raise ValueError('Please provide the file path')
+    else:
+        with open(filepath, 'r') as json_file:
+            data = json.load(json_file)
+        return data
+\end{minted}
+
+In this example, the function \texttt{load\_robot\_data} is designed to load data from a file. The parameter \texttt{filepath} is optional and has a default value of \texttt{None}. If the user does not provide a file path, the function checks if \texttt{filepath} is \texttt{None}. If it is, the function raises an error asking the user to provide the file path. Otherwise, it proceeds to open the file, read the data, and return it.
+This approach allows us to handle situations where important information might be missing, ensuring our program can respond appropriately.
+

@@ -1,0 +1,156 @@
+
+\section{Detailed Step-by-Step Coding Manual}
+
+Follow these steps \textbf{in order} inside \texttt{session5/session5\_iris\_template.py}.
+
+\begin{tcolorbox}[title=Do: Add Imports]
+Add imports at the very top:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+import csv
+from helper.iris_utils import fit_threshold_from_setosa
+\end{minted}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Do: Update Data Loading to Support Defaults]
+Change from Session 4 style to Session 5 style:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+def load_iris_data(filepath=None):
+    if filepath is None:
+        print("[WARNING] No filepath provided. Using default.")
+        filepath = "session5/iris_data.csv"
+\end{minted}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Do: Add Optional Output Control in initialize\_predictions]
+Change the function header to:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+def initialize_predictions(dataset, settings, print_each=True):
+\end{minted}
+Then wrap your print statement inside \texttt{if print\_each:} so the caller can switch logging on or off.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Do: Upgrade setup\_application]
+Use this Session 5 header:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+def setup_application(filepath=None, threshold=None, print_each=True, use_fit=False):
+\end{minted}
+Apply priority in this order:
+\begin{enumerate}
+    \item if \texttt{use\_fit} is True, learn threshold from \texttt{fit\_threshold\_from\_setosa(...)};
+    \item else if \texttt{threshold} is not None, use the manual threshold override;
+    \item else keep default threshold from \texttt{get\_default\_settings()}.
+\end{enumerate}
+\end{tcolorbox}
+
+
+\section{Task: Positional vs Keyword Arguments in \texttt{main()}}
+
+\textbf{Positional Arguments:} Python matches arguments to parameters by left-to-right order.
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+# filepath, threshold, print_each
+setup_application("session5/iris_data.csv", 1.8, False)
+\end{minted}
+
+\textbf{Keyword Arguments:} You explicitly name the parameter you are setting.
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+setup_application(threshold=2.2, print_each=False)
+\end{minted}
+
+\begin{tcolorbox}[title=Do: Write main() with Four Runs]
+In your \texttt{main()} function, add a helper \texttt{print\_summary} to avoid duplicate print statements. Then, write four distinct runs:
+\begin{enumerate}
+    \item \textbf{Default Run:} \texttt{setup\_application()}
+    \item \textbf{Positional Run:} \texttt{setup\_application("session5/iris\_data.csv", 1.8, False)}
+    \item \textbf{Keyword Run:} \texttt{setup\_application(threshold=2.2, print\_each=False)}
+    \item \textbf{Fit Run:} \texttt{setup\_application(print\_each=False, use\_fit=True)}
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Checkpoint]
+Run the script using \texttt{python3 session5/session5\_iris\_template.py}.
+You should see 4 separate summaries printed. The default run will print all 50 sample trace lines, while the other runs will not (because \texttt{print\_each=False}). 
+\end{tcolorbox}
+
+\section{Troubleshooting Mini-Section}
+
+\begin{tcolorbox}[title=Common Mistakes \& Errors]
+\begin{itemize}
+    \item \textbf{ModuleNotFoundError:} If Python complains it cannot find \texttt{helper}, it means you ran the script from inside the \texttt{session5} directory. Navigate to the project root and run it from there.
+    \item \textbf{SyntaxError: positional argument follows keyword argument:} In Python, if you mix positional and keyword arguments, all positional arguments \textbf{must} come before keyword arguments.
+    \item \textbf{TypeError: multiple values for argument:} This happens if you accidentally pass a positional argument that maps to a parameter, and then provide a keyword argument for the exact same parameter.
+\end{itemize}
+\end{tcolorbox}
+
+\section{Review and Next Steps}
+
+\textbf{Summary:}
+\begin{itemize}
+    \item \textbf{Positional Arguments:} Matched by order. Easy to type, easy to mix up.
+    \item \textbf{Keyword Arguments:} Matched by name. Self-documenting and safe.
+    \item \textbf{Defaults (\texttt{None}):} Allow functions to be called without specifying every parameter, making APIs friendly and backward-compatible.
+\end{itemize}
+
+\textbf{Review Questions:}
+\begin{enumerate}
+    \item How do positional and keyword arguments differ?
+    \item What happens if you pass a keyword argument before a positional argument?
+    \item Why is it common to use \texttt{None} as a default value instead of \texttt{0} or \texttt{""}?
+\end{enumerate}
+
+\textbf{Micro-Exercise:} Change the keyword run in \texttt{main()} to use \texttt{threshold=1.5} and see how the accuracy changes. Try swapping the order of the keyword arguments (e.g., \texttt{print\_each=False, threshold=1.5}); does it still work? (Hint: Yes, keyword arguments don't depend on order!)
+
+\textbf{Stretch Exercise:} Add an optional parameter \texttt{custom\_fit\_function=None} to \texttt{setup\_application}. If provided, use it instead of \texttt{fit\_threshold\_from\_setosa}.
+\section{Importing Packages and Functions}
+In Python, as your project grows, you will want to split your code into multiple files. You can import functions from one file into another using the \texttt{import} statement.
+
+For this session, we provide a helper module \texttt{session5/helper/iris\_utils.py} which contains a function to calculate a threshold from the dataset.
+You will \textbf{not} rewrite this helper; you will \textbf{use} it.
+Import it at the top of your script like this:
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+import csv
+from helper.iris_utils import fit_threshold_from_setosa
+\end{minted}
+
+\noindent
+\textbf{Why this import is important for beginners:}
+\begin{itemize}
+    \item In Session 4, all logic stayed in one file.
+    \item In Session 5, we start separating logic across files so code is easier to maintain.
+    \item \texttt{helper.iris\_utils} means: "go to the \texttt{helper} folder and use the function inside \texttt{iris\_utils.py}".
+\end{itemize}
+
+\begin{tcolorbox}[title=Important: Running from the Project Root]
+Beginners often think the import path is the same as the file path.
+In Python, the import path depends on \textit{where you run the script from}.
+For this tutorial, run your script from the project root:
+\texttt{python3 session5/session5\_iris\_template.py}. This makes the \texttt{helper} module importable because the script looks for \texttt{helper} relative to where it was executed.
+\end{tcolorbox}
+
+
+\subsubsection{Your Task (Optional): Refactoring Code for Flexibility Using Keyword Arguments}
+
+As an extension of the last session topic about conditional statement (if-else), I have create another scenario where we can apply the if-else statement to determines the antenna color of a robot based on its center\_x coordinate and a threshold value. Here is \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session5/session5_robot_template.py#L43}{one way} on how to solve it:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def determine_antenna_color(i, colors, config, my_th):
+    if config["center_x"] >= my_th:
+        return "purple"
+    else:
+        return colors[f"robot{i + 1}"]["light_color"]
+\end{minted}
+
+In this part of the code, we initially set the value of \texttt{my\_th} to \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session5/session5_robot_template.py#L135}{500}, and this value was defined within the \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session5/session5_robot_template.py#L121}{function} as shown below:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def initialize_robots(canvas, data):
+    colors = data["colors"]
+    robot_configurations = data["robot_configurations"]
+    condition = True
+    my_th = 500
+    for i, config in enumerate(robot_configurations):
+        create_robot(i, canvas, config, condition, colors, my_th)
+\end{minted}
+However, hardcoding values, such as \texttt{my\_th}, is generally not a best practice in the real-world programming. This is because if the threshold value needs to be changed, you would have to manually update the code each time. A more flexible approach is to pass \texttt{my\_th} as a parameter. This method allows you to easily adjust the threshold value without needing to alter the code directly.
+
+There are several ways to implement this improvement. For clarity and to focus on understanding keyword arguments, let's make changes starting from the \texttt{main()} function. Here's a step-by-step guide on how to refactor the code:

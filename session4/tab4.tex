@@ -1,0 +1,104 @@
+\begin{landscape}
+\small
+\renewcommand{\arraystretch}{0.3}
+
+\begin{longtable}{|p{0.28\linewidth}|p{0.48\linewidth}|p{0.14\linewidth}|}
+\caption{Session 4 canonical functions: what to implement and which session 3 block they come from (dataset loaded from CSV).} \\
+\hline
+\textbf{Function} & \textbf{Code to put inside the function (from Session 3)} & \textbf{Notes} \\
+\hline
+\endfirsthead
+
+\multicolumn{3}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline
+\textbf{Function} & \textbf{Code to put inside the function (from Session 3)} & \textbf{Notes} \\
+\hline
+\endhead
+
+\hline \multicolumn{3}{|r|}{{Continued on next page}} \\ \hline
+\endfoot
+
+\hline \hline
+\endlastfoot
+
+\texttt{make\_print\_status(status\_text)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+print(f"[STATUS] {status_text}")
+\end{minted}
+& Optional helper for readable progress logs. \\
+\hline
+\texttt{determine\_binary\_label(sample, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+if sample[settings["feature_name"]] < settings["threshold"]:
+	return settings["positive_label"]
+return settings["negative_label"]
+\end{minted}
+& (binary: setosa vs not\_setosa). \\
+\hline
+\texttt{determine\_true\_binary\_label(sample, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+if sample[settings["label_key"]] == settings["positive_label"]:
+	return settings["positive_label"]
+return settings["negative_label"]
+\end{minted}
+& Converts species labels into binary truth labels. \\
+\hline
+\texttt{evaluate\_prediction(y\_pred, y\_true)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+return (y_pred == y_true)
+\end{minted}
+& Returns a boolean correctness flag. \\
+\hline
+\texttt{update\_metrics(metrics, y\_pred, y\_true)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+if y_pred == y_true:
+	metrics["correct"] += 1
+else:
+	metrics["wrong"] += 1
+metrics["total"] += 1
+metrics["y_pred_list"].append(y_pred)
+\end{minted}
+& Refactors the counter update + prediction list append block. \\
+\hline
+\texttt{classify\_sample(sample, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+return determine_binary_label(sample, settings)
+\end{minted}
+& Keeps the main loop clean and prepares for Session 5/6 changes. \\
+\hline
+\texttt{load\_iris\_data(filepath)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+dataset = []
+with open(filepath, "r", encoding="utf-8") as f:
+	reader = csv.DictReader(f)
+	for row in reader:
+		dataset.append({...})
+\end{minted}
+& \textbf{Remark:} this session we load the dataset from \texttt{CSV} (not JSON). Convert numeric fields to \texttt{float}. \\
+\hline
+\texttt{get\_default\_settings()} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+return {
+	"threshold": 2.0, "feature_name": "petal_length",
+	"positive_label": "setosa", "negative_label": "not_setosa",
+	"label_key": "species"
+}
+\end{minted}
+& Keeps Session 2/3 naming stable; no external settings file yet. \\
+\hline
+\texttt{initialize\_predictions(dataset, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+for sample in dataset:
+	y_pred = classify_sample(sample, settings)
+	y_true = determine_true_binary_label(sample, settings)
+	update_metrics(metrics, y_pred, y_true)
+	print(f"id=... | true=... | pred=... | petal_length=...")
+\end{minted}
+& This is the session 3 loop, but decomposed into functions. \\
+\hline
+\texttt{setup\_application(filepath)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+dataset = load_iris_data(filepath)
+settings = get_default_settings()
+result = initialize_predictions(dataset, settings)
+\end{minted}
+& Small pipeline wrapper for readability. \\
+\hline
+\texttt{main()} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+print("Correct:", result["correct"])
+\end{minted}
+& Runs the whole program and prints the final summary. \\
+\hline
+\end{longtable}
+\end{landscape}

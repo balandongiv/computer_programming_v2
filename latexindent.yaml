@@ -1,0 +1,41 @@
+# latexindent.yaml
+# Tip: YAML is indentation-sensitive. Use SPACES, not tabs.
+
+defaultIndent: "  " # 2 spaces
+indentPreamble: 1
+preserveBlankLines: 1
+removeTrailingWhitespace: 1
+
+# Don't format inside verbatim-like environments
+verbatimEnvironments:
+  verbatim: 1
+  lstlisting: 1
+  minted: 1
+
+# Don't format inline verbatim-like commands
+verbatimCommands:
+  verb: 1
+  lstinline: 1
+
+# Nice, readable environment line breaks
+modifyLineBreaks:
+  environments:
+    BeginStartsOnOwnLine: 1
+    BodyStartsOnOwnLine: 1
+    EndStartsOnOwnLine: 1
+    EndFinishesWithLineBreak: 1
+  items:
+    ItemStartsOnOwnLine: 1
+
+# Align & in common environments (tables + aligned math)
+lookForAlignDelims:
+  tabular:
+    delims: 1
+    alignDoubleBackSlash: 1
+    spacesBeforeDoubleBackSlash: 1
+  align:
+    delims: 1
+    alignDoubleBackSlash: 1
+    spacesBeforeDoubleBackSlash: 1
+  aligned:
+    delims: 1

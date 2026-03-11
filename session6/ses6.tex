@@ -1,0 +1,204 @@
+\chapter{Classes and Objects}
+
+\section{Introduction}
+
+\begin{tcolorbox}[title=Goal]
+\textbf{Refactor} your Session 5 functional pipeline into a class (\texttt{IrisRuleClassifier}) that bundles configuration (threshold and labels) with behavior (prediction and evaluation). 
+
+\textbf{What is Object-Oriented Programming (OOP)?}
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item A \textbf{class} is a blueprint that describes what data and behavior a thing should have.
+    \item An \textbf{object} is a single instance created from that blueprint.
+    \item An \textbf{attribute} is data stored on the object (for example, \texttt{self.threshold}).
+    \item A \textbf{method} is a function stored on the class that operates on the object (for example, \texttt{predict()} and \texttt{evaluate()}).
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=You will work in]
+Use the following file for this session:
+\begin{itemize}
+    \item \texttt{session6/session6\_iris\_template.py} (main student file)
+\end{itemize}
+\textbf{How to run the file:} Always run this script from the project root using the terminal command: \\
+\texttt{python3 session6/session6\_iris\_template.py} \\
+\textbf{Do not edit files outside} \texttt{session6/}.
+\end{tcolorbox}
+
+In session 4 and session 5, you built an Iris classifier using \textbf{functions}.
+Your pipeline worked, but you may have noticed a design pattern:
+many functions needed the same configuration values (for example, the threshold and the label names), so you passed a dictionary called \texttt{settings} around repeatedly.
+
+\noindent
+\textbf{Why refactor?}
+That function-based design is fine for one small classifier, but it becomes awkward as soon as you want to run experiments:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item If you want 10 classifiers with 10 thresholds, you now need 10 different \texttt{settings} dictionaries.
+    \item Every time you call a function, you must remember to pass the correct \texttt{settings}.
+    \item If you add one new setting later, you must update many function signatures and many function calls.
+\end{itemize}
+
+\noindent
+This session (Session 6), you refactor your session 5 design using \textbf{Object-Oriented Programming (OOP)}.
+The core idea is simple:
+\begin{quote}
+\textbf{Bundle the data (configuration) and the behavior (functions) together.}
+\end{quote}
+
+\noindent
+\textbf{Refactoring promise:} the classifier rule itself stays the same.
+This session reorganizes code, but it should \textbf{not change} what "setosa" means or how the threshold rule works.
+
+\subsection{Transition Map: Session 5 Functions $\rightarrow$ Session 6 Class}
+The classifier logic itself (if petal\_length < threshold ...) remains exactly the same.
+What changes is \textit{where} that logic lives and \textit{how} you access it.
+
+\noindent
+Use this table as your translation guide. It shows how session 5 functions and settings translate into session 6 attributes and methods:
+
+\input{session6/tab6.tex}
+
+\section{The Blueprint and Data (\texttt{\_\_init\_\_})}
+
+\begin{tcolorbox}[title=Do: Define the Blueprint and Data (\texttt{\_\_init\_\_})]
+A class starts with a special constructor method called \texttt{\_\_init\_\_}.
+This method runs \textbf{automatically} when you create a new object.
+Its job is to put the object into a valid starting state.
+
+In session 5, you used \texttt{get\_default\_settings()} to build a dictionary.
+In session 6, you store that information as \textbf{attributes} on \texttt{self}.
+\texttt{self} is how a method refers to the current object.
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+class IrisRuleClassifier:
+    def __init__(self, threshold=2.0):
+        # Store configuration inside the instance (self)
+        self.threshold = threshold
+        
+        # We enforce these attribute names so later sessions can reuse your class!
+        self.positive_label = "setosa"
+        self.negative_label = "not_setosa"
+\end{minted}
+
+\textbf{Task:}
+\begin{enumerate}
+    \item Define this \texttt{\_\_init\_\_} method inside the \texttt{IrisRuleClassifier} class.
+    \item In \texttt{main()}, create an instance: \texttt{my\_clf = IrisRuleClassifier(threshold=2.5)}.
+    \item Print the stored threshold: \texttt{print("Threshold:", my\_clf.threshold)}.
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Checkpoint]
+You should be able to create two objects with different thresholds and see that each object stores its own value:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+clf_a = IrisRuleClassifier(threshold=1.5)
+clf_b = IrisRuleClassifier(threshold=2.5)
+print(clf_a.threshold, clf_b.threshold)  # should print two different numbers
+\end{minted}
+\end{tcolorbox}
+\begin{tcolorbox}[title=Common Mistake]
+Forgetting \texttt{self}.
+Inside methods you must write \texttt{self.threshold}, not just \texttt{threshold}, because \texttt{threshold} is not a global variable.
+\end{tcolorbox}
+
+\section{The Logic (\texttt{predict})}
+
+\begin{tcolorbox}[title=Do: Implement predict]
+In session 5, you wrote \texttt{classify\_sample(sample, settings)}.
+In session 6, this becomes a \textbf{method}.
+Because \texttt{threshold} and the labels already live on \texttt{self}, you no longer need a \texttt{settings} dictionary argument.
+
+Conceptually, you are changing:
+\texttt{classify\_sample(sample, settings)} $\rightarrow$ \texttt{my\_clf.predict(sample)}
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+    def predict(self, sample):
+        # We assume sample is a dict with 'petal_length'
+        if sample["petal_length"] < self.threshold:
+            return self.positive_label
+        return self.negative_label
+\end{minted}
+
+\textbf{Task:} Add this method to your class (indented inside the class). Identify which inputs are "per sample" and which inputs are "settings".
+\texttt{sample} changes every iteration, so it stays an argument. \texttt{threshold} is a setting, so it becomes \texttt{self.threshold}.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Checkpoint]
+Call \texttt{my\_clf.predict(...)} on a single dictionary and make sure you get either \texttt{"setosa"} or \texttt{"not\_setosa"}.
+\end{tcolorbox}
+\begin{tcolorbox}[title=Common Mistake]
+Forgetting to include \texttt{self} as the first parameter of a method. If you define \texttt{def predict(sample):}, Python will raise a TypeError when you call it!
+\end{tcolorbox}
+
+\section{Processing the Dataset (Evaluation)}
+
+\begin{tcolorbox}[title=Do: Implement evaluate]
+In session 5, you had a function \texttt{initialize\_predictions} that looped over the data.
+We will now create a method \texttt{evaluate(self, dataset)} that does the entire prediction loop and calculates accuracy.
+
+\textbf{Why make this a method?}
+Because evaluation depends on \texttt{predict()}, and \texttt{predict()} depends on the object's configuration.
+By keeping them together, you avoid passing settings around.
+
+\textbf{Task:} Implement the \texttt{evaluate(self, dataset)} method. 
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item The evaluation loop should call \texttt{self.predict(sample)}.
+    \item Determine truth (if species is "setosa", truth is \texttt{self.positive\_label}, else \texttt{self.negative\_label}).
+    \item The method should keep counting logic local (\texttt{correct}, \texttt{total}).
+    \item \textbf{CRITICAL:} Ensure \texttt{total += 1} runs for every sample, even if the prediction is wrong.
+    \item Return accuracy (\texttt{correct / total} if \texttt{total > 0} else \texttt{0.0}).
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Checkpoint]
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item Accuracy is a number between 0.0 and 1.0.
+    \item Test your method on a dataset with at least one misclassified sample and confirm that \texttt{total} equals the number of samples.
+\end{itemize}
+\end{tcolorbox}
+\begin{tcolorbox}[title=Common Mistake]
+Forgetting to increment \texttt{total} for every sample, even wrong ones. If you only increment total when correct, your accuracy will always be 100\% (which is wrong!).
+\end{tcolorbox}
+
+\section{Putting it all together (Main Script)}
+
+\begin{tcolorbox}[title=Do: Use the Class in \texttt{main()}]
+Now you can use your class to test different classifiers easily.
+The workflow becomes:
+\begin{enumerate}
+    \item Use the provided \texttt{dataset} (list of dictionaries).
+    \item Create one or more classifier objects (each with its own threshold).
+    \item Ask each object to evaluate itself on the dataset.
+\end{enumerate}
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+# Create Objects with different configurations
+clf_strict = IrisRuleClassifier(threshold=1.5)   # Strict threshold
+clf_loose  = IrisRuleClassifier(threshold=2.5)   # Loose threshold
+
+# Evaluate each one
+print("Strict Classifier Accuracy:", clf_strict.evaluate(dataset))
+print("Loose Classifier Accuracy: ", clf_loose.evaluate(dataset))
+\end{minted}
+
+Notice that the dataset is passed in, but the threshold is not. The threshold lives inside each object!
+\end{tcolorbox}
+
+\section{Review and Next Steps}
+
+\textbf{Summary:}
+\begin{itemize}
+    \item \textbf{Classes} group data (attributes) and behavior (methods) together.
+    \item \textbf{Objects} remember their own configuration, allowing you to create many variations easily.
+    \item Object-oriented design is the foundation of reusable software libraries. Machine-learning libraries like \texttt{scikit-learn} use objects to encapsulate models!
+\end{itemize}
+
+\textbf{Review Questions:}
+\begin{enumerate}
+    \item What does \texttt{self} refer to inside a method?
+    \item Why did we move \texttt{threshold} from a dictionary into \texttt{self.threshold}?
+    \item Why is inheritance useful? (Think ahead: what if we wanted a new classifier that guessed randomly, but shared the same evaluation logic?)
+\end{enumerate}
+
+\textbf{Micro-Exercise:} Create two classifier objects with different thresholds (e.g., 1.4 and 5.0) and compare their accuracies. Can you find a threshold that performs perfectly on the provided dataset?
+
+\textbf{Stretch Exercise:} Write an additional method on the class called \texttt{predict\_all(self, dataset)} that returns a list of predictions for the entire dataset, rather than just returning accuracy.

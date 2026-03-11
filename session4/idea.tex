@@ -1,0 +1,187 @@
+\section{Mastering Code Organization with Functions}
+
+This session is all about how functions can dramatically improve the way you structure your code, making it more organized and reusable. Think of \textbf{functions} as essential building blocks for any programmer. They allow you to break down complex projects into smaller, more manageable, and importantly, reusable parts. By learning to effectively use functions, you'll be writing Python code that is not only cleaner and more efficient but also significantly easier to understand and maintain.
+
+In Tutorial session 3, you built a solid foundation by learning about lists, loops for repetitive tasks, and conditional statements for decision-making. Now, we're going to elevate your Python skills further. This session, we'll focus on structuring your Python scripts more effectively using functions. We'll revisit code from a previous tutorial that was written sequentially and transform it by incorporating functions. This hands-on, practical approach will demonstrate firsthand how functions can convert disorganized and lengthy code into well-structured, modular, and maintainable scripts. You'll soon see how functions enhance code clarity, eliminate redundancy, and promote best practices in programming.
+
+\subsection{What You Will Learn}
+In this tutorial, you will learn to:
+\begin{enumerate}\setlength{\itemsep}{5pt}
+\item \textbf{Refactor Code into Functions}: Take existing, sequential scripts and reorganize them using functions. This will teach you how to identify blocks of code that can be encapsulated into reusable functions.
+\item \textbf{Understand Functions}: Learn the fundamental concept of functions – what they are, how they are structured in Python, and why they are so beneficial for writing efficient and organized code. We will cover the anatomy of a function and explore the advantages they bring to your \texttt{Python} programming.
+\item \textbf{Implement JSON Configuration Management}: Discover the importance of externalizing configuration settings into JSON files. This powerful technique adds flexibility to your code, making it much easier to adjust settings without needing to modify the core Python script itself. You'll learn how to separate data from code for better maintainability.
+\end{enumerate}
+
+To help you track your progress and see the impact of each step, most of the instructions will be provided directly within this Notebook. However, for the final submission, you will need to copy your code into a \texttt{.py} file. This is a standard practice in Python development.
+
+\subsection{Tools and Setup}
+For starter, we will consider these two files which is available in folder session 4:
+\begin{itemize}\setlength{\itemsep}{5pt}
+\item \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session4/session4_robot_template.py}{\texttt{session4\_robot\_template.py}}: This is the Python template file we will be working with. It contains the initial code structure.
+\item \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session4/robot\_data.json}{\texttt{robot\_data.json}}: This file contains the configuration data for our robots in JSON format.
+\end{itemize}
+
+Take some time to understand the \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session4/session4_robot_template.py} {\texttt{session4\_robot\_template.py}}{\texttt{function\_template.py}} especially its structure and overall functionality. Pay close attention to how functions are used to break down the code into logical modules. If you encounter any \texttt{Python} constructs that are unfamiliar to you, please take a moment to look them up for clarification. Don't hesitate to raise your hand and ask me if you have any questions!
+
+\subsection{Function Flow Explanation}
+You'll notice that the code in \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session4/session4_robot_template.py}{\texttt{session4\_robot\_template.py}} is functionally similar to the code from Tutorial 3, but now it's been reorganized using functions. This is done to demonstrate how functions can significantly improve code readability and reusability.
+
+The primary functions defined in the code are:
+\begin{enumerate}\setlength{\itemsep}{5pt}
+\item \texttt{make\_print\_status()}: \
+This function is responsible for printing informative status messages, particularly when a robot's activity or state changes. It helps provide feedback on what the program is doing.
+\item \texttt{create\_robot()}: \
+This is a core function that handles the creation of individual robot instances. It's designed to configure each robot with specific attributes and behaviors based on provided parameters.
+\item \texttt{main()}: \
+This function acts as the script's entry point. It's the first function that gets executed when you run the script, and it orchestrates the overall program flow by calling other functions in a specific order.
+\end{enumerate}
+
+\subsubsection{Understanding Function Roles}
+When you run the script, the \texttt{main()} function is executed first. Think of \texttt{main()} as the conductor of an orchestra; it sets the stage and directs the flow of operations within the script. Inside \texttt{main()}, you'll find a loop that repeatedly calls the \texttt{create\_robot()} function. Each call to \texttt{create\_robot()} is designed to create a new robot instance with specific, tailored parameters.
+
+After a robot has been successfully configured by \texttt{create\_robot()}, the \texttt{make\_print\_status()} function is called. \texttt{make\_print\_status()} is used to display a message confirming the successful creation or modification of a robot instance. Notice that the call to \texttt{make\_print\_status()} is actually located within the \texttt{create\_robot()} function. The key takeaway here is that you can define a function and then call it from within another function. This is a fundamental concept in modular programming!
+
+Essentially, the underlying logic of this script remains the same as what we implemented in Tutorial 3. The key difference is that the code is now encapsulated within functions, making it more structured and easier to manage.
+
+You'll also encounter a new and important Python construct:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+if name == "main":
+   main()
+\end{minted}
+
+The statement \texttt{if \_\_name\_\_ == "\_\_main\_\_":} is a common \texttt{Python} idiom. It is used to determine whether a Python script is being run directly as the main program or if it is being imported as a module into another script. 
+
+This ensures that the \texttt{main()} function, and thus the main part of your script, only runs when the script is executed directly, not when it is imported.
+
+
+\subsection{Externalizing Configuration}
+Currently, the configuration settings in your Python file are "hardcoded," meaning they are directly embedded within the code. However, this is generally not considered a best practice for larger or more complex projects. Storing configuration data directly in the \texttt{Python} script has several drawbacks:
+
+\begin{itemize}\setlength{\itemsep}{5pt}
+\item \textbf{Reduced Flexibility}: Changing configurations requires modifying the code itself, which can be error-prone.
+\item \textbf{Complicated Changes}: Updating configuration settings becomes more complex, especially when dealing with numerous settings or frequent changes.
+\item \textbf{Security Risks}: Storing sensitive data directly in code can pose security risks, especially if the code is shared or publicly accessible. You can check this \href{https://youtu.be/WzpKB3poOBw}{YouTube} video.
+\end{itemize}
+
+A more robust and scalable approach is to externalize your configuration into a separate file, such as a JSON file. JSON (JavaScript Object Notation) is a lightweight, human-readable format commonly used for data interchange.
+
+For more details on how to read JSON files in Python, you can refer to this helpful resource: \href{https://www.geeksforgeeks.org/read-json-file-using-python/}{read-json-file-using-python}.
+
+\subsubsection{Your Task: Externalize Configuration}
+Your first task is to move the hardcoded configuration from the Python script into the separate \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session4/robot_data.json}{\texttt{robot\_data.json}} file you downloaded earlier.
+
+\paragraph{Remove old configuration}
+Let's start by cleaning up the Python file. You need to remove the hardcoded configuration data from the \texttt{main()} function in your Python script. Specifically, you should remove the lines that define \texttt{colors} and \texttt{robot\_configuration}. I belief this should be starting from line 47 to line 103. Or if the line numbering is different. If confuse what lines to be removed!!, you can refer to this \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session4/prune_out_setting.py}{gist (all the code inside it are that u should remove)} for a visual guide regarding  the lines that need to be removed.
+
+
+\paragraph{Add robot\_data.json}
+
+Next, add the following code snippet (\href{https://github.com/balandongiv/computer_programming_gist/blob/main/session4/import_json.py}{code:importJson)}] to your \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session4/session4_robot_template.py}{\texttt{session4\_robot\_template.py}} file, directly under the \texttt{main()} function and immediately after the \texttt{canvas.pack()} line:
+
+Remember, import json always being placed at the top (the line 1).
+
+Then migration of the the line 5 to line 9, see the instruction above or the line 3 below.
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines, label=code:importJson]{python}
+import json # paste this just after the import tkinter as tk
+
+# add immediately after the canvas.pack()
+with open(r'..\helper\robot_data.json','r') as json_file:
+    data=json.load(json_file)
+
+# Now, access the configuration data
+colors = data["colors"]
+robot_configurations = data["robot_configurations"]
+\end{minted}
+
+This code first imports the \texttt{json} library, which allows you to work with JSON data in Python. Then, it opens the \texttt{robot\_data.json} file in read mode (\texttt{'r'}) and uses \texttt{json.load()} to parse the JSON content into a Python dictionary called \texttt{data}. Finally, it extracts the \texttt{colors} and \texttt{robot\_configurations} from this dictionary.
+
+
+Now, your script will load these settings from the external JSON file instead of having them hardcoded.
+
+To verify that everything is working correctly, run your Python script. If the graphical user interface (GUI) appears without any errors, it means the configuration is being loaded successfully from the JSON file.
+
+\subsubsection{Your Task: Code Refactoring into Functions}
+You may have noticed that even with the existing functions, the code within the \texttt{main()} function and potentially within other functions could still be better organized. Messy code can be challenging to maintain, debug, and understand. Your next task is to further refactor the code by introducing more functions to improve modularity and clarity.
+
+Specifically, we will create four new functions:
+
+\begin{itemize}\setlength{\itemsep}{5pt}
+\item \texttt{load\_robot\_data()}: Responsible for loading robot configuration data from the JSON file.
+\item \texttt{setup\_canvas()}: Handles the setup of the Tkinter canvas where the robots will be drawn.
+\item \texttt{initialize\_robots(canvas, data)}: Creates and draws all the robots on the canvas using the loaded data.
+\item \texttt{setup\_application()}: Sets up the main Tkinter application window and integrates the canvas.
+\end{itemize}
+
+After this refactoring, the overall structure of your code should include the following functions:
+
+\begin{itemize}\setlength{\itemsep}{5pt}
+\item \texttt{make\_print\_status()}:
+\item \texttt{create\_robot(i, canvas, config, condition, colors)}:
+\item \texttt{setup\_canvas()}: \# new function
+\item \texttt{load\_robot\_data()}: \# new function
+\item \texttt{initialize\_robots(canvas, data)}: \# new function
+\item \texttt{setup\_application()}: \# new function
+\item \texttt{main()}:
+\end{itemize}
+
+To help you with this task, I've provided a 
+\href{https://github.com/balandongiv/computer_programming_gist/blob/main/session4/additional_function.py}{template} 
+containing the skeletons of these four new functions: 
+\begin{itemize}
+    \item \texttt{load\_robot\_data()}
+    \item \texttt{setup\_canvas()}, 
+    \item \texttt{initialize\_robots(canvas, data)}
+    \item \texttt{setup\_application()}.
+\end{itemize}
+
+
+Please copy and paste this template into your \texttt{function\_template.py} file.
+
+
+Remember, this template is not complete. Your task is to fill in the missing code within each of these new functions, as indicated by the comments. Also remember, you may need to delete some of the old configuration. Pay close attention to the hints and remarks provided in the comments – they will guide you in completing the decomposition task. For example, you might see comments like:
+
+\begin{itemize}
+\item \texttt{\# new function} - Indicates a newly introduced function.
+\item \texttt{\# Something is missing here, what is it?} - Points out a section where you need to add code to complete the function's logic.
+\end{itemize}
+
+\newpage
+\subsection{Further Function Decomposition}
+Looking at the \texttt{create\_robot} function under the \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session4/session4_robot_template.py}{session4\_robot\_template.py L5}, you might notice that it's still quite long and handles multiple responsibilities. Functions that become too large or complex can hinder readability and make maintenance more difficult. To further improve our code, we can decompose the \texttt{create\_robot} function into smaller, more focused functions.
+
+Specifically, we can isolate the decision-making logic for determining robot colors into its own function, which we'll call \texttt{determine\_robot\_colors}. Similarly, the graphical rendering tasks, which involve drawing the robot on the canvas, can be moved to another function named \texttt{draw\_robot}.
+
+\subsubsection{Your Task: Decompose \texttt{create\_robot}}
+For this task, you will break down the existing \texttt{create\_robot} function into two new functions: \texttt{determine\_robot\_colors} and \texttt{draw\_robot}. This will make the code more modular and easier to understand.
+
+As in the previous task, I've prepared a \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session4/breaking_function_into_functions.txt}{template} to assist you. Please copy and paste the content of this template into your \texttt{function\_template.py} file.
+
+Again, this template is not complete. You will need to fill in the missing parts of the code within each of these new functions, guided by the comments.
+
+Once you have completed this decomposition, you will have a suite of functions, each with a specific and well-defined purpose. Your function list will now look like this:
+
+\begin{itemize}\setlength{\itemsep}{5pt}
+\item \texttt{def make\_print\_status(status\_text):}
+\item \texttt{def determine\_body\_color(i, colors, condition):}
+\item \texttt{def determine\_antenna\_color(i, colors, config, my\_th):}
+\item \texttt{def draw\_robot(i, canvas, config, colors, body\_color, antenna\_color):}
+\item \texttt{def create\_robot(i, canvas, config, condition, colors, my\_th):}
+\item \texttt{def load\_robot\_data(filepath):}
+\item \texttt{def initialize\_robots(canvas, data):}
+\item \texttt{def setup\_application():}
+\item \texttt{def main():}
+\end{itemize}
+
+
+\subsection{Take Home Message:}
+By now, you should notice a significant improvement in the organization and readability of your code. This is the primary benefit of using functions: they make your code easier to understand, maintain, and debug.
+
+Furthermore, functions promote modularity. This means that your code is now composed of independent, reusable modules (the functions). You can potentially reuse these functions in other parts of your code or even in different projects, without having to rewrite the logic.
+
+However, there's still room for improvement. As a user of these functions (or even your future self!), you might need to delve into the function's code to understand what parameters to change and how each function works. The parameters that you might want to adjust are currently scattered across different functions. Also, currently, the functions lack clear documentation. While you might understand what each function does right now, recalling the specifics after a few sessions or months might be challenging.
+
+Don't worry, we will address these issues in the upcoming sections! One key way to improve function documentation in Python is by using "docstrings."
+
+In \texttt{Python}, a statement that describes what a function does, placed right at the beginning of the function, is called a "docstring" (short for "documentation string"). A \texttt{docstring} is a string literal that is used to document a specific segment of code, like a function, class, module, or method. Unlike regular comments (\texttt{\#}), docstrings are retained during the runtime of the program and can be accessed programmatically. This allows programmers and others to quickly understand the function's purpose, its parameters, what it returns, and other important details without needing to read the function's code itself. We will explore how to write effective docstrings in a future tutorial.

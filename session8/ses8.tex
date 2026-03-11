@@ -1,0 +1,273 @@
+\chapter{NumPy (Iris — session 8)}
+
+\section{Introduction}
+In session 6 and session 7, we focused on \textbf{classes} and \textbf{inheritance} to build reusable classifiers for the Iris classification task.
+This session, we introduce \textbf{NumPy}, the most important Python library for fast numerical computing. NumPy is designed to work efficiently with large arrays of numbers, which is exactly what we need for machine learning.
+
+Recall from session 7 that our classifier interface was \texttt{fit()}, \texttt{predict\_one()}, \texttt{predict\_all()}, and \texttt{evaluate()}.
+In this session, we keep that interface but implement NumPy-based data operations underneath it.
+
+\begin{tcolorbox}[title=You will work in]
+Use the following files for this session:
+\begin{itemize}
+    \item \texttt{session8/session8\_iris\_template.py} (main student file)
+    \item \texttt{session8/iris\_session8\_utils.py} (data loading and utilities)
+    \item \texttt{session8/iris\_session8\_models.py} (NumPy-based classifier model)
+\end{itemize}
+\textbf{How to run the file:} Run from the project root: \\
+\texttt{python3 session8/session8\_iris\_template.py}
+\end{tcolorbox}
+
+\subsection{What You Will Learn}
+By the end of this tutorial, you will be able to:
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item create NumPy arrays and understand their advantages over Python lists for numerical tasks,
+\item use indexing and slicing on arrays,
+\item compute means with \texttt{np.mean(..., axis=\dots)},
+\item use boolean masks to select rows in a dataset,
+\item compute Iris class centroids and use them for classification intuition,
+\item import custom functions/classes from one Python file to another.
+\end{itemize}
+
+\subsection{Tools and Setup}
+\noindent
+You need:
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item Python 3,
+\item NumPy installed (\texttt{pip install numpy}),
+\item an \texttt{iris.csv} file.
+\end{itemize}
+
+\noindent
+\textbf{Assumption about \texttt{iris.csv}:} it contains 5 columns:
+\begin{center}
+    \texttt{sepal\_length,sepal\_width,petal\_length,petal\_width,species}
+\end{center}
+If your file has a header row, we will handle it by skipping the first row.
+
+\section{Understanding X and y}
+In machine learning, data is usually separated into features and labels. 
+\begin{itemize}
+    \item \textbf{X:} A 2D NumPy array of shape \texttt{(n\_samples, 4)} containing the numeric features (sepal length, sepal width, petal length, petal width).
+    \item \textbf{y:} A 1D NumPy array of shape \texttt{(n\_samples,)} containing the string species labels.
+\end{itemize}
+
+\newpage
+\subsection{Activity 1: Load Iris into NumPy arrays (\texttt{X} and \texttt{y})}
+
+\noindent
+Create a new file called \texttt{session8/iris\_session8\_utils.py}. Start with:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+import numpy as np
+
+def load_iris_csv(filepath="iris.csv", skip_header=1):
+    """
+    Loads iris.csv into:
+      X: (n_samples, 4) float array
+      y: (n_samples,) string array
+    """
+    # Use genfromtxt for mixed types (numbers + strings)
+    data = np.genfromtxt(
+        filepath,
+        delimiter=",",
+        dtype=None,          # allow mixed dtype
+        encoding="utf-8",
+        skip_header=skip_header
+    )
+
+    # data will be a structured array with 5 columns
+    X = np.column_stack([data[i] for i in range(4)]).astype(float)
+    y = np.array(data[4], dtype=str)
+
+    return X, y
+\end{minted}
+
+Now in \texttt{session8/session8\_iris\_template.py}, write:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+import numpy as np
+from session8.iris_session8_utils import load_iris_csv
+
+X, y = load_iris_csv("iris.csv")
+print("X shape:", X.shape)
+print("X dtype:", X.dtype)
+print("y shape:", y.shape)
+print("y dtype:", y.dtype)
+\end{minted}
+
+\begin{tcolorbox}[title=Checkpoint]
+Run \texttt{session8\_iris\_template.py}. Confirm you see \texttt{X shape: (150, 4)} and \texttt{y shape: (150,)}. Check that \texttt{X dtype} is \texttt{float64} and \texttt{y} is \texttt{<U10} (string).
+\end{tcolorbox}
+
+\newpage
+\subsection{Activity 2: Quick NumPy warm-up (indexing and slicing)}
+
+\noindent
+Add the following to \texttt{session8\_iris\_template.py} below your prints:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+# First sample (row 0)
+print("First row of X:", X[0])
+print("First label y[0]:", y[0])
+
+# First 5 rows
+print("First 5 rows of X:\n", X[:5])
+
+# Only petal features (columns 2 and 3)
+petal = X[:, 2:4]
+print("Petal matrix shape:", petal.shape)
+
+# Sepal length column only (column 0)
+sepal_length = X[:, 0]
+print("Sepal length shape:", sepal_length.shape)
+\end{minted}
+
+\begin{tcolorbox}[title=Do: Your Task]
+\begin{enumerate}
+    \item What will \texttt{X[-1]} return? Add a print statement to output the last row using negative indexing.
+    \item Print the first 10 labels from \texttt{y}.
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Checkpoint]
+Verify your last row matches the bottom of your CSV and your first 10 labels are all \texttt{setosa}.
+\end{tcolorbox}
+
+\newpage
+\subsection{Activity 3: Compute centroids (mean feature vector) per species}
+
+A \textbf{boolean mask} is an array of True/False values that you can use to select specific rows from another array. For example, \texttt{y == "setosa"} returns an array of booleans. We can then do \texttt{X[y == "setosa"]} to grab only the rows in \texttt{X} where the species is setosa.
+
+\noindent
+A \textbf{centroid} is the mean of the features for a class. For each species, we want:
+\[
+    \mu_{\text{class}} = \texttt{mean}(X_{\text{class}}, \text{axis}=0)
+\]
+This gives a 4D vector:
+\texttt{[mean\_sepal\_length, mean\_sepal\_width, mean\_petal\_length, mean\_petal\_width]}.
+
+\subsubsection{Step 1: Find unique species}
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+classes = np.unique(y)
+print("Classes:", classes)
+\end{minted}
+
+\subsubsection{Step 2: Compute centroid with a boolean mask}
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+centroids = {}
+
+for c in classes:
+    mask = (y == c)          # boolean array, True where class matches
+    X_c = X[mask]            # select rows belonging to class c
+    mu = np.mean(X_c, axis=0)
+    centroids[c] = mu
+
+print("Centroids:")
+for c in classes:
+    print(c, "->", np.round(centroids[c], 2))
+\end{minted}
+
+\begin{tcolorbox}[title=Checkpoint]
+Verify that the \texttt{centroids} dictionary contains three entries (one per species) and each entry is an array of 4 rounded numbers.
+\end{tcolorbox}
+
+\newpage
+\subsection{Activity 4: Why \texttt{axis=0} matters}
+
+\noindent
+In NumPy, \texttt{axis=0} means: "collapse rows (samples) and compute the mean per column (feature)". \texttt{axis=1} means "collapse columns and compute the mean per row (sample)".
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+example = X[:3]  # first 3 samples
+print("example shape:", example.shape)
+print("mean axis=0 (per feature):", np.mean(example, axis=0))
+print("mean axis=1 (per sample):", np.mean(example, axis=1))
+\end{minted}
+
+\begin{tcolorbox}[title=Do: Your Task]
+\begin{enumerate}
+    \item In one sentence (as a comment in your code), explain the difference between \texttt{axis=0} and \texttt{axis=1}.
+\end{enumerate}
+\end{tcolorbox}
+
+\newpage
+
+\section{Troubleshooting Imports and CSV Loading}
+\begin{tcolorbox}[title=Common Mistakes \& Troubleshooting]
+\begin{itemize}
+    \item \textbf{ModuleNotFoundError:} If Python cannot find \texttt{session8.iris\_session8\_utils}, make sure you are running the script from the project root directory, not from inside the \texttt{session8} folder.
+    \item \textbf{FileNotFoundError or ValueError (CSV):} If \texttt{load\_iris\_csv} fails, check that \texttt{iris.csv} exists. If you get a ValueError about parsing strings, ensure \texttt{skip\_header=1} matches your CSV file.
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Activity 5: Code organization across files (imports)}
+
+\noindent
+As projects grow, we avoid putting everything in one file. Practice splitting code into three files: \texttt{iris\_session8\_utils.py}, \texttt{iris\_session8\_models.py}, and \texttt{session8\_iris\_template.py}.
+
+Recall from session 7 that the classifier interface should stay stable. In \texttt{iris\_session8\_models.py}, we define a \texttt{NumpyCentroidClassifier} class that keeps the same method names: \texttt{fit()}, \texttt{predict\_one()}, \texttt{predict\_all()}, and \texttt{evaluate()}.
+
+\begin{tcolorbox}[title=Do: Your Task]
+\begin{enumerate}
+    \item Run \texttt{session8/session8\_iris\_template.py} and confirm the imports work and the centroid classifier correctly evaluates the dataset.
+    \item Intentionally rename \texttt{session8/iris\_session8\_utils.py} to something else and observe the import error.
+    \item Rename it back correctly.
+\end{enumerate}
+\end{tcolorbox}
+
+\noindent
+This file/module structure is important because Session 9 will import these exact same utilities and model interface for plotting-based analysis.
+
+\newpage
+\subsection{Optional Activity: Use an LLM to explain NumPy-heavy code}
+
+\noindent
+Professional developers often paste unfamiliar code into an LLM and ask for a guided explanation.
+This is a \textbf{learning tool}, not a replacement for understanding.
+
+\subsubsection{Prompt 1: Explain NumPy usage}
+Copy your centroid computation code and ask:
+\begin{quote}
+    Explain every place NumPy is used in this script. For each NumPy function, tell me: (1) what it does, (2) what shape the input is, (3) what shape the output is.
+\end{quote}
+
+\subsubsection{Prompt 2: Explain boolean masks + axis mean}
+Copy the loop and ask:
+\begin{quote}
+    Explain line-by-line how boolean masking works in NumPy here, and why axis=0 produces a centroid vector.
+\end{quote}
+
+\begin{tcolorbox}[title=Do: Reflection]
+Write 3--5 lines (as comments in your Python file):
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item One thing the LLM explained clearly.
+\item One thing you still find confusing.
+\end{itemize}
+\end{tcolorbox}
+
+\section{Summary and Reflection}
+
+\textbf{Summary:}
+\begin{itemize}
+    \item \textbf{NumPy Arrays:} Provided a more efficient, faster way to store numerical data than Python lists. We explored shapes and dtypes.
+    \item \textbf{Boolean Masking:} Allowed us to filter data without writing explicit \texttt{for} loops.
+    \item \textbf{Axes:} \texttt{axis=0} computes operations across rows (giving per-column results), while \texttt{axis=1} computes across columns.
+    \item \textbf{Modularization:} Code was successfully split across utilities, models, and execution scripts.
+\end{itemize}
+
+\textbf{Reflection Questions:}
+\begin{enumerate}
+    \item Why does NumPy make numerical operations faster than Python lists?
+    \item What does \texttt{axis=0} mean in the context of computing centroids for the Iris dataset?
+\end{enumerate}
+
+\subsection{Submission Requirement (Graded)}
+
+\noindent
+Submit:
+\begin{enumerate}
+    \item \texttt{session8/session8\_iris\_template.py}
+    \item \texttt{session8/iris\_session8\_utils.py}
+    \item \texttt{session8/iris\_session8\_models.py}
+    \item A screenshot/PDF of your terminal output showing \texttt{X shape} and \texttt{X dtype}, and printed centroids.
+\end{enumerate}

@@ -1,0 +1,22 @@
+\begin{landscape}
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{0.3}
+
+\begin{tabular}{|p{0.30\textwidth}|p{0.30\textwidth}|p{0.35\textwidth}|}
+\hline
+\textbf{Session 6 (Standalone Class)} & \textbf{Session 7 (Inheritance Hierarchy)} & \textbf{Explanation of Change} \\
+\hline
+\texttt{IrisRuleClassifier.evaluate(self, ...)} & \texttt{ClassifierBase.evaluate(self, ...)} & Every classifier needs evaluation. We move this shared logic up to the parent \textbf{Base Class} so all children get it for free. \\
+\hline
+\texttt{IrisRuleClassifier.predict(self, ...)} & \texttt{ChildClass.predict(self, ...)} & Prediction logic is specific to each algorithm. The parent defines the signature, but the \textbf{Child Class} provides the specific implementation. \\
+\hline
+\texttt{\_\_init\_\_} & \texttt{super().\_\_init\_\_()} & Child classes call the parent's constructor to ensure shared setup (like logging names) is done correctly. \\
+\hline
+One single class file & A hierarchy of classes & We can now easily add new classifiers (\texttt{NearestCentroid}, \texttt{RandomGuess}) without rewriting the evaluation loop. \\
+\hline
+\end{tabular}
+\caption{Refactoring Map: From Single Class (S6) to Parent/Child Inheritance (S7).}
+\end{table}
+\end{landscape}

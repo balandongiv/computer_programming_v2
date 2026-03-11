@@ -1,0 +1,417 @@
+
+\subsection{Loop Programming}
+
+So far, we've accessed robot configurations sequentially, which works fine for a small number of robots. For example, we printed the configurations of the first two robots like this:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+# Accessing each value by its key
+print("center_x:", robot_configurations[0]['center_x'])
+print("center_y:", robot_configurations[0]['center_y'])
+print("wheel1_x:", robot_configurations[0]['wheel1_x'])
+print("wheel1_y:", robot_configurations[0]['wheel1_y'])
+print("wheel2_x:", robot_configurations[0]['wheel2_x'])
+print("wheel2_y:", robot_configurations[0]['wheel2_y'])
+print("sensor1_x:", robot_configurations[0]['sensor1_x'])
+print("sensor1_y:", robot_configurations[0]['sensor1_y'])
+print("sensor2_x:", robot_configurations[0]['sensor2_x'])
+print("sensor2_y:", robot_configurations[0]['sensor2_y'])
+print("id:", robot_configurations[0]['id'])
+print("robot_points:", robot_configurations[0]['robot_points'])
+
+print("center_x:", robot_configurations[1]['center_x'])
+print("center_y:", robot_configurations[1]['center_y'])
+print("wheel1_x:", robot_configurations[1]['wheel1_x'])
+print("wheel1_y:", robot_configurations[1]['wheel1_y'])
+print("wheel2_x:", robot_configurations[1]['wheel2_x'])
+print("wheel2_y:", robot_configurations[1]['wheel2_y'])
+print("sensor1_x:", robot_configurations[1]['sensor1_x'])
+print("sensor1_y:", robot_configurations[1]['sensor1_y'])
+print("sensor2_x:", robot_configurations[1]['sensor2_x'])
+print("sensor2_y:", robot_configurations[1]['sensor2_y'])
+print("id:", robot_configurations[1]['id'])
+print("robot_points:", robot_configurations[1]['robot_points'])
+
+\end{minted}
+
+However, what if you had to manage configurations for ten, twenty, or even hundreds of robots? Repeating this code for each robot would become incredibly tedious and error-prone. This is where \textbf{loops} become essential. You can see an example of printing configurations for multiple robots sequentially (without loops) in this \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/print_robot_positions.py}{code snippet}. Notice how repetitive and lengthy it is!
+
+
+Loops allow you to automate repetitive tasks, making your code more efficient, concise, and easier to maintain.
+
+
+
+
+\subsubsection{The Problem with Sequential Code for Repetitive Tasks}
+
+
+
+Continuing to write code sequentially for each robot's configuration – as we did above – quickly becomes inefficient and impractical, especially when dealing with larger datasets. Imagine having to add or modify a configuration detail for all robots – you would have to change the code in multiple places! This is not only time-consuming but also significantly increases the chance of introducing errors.
+
+Organizing robot configurations in a list allows us to leverage the power of iteration. \textbf{Iteration} means going through each item in a list (or other iterable data structure) one by one. This is where loops come into play.
+
+Python offers two primary types of loops for iteration: the \textbf{\texttt{for} loop} and the \textbf{\texttt{while} loop}. For iterating through a list of robot configurations, the \texttt{for} loop is generally the more natural and efficient choice. \texttt{while} loops are typically used when you need to repeat a block of code until a certain condition is met, and you might not know in advance how many iterations will be needed. 
+
+For the robot example, I cannot think of any situation where we need to use while loop since,as mentioned above, while loop usually used when we don't know the number of iteration. 
+
+Wheras, in our robot configuration scenario, we know we want to process each robot in the list, making a \texttt{for} loop ideal. Therefore, atleast for this tutorial, we will use for loop to appreciate the beauty of iteration.
+
+\subsubsection{Iterating Through a List with a \texttt{for} Loop}
+\label{sec:iteratinglist}
+Here's how you can use a \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/for_loop.py}{for loop} to iterate through each robot's configuration in the \texttt{robot\_configurations} list:
+% \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines, label=code:Robot1Configuration]{python}
+\begin{minted}[fontsize=\small, linenos, breaklines=true,
+frame=lines, 
+label=code:iterateLoop]{python}
+for robot_configuration in robot_configurations:
+    # Access and process each robot's configuration here
+    print(robot_configuration) # For now, let's just print the whole dictionary
+\end{minted}
+
+
+In this \texttt{for} loop:
+
+\begin{minted}[fontsize=\small]{python}
+for robot_configuration in robot_configurations:
+\end{minted}
+
+The loop starts by iterating over each item in the \texttt{robot\_configurations} list. In each iteration, the current robot's configuration dictionary is assigned to the variable \texttt{robot\_configuration}, and the code block inside the loop is executed.
+
+\begin{minted}[fontsize=\small]{python}
+print(robot_configuration)
+\end{minted}
+
+The above line simply prints the entire dictionary representing the current robot's configuration.
+
+\vspace{0.5cm}
+
+\subsubsection{Let's refine this loop (The snippet in Code:iterateLoop):}
+\label{sec:refineloop}
+Instead of printing the entire dictionary, we will access and print specific configuration details for each robot—just like we did sequentially earlier. This makes the output clearer and more readable.
+
+
+
+%%%%%%%%%%%%%
+
+\begin{minted}[linenos]{python}
+for config in robot_configurations:
+    print("center_x:", config['center_x'])
+    print("center_y:", config['center_y'])
+    # you may continue here for the rest of the variables
+    print("---")  # Just to separate each robot configuration for clarity
+\end{minted}
+
+This loop iterates through the \texttt{robot\_configurations} list. In each iteration, the current robot's configuration dictionary is assigned to the variable \texttt{config}. We then access and print the \texttt{center\_x} and \texttt{center\_y} values from the \texttt{config} dictionary. The "---" line is added simply to visually separate the output for each robot.
+
+
+% \begin{minted}[linenos]{python}
+% # Example of another way to iterate through a dictionary (optional for now)
+% for config in robot_configurations:
+%     # Print each key-value pair within the config dictionary
+%     for key, value in config.items():
+%     print(f"{key}: {value}") # Formatted output
+%     print("---")
+% \end{minted}
+
+\paragraph{Your Task: Print All Configuration Variables Using a Loop}
+\label{sec:print_all_config}
+To test your understanding of loops (as discussed in Section \ref{sec:refineloop}) and dictionary access, complete the code snippet  Code:iterateLoop ,to print the values for \textbf{all} the keys in each robot's configuration dictionary. You need to extend the loop to print the values for these keys:
+
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item id
+    \item wheel1\_x
+    \item wheel1\_y
+    \item wheel2\_x
+    \item wheel2\_y
+    \item sensor1\_x
+    \item sensor1\_y
+    \item sensor2\_x
+    \item sensor2\_y
+    \item  robot\_points
+\end{itemize}
+
+
+Start with the code snippet below and add the necessary lines within the loop to print all the requested configuration details for each robot.
+
+\begin{minted}[linenos]{python}
+for config in robot_configurations:
+    print("center_x:", config['center_x'])
+    print("center_y:", config['center_y'])
+    # ... Add lines here to print the rest of the configuration variables ...
+    print("---") # Separator between robot configurations
+\end{minted}
+
+% \subsubsection{Optional Activity: Using \texttt{enumerate()} for Index Tracking}
+
+% Sometimes, you might need to know the index (position) of the current item while iterating through a list. Python's \texttt{enumerate()} function is very useful for this. It provides both the index and the value of each item in the list during iteration.
+
+% Here's how you can use \texttt{enumerate()} to print the index (robot number) along with the configuration details for each robot:
+
+% \begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+% for index, config in enumerate(robot_configurations):
+% print(f"Robot {index + 1} Configuration:") # index starts from 0, so we add 1 to get robot number
+% print("center_x:", config['center_x'])
+% print("center_y:", config['center_y'])
+% # ... Paste the code you completed in the previous task here to print other variables ...
+% print("---") # Separator between robot configurations
+% \end{minted}
+
+% In this code:
+
+% \begin{minted}[fontsize=\small]{python}
+% for index, config in enumerate(robot_configurations):
+% \end{minted}
+
+% The built-in \texttt{enumerate()} function returns pairs of \texttt{(index, value)} for each item in the \texttt{robot\_configurations} list. In each iteration:
+% \begin{itemize}
+%     \item \texttt{index} holds the current position in the list (starting from 0).
+%     \item \texttt{config} holds the current robot's configuration dictionary.
+% \end{itemize}
+
+% \begin{minted}[fontsize=\small]{python}
+% print(f"Robot {index + 1} Configuration:")
+% \end{minted}
+
+% Here, we use an \texttt{f-string} to create a nicely formatted output that displays the robot number. Since Python indices start at 0, adding 1 ensures the robot numbering starts from 1 for better readability.
+
+% \vspace{0.5cm}
+
+% \textbf{Refined Example:}
+
+% Let's put this together to print each robot's specific configuration details along with its number:
+
+% \begin{minted}[fontsize=\small]{python}
+% for index, config in enumerate(robot_configurations):
+%     print(f"Robot {index + 1} Configuration:")
+%     print("  Name:", config['name'])
+%     print("  Max Speed:", config['max_speed'])
+%     print("  Sensors:", config['sensors'])
+%     print("  Battery Capacity:", config['battery_capacity'])
+%     print("-" * 40)  # Separator for readability
+% \end{minted}
+
+\paragraph{Optional Task: Enhanced Output Formatting with Robot Names}
+
+This is an optional task for those who want to further enhance the output and practice string formatting.
+
+To make the output even more informative, let's include the robot's \texttt{id} (which serves as its name) in each printed line. This will make it clearer which robot each configuration detail belongs to, especially when you have configurations for many robots.
+
+Modify your loop to produce output in the following format:
+
+\texttt{Robot <robot\_id>: <key>: <value>}
+
+
+is used to indicate the robot name, the key being accessed, and the corresponding value. This structure is repeated for each key-value pair in the robot configuration, making it easy to understand which robot each piece of data belongs to.
+
+
+For example, for Robot One and Two, the output should look like:
+
+\begin{verbatim}
+Robot One: center_x: 327
+Robot One: center_y: 505
+Robot One: wheel1_x: 330.3
+Robot One: wheel1_y: 534.8
+Robot One: wheel2_x: 323.7
+Robot One: wheel2_y: 475.2
+Robot One: sensor1_x: 354.6
+Robot One: sensor1_y: 481.8
+Robot One: sensor2_x: 359.0
+Robot One: sensor2_y: 521.6
+Robot One: label: Robot One
+Robot One: robot_points: [293.9, 478.4, 300.4, 538.1, 360.1, 531.6, 353.6, 471.9]
+---
+Robot Two: center_x: 627
+Robot Two: center_y: 505
+Robot Two: wheel1_x: 630.3
+Robot Two: wheel1_y: 534.8
+Robot Two: wheel2_x: 623.7
+Robot Two: wheel2_y: 475.2
+Robot Two: sensor1_x: 654.6
+Robot Two: sensor1_y: 481.8
+Robot Two: sensor2_x: 659.0
+Robot Two: sensor2_y: 521.6
+Robot Two: label: Robot Two
+Robot Two: robot_points: [593.9, 478.4, 600.4, 538.1, 660.1, 531.6, 653.6, 471.9]
+\end{verbatim}
+
+To achieve this, you'll need to access the \texttt{id} from the \texttt{config} dictionary within the loop and incorporate it into your print statements. Use f-strings to format the output nicely.
+
+
+\newpage
+\subsection{Decision Control Statements: Making Choices in Your Code}
+
+Decision control statements are fundamental constructs in programming that allow your code to make decisions and execute different actions based on specified conditions. By evaluating logical expressions, these statements determine which code segments to run, enabling your programs to handle various scenarios, adapt to dynamic data, and perform different tasks as needed. This capability is essential for creating interactive, responsive, and intelligent software applications.
+
+\subsubsection{if-else statement in the robot}
+In this section, we'll explore how to use \textbf{decision control statements} (specifically, \texttt{if-else} statements) to make your code behave differently based on certain conditions. We'll use this to dynamically change the body color of our robots.
+
+Let's say we want to set the robot's body color to a specific color from a predefined configuration, or to a default color (gray) if a certain condition is not met.
+
+First, we'll define a dictionary called \texttt{colors} to store predefined \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/color_setting.py}{color configurations (saved as color\_setting.py} for different robot parts. This dictionary will contain nested dictionaries for each robot (\texttt{robot1}, \texttt{robot2}, etc.), specifying colors for wheels, sensors, lights, and the body.
+
+
+
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+# Define a dictionary of color sets for different parts of the robots
+
+colors = dict(                          # Start of the colors dictionary
+    robot1=dict(                        # Start of the robot1 dictionary
+        wheel_color_left="red",
+        wheel_color_right="green",
+        sensor_color="gold",
+        light_color="yellow",
+        body_color="blue",
+    ),  # End of the robot1 dictionary
+    robot2=dict(                    # Start of the robot2 dictionary# Start of the robot2 dictionary
+        wheel_color_left="orange",
+        wheel_color_right="purple",
+        sensor_color="silver",
+        light_color="pink",
+        body_color="cyan",
+    ),  # End of the robot2 dictionary
+)  # End of the colors dictionary
+\end{minted}
+
+Now, let's introduce a \textbf{control variable} called \texttt{condition}. This variable will be a boolean value (\texttt{True} or \texttt{False}) that determines whether we use the predefined body color or the default gray color.
+
+If \texttt{condition} is \texttt{True}, we will use the \texttt{body\_color} specified in the \texttt{colors} dictionary for each robot. If \texttt{condition} is \texttt{False}, we will use the default color "black". This gives us a way to dynamically control the robot's appearance based on a condition.
+
+We'll use an \texttt{if-else} statement inside a loop to implement this decision-making process for each robot in our \texttt{robot\_configurations} list.
+
+Here's the \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/condition_block.py}{code}:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+# Control variable for the condition
+condition = True # Try changing this to False and see what happens
+
+for config in robot_configurations:
+    # Get the color configuration for the current robot using its id
+    robot_colors = colors[config['id']]
+    
+    # Use an if-else expression (ternary operator) to determine body color
+    body_color = robot_colors["body_color"] if condition else "black"
+    
+    print(f"Robot {config['id']} body color: {body_color} (Condition: {condition})")
+\end{minted}
+
+In this code:
+
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \item \texttt{condition = True}:\\
+    We initialize the \texttt{condition} variable to \texttt{True}. You can change this to \texttt{False} to see the effect.\\
+    \item \texttt{for config in robot\_configurations:}\\
+    We loop through each robot configuration.\\
+    \item \texttt{robot\_colors = colors[config['id']]}:\\
+    We access the color configuration dictionary for the current robot using its \texttt{id} as the key into the \texttt{colors} dictionary.\\
+    \item \texttt{body\_color = robot\_colors["body\_color"] if condition else "black"}:\\
+    This is an \textbf{if-else expression} (also known as a ternary operator). It's a concise way to write a simple if-else statement in a single line.\\
+    \item \texttt{robot\_colors["body\_color"] if condition}:\\
+    If \texttt{condition} is \texttt{True}, the value of \texttt{robot\_colors["body\_color"]} is assigned to \texttt{body\_color}.\\
+    \item \texttt{else "black"}:\\
+    If \texttt{condition} is \texttt{False}, the string \texttt{"black"} is assigned to \texttt{body\_color}.\\
+    \item \texttt{print(...)}:\\
+    We print the robot's \texttt{id}, the determined \texttt{body\_color}, and the value of the \texttt{condition} for clarity.\\
+\end{itemize}
+
+Try running this code and then change \texttt{condition = True} to \texttt{condition = False} and run it again. Observe how the robot body colors change!
+
+\input{session3/question3}
+
+\newpage
+\subsection{Optional: Canvas Drawing: Visualizing Your Robots}
+
+Do this if you want to the changes you made so far!!!!!!!!!!!!!!!!!!!!!!!!
+
+Now that we can manage robot configurations, use loops to process them, and dynamically adjust their colors with conditional statements, let's move to the final step: drawing the robots on a graphical canvas using the \texttt{tkinter} library.
+
+Let's quickly recap what we learned about canvas drawing in the previous tutorial. We used the \texttt{create\_polygon} method from \texttt{tkinter} to draw the robot's body. \texttt{create\_polygon} draws a shape by connecting a series of points. For the robot body, we used a four-sided polygon (quadrilateral) defined by a list of (x, y) coordinate pairs.
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+canvas.create_polygon(config['robot_points'], fill=body_color, tags='robot')
+\end{minted}
+
+This line of code, when placed inside a loop that iterates through your \texttt{robot\_configurations} list, will draw the body of each robot on the canvas, filling it with the \texttt{body\_color} we determined in the previous section. The \texttt{tags='robot'} part is useful for later manipulation of the drawn robot shapes (e.g., moving or deleting them).
+
+You can find the complete code structure, including the \texttt{tkinter} setup and basic robot body drawing, in this \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/tkinter_robot_template.py}{code template}.
+
+\subsubsection{Your Task: Adding Robot Components (Wheels and Sensors)}
+
+In the \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/tkinter_robot_template.py}{code template}, you'll find a comment:
+
+
+
+\texttt{\# add your code here and below}
+
+This is your cue to expand the visual representation of the robot! Your task is to add code to draw the robot's additional components: \textbf{wheels} and \textbf{sensors}. Adding these components will make the robot depiction much more detailed and complete.
+
+Insert your code to draw the wheels and sensors directly below the comment in the template. Here's an example to get you started — this code snippet shows how to draw one sensor as an oval:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+constant_val = 5  # You might need to adjust this value for proper sizing
+canvas.create_oval(config["sensor2_x"] - constant_val, config["sensor2_y"] - constant_val,
+                   config["sensor2_x"] + constant_val, config["sensor2_y"] + constant_val,
+                   fill=robot_colors["sensor_color"], tags='robot')
+\end{minted}
+
+Remember to use the concepts you've learned to draw all the other components (both wheels and both sensors). Refer back to the code from last session's tutorial if you need a reminder on how to use \texttt{create\_oval} for circles/ovals and \texttt{create\_line} for lines (if needed for any component). Use the color information from the \texttt{robot\_colors} dictionary to color the components appropriately. Experiment and make your robots visually appealing and distinctive!
+
+\subsection{Extra Exercise: Dynamic Body Color Based on X-Coordinate}
+
+For an extra challenge, try creating new logic to dynamically determine the robot's body color based on its \texttt{center\_x} coordinate. Then, draw the robot on the canvas using \texttt{tkinter} with this dynamically assigned body color.
+
+Here's the logic you should implement:
+
+\textbf{Dynamic Body Color Assignment Based on X-Coordinate:}
+
+\begin{itemize}
+    \item Define a threshold value: \texttt{my\_th = 500}.
+    \item For each robot in \texttt{robot\_configurations}, check if its \texttt{center\_x} coordinate is greater than or equal to \texttt{my\_th}.
+    \item If \texttt{center\_x} $\geq$ 500, set the robot's \texttt{body\_color} to \texttt{"purple"}.
+    \item If \texttt{center\_x} $<$ 500, set the robot's \texttt{body\_color} to its predefined \texttt{light\_color} from the \texttt{colors} dictionary.
+\end{itemize}
+
+After determining the \texttt{body\_color} based on this logic, use it in your \texttt{canvas.create\_polygon} call to draw the robot body with the appropriate color. This exercise will combine your knowledge of loops, conditional statements, dictionary access, and canvas drawing in a creative way!
+
+
+% Now that we have a solid understanding of how to manage robot configurations and dynamically adjust their body colors based on specific conditions, we can proceed to the final section: drawing the robots on a canvas.
+
+% Let's quickly review what we did last session. We learned how to draw the robot's body using the \texttt{create\_polygon} method from the \texttt{tkinter} library. This method draws a shape on the canvas by connecting points. For the robot's body, we used a shape with four sides (a polygon), defined by pairs of x (horizontal) and y (vertical) coordinates.
+
+% \begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+% canvas.create_polygon(config['robot_points'], fill=body_color, tags='robot')
+% \end{minted}
+
+% The full code is as available \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/tkinter_robot_template.py}{click me}:
+
+% \subsubsection{Your Task: Adding more component : or you can suggest better descriptive name}
+
+
+% In the provided \href{https://github.com/balandongiv/computer_programming_gist/blob/main/session3/tkinter_robot_template.py}{code snippet}, you'll find a placeholder comment:
+
+% \texttt{\# add your code here and below}.
+
+% This comment serves as your cue to expand upon our robot's visual representation on the canvas. Your specific task is to develop and add code that creates the robot's additional components, such as its wheels and sensors. These elements will significantly enhance the visual detail and completeness of our robot's depiction.
+
+% Please insert your code for these additional components directly beneath the aforementioned comment. Here's a brief example to get you started on adding a wheel:
+% \begin{minted}[fontsize=\small, linenos, breaklines=true, breakanywhere=true]{python}
+% canvas.create_oval(config["sensor2_x"] - constant_val, config["sensor2_y"] - constant_val, config["sensor2_x"] + constant_val, config["sensor2_y"] + constant_val, fill=robot_colors["sensor_color"], tags='robot')
+% \end{minted}
+% Remember, this is just a starting point. You're encouraged to use the concepts learned so far to add the necessary code to create the remaining components of the robots, such as the wheels, sensors, and lights, making your robot visually compelling and unique. You can refer to the code from last session's worksheet to understand how to create these components using the \texttt{create\_oval} and \texttt{create\_line} methods.
+
+% \subsection{Extra Exercise:}
+
+% Create a new logic where the code dynamically determining the body color of each robot based on its center x-coordinate and then drawing the robot on a canvas using tkinter.
+
+% Here's a breakdown of the key components of this logic:
+
+% Dynamic Body Color Assignment Based on X-Coordinate:
+
+% \begin{itemize}
+%     \item A threshold value (\texttt{my\_th = 500}) is defined. This value is used to compare against the center x-coordinate of each robot.
+%     \item For each robot in the \texttt{robot\_configurations} list, the code checks if its \texttt{center\_x} coordinate is greater than or equal to \texttt{my\_th}.
+%     \item If a robot's \texttt{center\_x} is greater than or equal to 500, its body color is set to "purple".
+%     \item  If a robot's \texttt{center\_x} is less than 500, its body color is set to the robot's predefined \texttt{light\_color} from the \texttt{colors} dictionary
+% \end{itemize}
+
+

@@ -1,0 +1,156 @@
+
+\section{Keywords Arguments}
+Keyword arguments offer an alternative way to provide values to function parameters explicitly by their names, regardless of the order. Unlike positional arguments, keyword arguments allow you to specify exactly which parameter is being assigned a value, enhancing readability and reducing errors.
+
+
+\subsubsection{Advantages of Keyword Arguments:}
+
+There are several advantages:
+\begin{itemize}\setlength{\itemsep}{0pt}
+    \item Enhanced readability and clarity in function calls.
+    \item Flexible argument ordering, reducing potential errors.
+    \item Easy handling of optional parameters with default values.
+\end{itemize}
+
+\subsubsection{Keyword Argument Syntax}
+When you use keyword arguments, you specify the name of the parameter followed by an equal sign and the value it should receive within the function call. For example,
+\begin{center}
+    width=1000
+\end{center}
+
+\noindent
+The benefit of this approach is that you can rearrange the order of arguments when calling the function without affecting its behavior, as long as all required arguments are provided.
+
+So far, we have not been using keyword arguments in our code, but we will start introducing them in this session to give you more control over the behavior of your functions without having to change their internal logic.
+% \subsubsection{Self-Reflection: Spotting Keyword Arguments in Your Existing Code}
+% Now you have an idea about it, take a seat back, lean back and careful with the SmartRoom chair, and look elsewhere, and think. do you think if you have been using the keyword argument in the previous code.
+% % \begin{figure}[h]
+% %     \centering
+% %     \includegraphics[width=0.4\textwidth]{session5/thinking.png}
+% % \end{figure}
+
+
+% \noindent
+% ok, stop thinking and continue read this text. Actually, since the beginning when we start developing our robot code, we've already encountered the use of keyword arguments.
+
+% \noindent
+% Specifically within the \texttt{setup\_application} function,
+
+
+
+% In this snippet, the parameters \texttt{width=1000} and \texttt{height=1000} for the \texttt{tk.Canvas} function are perfect examples of keyword arguments. Here, we're specifying the canvas size directly by naming the parameters and their desired values. This approach gives us clarity and control over the canvas dimensions without much thought about changing them later on.
+
+\subsection{Introduce \texttt{fit()} that have ONE keyword argument}
+To understand the concept of keyword arguments, we will introduce a new feature to our classifier: the ability to "fit" a threshold from the dataset instead of hardcoding it.
+
+In real machine learning, \texttt{fit()} means "learn parameters from data". We will learn \textbf{one} number (a threshold) from the dataset. 
+The helper function \texttt{fit\_threshold\_from\_setosa} calculates the average petal length of setosa samples to dynamically set the threshold.
+You will call this through \texttt{setup\_application(..., use\_fit=True)}.
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def fit_threshold_from_setosa(dataset, fallback_threshold=2.0):
+    """Learn a simple threshold as mean petal_length over setosa samples."""
+    total = 0.0
+    count = 0
+
+    for sample in dataset:
+        if sample["species"] == "setosa":
+            total += sample["petal_length"]
+            count += 1
+
+    return total / count if count > 0 else fallback_threshold
+\end{minted}
+
+This example also interesting, because we can see that both the keyword argument can exist together with the positional argument in the same function. The \texttt{dataset} is a positional argument, while \texttt{fallback\_threshold} is a keyword argument with a default value of 2.0. This means that when calling \texttt{fit\_threshold\_from\_setosa}, you can provide just the dataset as a positional argument, and it will use the default fallback threshold if needed. Alternatively, you can also specify a custom fallback threshold using the keyword argument if you want to override the default behavior.
+
+
+\subsection{Two keyword argument}
+It is also possible to have multiple keyword arguments in a function. For example, in the \texttt{setup\_application} function. For example
+
+recall that
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def classify_sample(sample, settings):
+    """Classify one sample and return prediction."""
+    return determine_binary_label(sample, settings)
+\end{minted}
+and we can refactor it to have two keyword arguments like this:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def classify_sample(sample=sample, settings=settings):
+    """Classify one sample and return prediction."""
+    return determine_binary_label(sample, settings)
+\end{minted}
+The advantage of this approach now is that, you can swap the order of the arguments when calling the function without affecting its behavior, as long as all required arguments are provided. For example, you can call \texttt{classify\_sample(settings=settings, sample=sample)} and it will work just fine.
+\subsubsection{Your Task:}
+In the code template, refactor the \texttt{classify\_sample} function to have two keyword arguments: \texttt{sample} and \texttt{settings}. Then, update all call sites of this function to use keyword arguments instead of positional arguments.
+
+Also, you need to update, in the function calling , to put the keyword arguments in the correct order, or you can swap the order of the arguments when calling the function without affecting its behavior, as long as all required arguments are provided. For example, you can call \texttt{classify\_sample(settings=settings, sample=sample)} and it will work just fine.
+
+\begin{tcolorbox}[title=Checkpoint]
+Your \texttt{setup\_application} should pass \texttt{print\_each} down to \texttt{initialize\_predictions}, and it should return \texttt{settings}, \texttt{dataset}, and \texttt{result}.
+\end{tcolorbox}
+
+\subsection{Many many keyword}
+It is also possible to have many keyword arguments in a function. For example, in the \texttt{setup\_application} function, you can have multiple keyword arguments to control different aspects of the application setup. 
+
+Recall that in previous session the setup application function accept 3 positional arguments, which means the order of the arguments matters. If you want to change the threshold, you have to pass the file path and print\_each value as well, even if you want to keep them as default. This can be inconvenient and error-prone. 
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+    def setup_application(filepath, threshold, print_each):
+
+    dataset = load_iris_data(filepath)
+    settings = get_default_settings()
+
+        settings["threshold"] = threshold
+
+    result = initialize_predictions(dataset, settings, print_each=print_each)
+    return settings, dataset, result
+\end{minted}
+
+With keyword arguments, you can specify only the parameters you want to override, and the rest will use their default values. For example, you can refactor the \texttt{setup\_application}
+
+
+For instance, you can have a keyword argument for the file path, another for the threshold, and another for whether to print each prediction.
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+    def setup_application(filepath=None, threshold=None, print_each=False):
+
+    dataset = load_iris_data(filepath)
+    settings = get_default_settings()
+
+        settings["threshold"] = threshold
+
+    result = initialize_predictions(dataset, settings, print_each=print_each)
+    return settings, dataset, result
+\end{minted}
+    
+\subsubsection{Your Task:Update}
+now in the code, refactor the \texttt{setup\_application} function to have multiple keyword arguments: \texttt{filepath}, \texttt{threshold}, \texttt{print\_each}, and \texttt{use\_fit}. Then, update the function logic to apply the fit or threshold overrides based on the provided arguments.
+
+
+
+\subsection{Adding Default Values with Keyword Arguments}
+
+So far, the function \texttt{load\_robot\_data} has been using positional arguments. However, we can improve its flexibility by using keyword arguments.
+For example, we can refactor the function to have a keyword argument for the threshold value, if the user does not provide a threshold, it will use a default value. This way, the function can be called with or without the threshold argument, and it will still work correctly.
+
+
+
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+def setup_application(filepath=None, threshold=None, print_each=True):
+
+    dataset = load_iris_data(filepath)
+    settings = get_default_settings()
+
+    # TODO 3: Apply fit or threshold overrides
+    if threshold is None:
+        settings["threshold"] = fit_threshold_from_setosa(
+            dataset, settings["threshold"])
+    else:
+        settings["threshold"] = threshold
+
+    result = initialize_predictions(dataset, settings, print_each=print_each)
+    return settings, dataset, result
+\end{minted}
+
+
+This code show,if user purposely or accidentally did not provide a threshold, the function will automatically learn it from the data using the fit. This makes the function more robust and easier to use, as it can handle cases where the user may not know what threshold to set or simply wants to use a data-driven approach without having to specify every detail manually.

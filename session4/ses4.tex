@@ -1,0 +1,203 @@
+\chapter{Functions}
+% as a Refactor of Session 3 (Session 4)
+
+\section{Introduction}
+
+\begin{tcolorbox}[title=Goal]
+\textbf{Refactor} sequential code into reusable functions, load a CSV dataset, and preserve the classifier rule from Session 3. This builds a clean foundation for upcoming sessions.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=You will work in]
+Use the following files for this session:
+\begin{itemize}
+    \item \texttt{session4/session4\_iris\_template.py} (student template)
+    \item \texttt{session4/iris\_data.csv} (dataset)
+\end{itemize}
+\textbf{How to run the file:} Use the terminal command: \\
+\texttt{python3 session4/session4\_iris\_template.py} \\
+\textbf{Do not edit other files.} We will reuse this file in later sessions.
+\end{tcolorbox}
+
+This session is all about how functions can dramatically improve the way you structure your code, making it more organized and reusable. Think of \textbf{functions} as essential building blocks for any programmer. They allow you to break down complex projects into smaller, more manageable, and importantly, reusable parts. By learning to effectively use functions, you'll be writing Python code that is not only cleaner and more efficient but also significantly easier to understand and maintain.
+
+In Session 3, you built a solid foundation by learning about lists, loops for repetitive tasks, and conditional statements for decision-making. Now, we're going to elevate your Python skills further. This session, we'll focus on structuring your Python scripts more effectively using functions. We'll revisit code from a previous tutorial that was written sequentially and transform it by incorporating functions. 
+
+\section{What You Will Learn}
+In this session, you will learn to:
+\begin{enumerate}\setlength{\itemsep}{5pt}
+\item \textbf{Refactor Code into Functions}: Take existing, sequential scripts and reorganize them using functions. This will teach you how to identify blocks of code that can be encapsulated into reusable functions.
+\item \textbf{Understand Functions}: Learn the fundamental concept of functions -- what they are, how they are structured in Python, and why they are so beneficial for writing efficient and organized code.
+\item \textbf{Load a Dataset from CSV}: In real projects, datasets can come from many file formats. For now, we use \texttt{.csv} because it is simple, human-readable, and supported by Python without extra libraries.
+\end{enumerate}
+
+\subsection{Functions Primer}
+A \textbf{function} is a named block of code designed to perform one specific job. Instead of writing the same lines repeatedly, you define the logic once and \textit{call} the function whenever you need it. Functions take \textit{arguments} (inputs), perform actions, and \textit{return} a value (output).
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+def greet_student(name):
+    # This function takes a name and returns a greeting
+    return "Hello, " + name
+
+print(greet_student("Alice"))
+\end{minted}
+
+\subsection{What is the common rule for creating functions?}
+There are several rules of thumb for creating functions, but a key one is: \textbf{Each function should do one thing and do it well.} This means that a function should have a single responsibility or task. If you find yourself writing a function that is trying to accomplish multiple tasks, it's often a sign that you should break it down into smaller, more focused functions. This makes your code easier to read, test, and maintain. For example, if you have a function that both processes data and prints results, consider splitting it into two functions: one for processing and another for printing.
+
+\subsection{The Benefit of function}
+Using functions has several benefits:
+\begin{itemize}
+    \item \textbf{Reusability}: Once a function is defined, you can call it multiple times throughout your code without having to rewrite the same logic.
+    \item \textbf{Organization}: Functions help break down complex problems into smaller, more manageable pieces, making your code easier to read and understand.
+    \item \textbf{Maintainability}: If you need to change the logic, you only need to update it in one place (the function definition) rather than in every place where the logic is used.
+    \item \textbf{Testing}: Functions can be tested independently, which makes it easier to identify and fix bugs.
+\end{itemize}
+
+
+\section{Session 3 to Session 4 Refactor Map}
+Session 3 sequential blocks become these functions in Session 4:
+
+\begin{itemize}
+    \item session 3 rule block $\rightarrow$ \texttt{determine\_binary\_label(sample, settings)}
+    \item session 3 truth conversion block $\rightarrow$ \texttt{determine\_true\_binary\_label(sample, settings)}
+    \item session 3 metric update block $\rightarrow$ \texttt{update\_metrics(metrics, y\_pred, y\_true)}
+    \item session 3 compare prediction to truth $\rightarrow$ \texttt{evaluate\_prediction(y\_pred, y\_true)}
+    \item session 3 per-sample classifier step $\rightarrow$ \texttt{classify\_sample(sample, settings)}
+    \item session 3 full loop and counters $\rightarrow$ \texttt{initialize\_predictions(dataset, settings)}
+    \item session 3 top-level script setup $\rightarrow$ \texttt{setup\_application(filepath)} and \texttt{main()}
+\end{itemize}
+
+\section{Canonical Function Set}
+Complete these functions in \texttt{session4\_iris\_template.py}. The table below shows the mapping:
+
+\input{session4/tab4.tex}
+
+\section{Dataset}
+In typical machine learning work, you may load datasets from many formats.
+
+\subsection{Task 1: Load the Dataset from CSV}
+
+In this course, we start with \texttt{CSV} because it is easy to inspect and easy to parse.
+
+\noindent
+\textbf{Remark (important for this session):} the provided \texttt{session4/iris\_data.csv} currently contains \textbf{only Iris setosa} samples.
+That means the \textbf{true label} (after binary conversion) will always be \texttt{setosa} for every row.
+You are still practicing a \textbf{binary classifier} (\texttt{setosa} vs \texttt{not\_setosa}) using the same session 3 rule. In later sessions, we will re-introduce \texttt{versicolor} and \texttt{virginica}.
+
+Load the dataset using \texttt{csv.DictReader}:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+import csv
+
+dataset = []
+with open("session4/iris_data.csv", "r", encoding="utf-8", newline="") as csv_file:
+    reader = csv.DictReader(csv_file)
+    for row in reader:
+        dataset.append(
+            {
+                "id": row["id"],
+                "sepal_length": float(row["sepal_length"]),
+                "sepal_width": float(row["sepal_width"]),
+                "petal_length": float(row["petal_length"]),
+                "petal_width": float(row["petal_width"]),
+                "species": row["species"],
+            }
+        )
+\end{minted}
+
+Notice: values read from CSV start as strings, so we convert numeric columns using \texttt{float(...)}.
+
+\begin{tcolorbox}[title=Checkpoint]
+Your \texttt{load\_iris\_data} function should return a list of dictionaries with length 50.
+\end{tcolorbox}
+\begin{tcolorbox}[title=Common Mistakes]
+\textbf{FileNotFoundError}: Check if you are running the script from the correct directory (the repository root). \\
+\textbf{String Type Errors}: If you forget \texttt{float()}, calculations will fail later because Python cannot multiply strings.
+\end{tcolorbox}
+
+\subsection{Task 2: Keep the Session 3 Rule Unchanged}
+Inside your \texttt{determine\_binary\_label} function, keep the same decision rule:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+if sample[settings["feature_name"]] < settings["threshold"]:
+    y_pred = settings["positive_label"]
+else:
+    y_pred = settings["negative_label"]
+return y_pred
+\end{minted}
+
+\textbf{Canonical Names:} Notice how we use \texttt{settings["feature\_name"]}. We enforce these exact names so the next session's template can import your work without changes.
+
+\section{Task 2.1: Convert the True Label into a Binary Label}
+In session 3, you used this block to convert a 3-class species into a binary truth label. Refactor that logic into the function:
+\texttt{determine\_true\_binary\_label(sample, settings)}.
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+if sample[settings["label_key"]] == settings["positive_label"]:
+    return settings["positive_label"]
+return settings["negative_label"]
+\end{minted}
+
+\section{Task 2.2: Update Metrics and Collect Predictions}
+In session 3, you updated counters and stored predictions.
+In Session 4, refactor that logic into a function:
+\texttt{update\_metrics(metrics, y\_pred, y\_true)}.
+
+\begin{tcolorbox}[title=Checkpoint]
+Ensure your \texttt{update\_metrics} function updates \texttt{metrics["correct"]} or \texttt{metrics["wrong"]}, appends to \texttt{y\_pred\_list}, and \textbf{always} updates \texttt{metrics["total"]}.
+\end{tcolorbox}
+\begin{tcolorbox}[title=Common Mistakes]
+\textbf{Logic Bug:} Only incrementing \texttt{total} if the prediction was correct. Check your indentation to ensure \texttt{total} increases for every sample!
+\end{tcolorbox}
+
+\section{Task 3: Maintain Output Compatibility}
+Inside \texttt{initialize\_predictions}, use this per-sample output line (same as Session 3):
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+print(
+    f"id={sample['id']} | true={y_true} | pred={y_pred} | "
+    f"petal_length={sample['petal_length']}"
+)
+\end{minted}
+
+Print final summary metrics in \texttt{main()}:
+\texttt{Correct}, \texttt{Wrong}, \texttt{Total}, \texttt{Accuracy (\%)}, \texttt{All predictions}.
+
+\subsection{Name Label (Required)}
+Include this in \texttt{main()}:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+print("=== Student Label ===")
+\end{minted}
+
+\section{About \texttt{\_\_main\_\_}}
+At the bottom of your Python file, you will see:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+if __name__ == "__main__":
+    main()
+\end{minted}
+
+\noindent
+\textbf{Meaning:}
+\begin{itemize}
+    \item When you run the file directly, Python sets \texttt{\_\_name\_\_} to \texttt{"\_\_main\_\_"} and \texttt{main()} executes.
+    \item When the file is imported by another file, \texttt{main()} does not automatically run.
+\end{itemize}
+
+\section{Review and Next Steps}
+
+\textbf{Summary:}
+\begin{itemize}
+    \item \textbf{Functions} allow you to bundle code into reusable blocks.
+    \item \textbf{CSV Loading} allows you to import external dataset files.
+    \item \textbf{Modular Design} sets you up to import these same functions in Session 5.
+\end{itemize}
+
+\textbf{Review Questions:}
+\begin{enumerate}
+    \item What is the purpose of \texttt{determine\_true\_binary\_label}?
+    \item Why must we convert numeric values from a CSV file using \texttt{float()}?
+    \item Why do we enforce exact keys like \texttt{feature\_name} inside the \texttt{settings} dictionary?
+\end{enumerate}
+
+\textbf{Micro-Exercise:} Change the \texttt{threshold} value in \texttt{get\_default\_settings()} and run the file. Observe how the accuracy changes!
+
+\begin{tcolorbox}[title=Real-World Hook]
+A rule-based classifier built with modular functions is exactly how basic medical triage rules or spam filters are initially designed before machine learning models are introduced!
+\end{tcolorbox}
