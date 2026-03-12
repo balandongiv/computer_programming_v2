@@ -227,9 +227,10 @@ Then follow these steps:
 
     \item You will see a message or page indicating that Codespaces is opening.
 
-    \item Wait until the Codespace finishes loading completely.
+    \item Wait until the Codespace finishes loading completely .
 
-    \item Once it has opened, you should see an editor interface in the browser together with a terminal area.
+    \item Once it has opened, an automatic setup process may run for a while, about 10 minutes or more, depending on the server load and your internet connection.
+    \item After the setup is complete, you should see the Codespaces interface as shown in Figure~\ref{fig:success_codespaces}.
 \end{enumerate}
 \begin{figure}
     \centering
@@ -237,34 +238,26 @@ Then follow these steps:
     \caption{Loading Codespaces}
     \label{fig:loading_codespaces}
 \end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{installation/images/success_codespaces.png}
+    \caption{Codespaces Successfully Opened}
+    \label{fig:success_codespaces}
+\end{figure}
 \subsection*{Initial check inside Codespaces}
 
 All the necessary packages should already have been installed for you.
 
-To make sure everything is working correctly:
-
-\begin{enumerate}
-    \item Open the terminal in Codespaces.
-
-    \item Locate the file named \texttt{first\_run.py}.
-
-    \item Run the script.
-
-    You may use:
-    \begin{quote}
-        \texttt{python first\_run.py}
-    \end{quote}
-    or, if needed,
-    \begin{quote}
-        \texttt{python3 first\_run.py}
-    \end{quote}
-
-    \item Wait for the program to execute.
-
-    \item If everything is okay, you should see the output in the terminal.
-
-    \item If the output appears normally, this means your Codespace is working properly and you are ready to begin.
-\end{enumerate}
+To make sure everything is working correctly, first click the "Explorer" icon on the left sidebar to open the file explorer.
+Then, locate the folder name "session0" and open it. Inside that folder, you should find a file named "first\_execution.py". Double click it.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{installation/images/execute_final.png.png}
+    \caption{Running the Initial Check Script}
+    \label{fig:execute_final}
+\end{figure}
+Then, click the "Run" button at the top right corner of the editor as shown in Figure~\ref{fig:execute_final}.
 
 \subsection*{If something does not work}
 
