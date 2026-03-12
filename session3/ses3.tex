@@ -56,13 +56,18 @@ If \texttt{petal\_length} is less than \texttt{threshold}, predict \texttt{setos
 \end{quote}
 
 Keep the following values exactly as they are in the session 3 template:
+
+\begin{listing}[H]
+\caption{Example Iris dataset variables}
+\label{lst:iris_variables}
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
-threshold = 2.0
-feature_name = "petal_length"
-positive_label = "setosa"
-negative_label = "not_setosa"
-label_key = "species"
+sepal_length = 5.1
+sepal_width = 3.5
+petal_length = 1.4
+petal_width = 0.2
+species = "setosa"
 \end{minted}
+\end{listing}
 
 \section{Python Lists}
 
@@ -109,7 +114,13 @@ Dictionaries are incredibly useful when you need to associate pieces of informat
 
 In our previous sessions, we've seen how to store individual pieces of information using separate variables. While this works for a small amount of data, it quickly becomes cumbersome when dealing with many flowers or features.
 
-Using a dictionary, we can group related pieces of information under meaningful names. Below is an illustrative example of what a dictionary looks like (note the curly braces \texttt{\{} and \texttt{\}}). You do not need to type this verbatim yet:
+Using a dictionary, we can group related pieces of information under meaningful names. For example, we can convert the code variables (as in block  \ref{lst:iris_variables}) into a single dictionary that represents one flower sample as shown in block \ref{lst: iris_dictionary}.
+
+%  Below is an illustrative example of what a dictionary looks like (note the curly braces \texttt{\{} and \texttt{\}}). You do not need to type this verbatim yet:
+
+\begin{listing}[H]
+\caption{Example Iris dataset variables}
+\label{lst: iris_dictionary}
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
 sample = {
@@ -121,6 +132,7 @@ sample = {
     "species": "setosa"
 }
 \end{minted}
+\end{listing}
 
 In this example, "id", "sepal\_length", "sepal\_width", "petal\_length", "petal\_width", and "species" are keys, and their corresponding values are the data associated with each key. Notice that values can be of different types, including strings, nested dictionaries, and lists.
 
@@ -192,6 +204,14 @@ Before you start the task, it is critical to use these exact keys: \texttt{id}, 
 
 
 \subsection{Your Task: Replacing sequential variable declaration with dict}
+
+
+\noindent
+\begin{tcolorbox}[title=Task 1: Create A dictionary for second flower]
+... but use the same values from Session 2 (the setosa image) and remove the \texttt{\_2} suffix from the keys.
+\end{tcolorbox}
+
+
 Open the file \texttt{session3/session3\_iris\_template.py}. 
 We will now convert the variables you created in Session 2 into a dictionary format. 
 For the second flower (\texttt{flower2}), remove the \texttt{\_2} suffix from the keys (e.g., use \texttt{sepal\_length} instead of \texttt{sepal\_length\_2}), but keep the numerical values from the Session 2 setosa image.
@@ -241,6 +261,11 @@ flower2 = {
 \section{List of Dictionaries}
 \label{sec:ses3_list_of_dicts}
 
+\noindent
+\begin{tcolorbox}[title=Task 2: Create list of dictionaries]
+Combine your two flower dictionaries into a list called \texttt{dataset}.
+\end{tcolorbox}
+
 One Iris sample is useful, but the real task is to process \textbf{many} samples.
 We therefore store multiple dictionaries inside a list called \texttt{dataset}.
 
@@ -286,6 +311,11 @@ In Python, you most often write for loops in the simpler ``for each item in this
 \subsection{Looping Over the Dataset}
 \label{sec:ses3_loop}
 
+
+\begin{tcolorbox}[title=Task 3: Create a for loop to process the dataset]
+Write a for loop that processes each sample in the \texttt{dataset} list. Inside the loop, print the sample's \texttt{id}, \texttt{petal\_length}, and \texttt{species}.
+\end{tcolorbox}
+
 When you have a dataset stored as a \textbf{list of dictionaries}, one of the cleanest ways to process every sample is a \texttt{for} loop. The loop below assigns each dictionary to the variable \texttt{sample}, one at a time:
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
@@ -321,6 +351,11 @@ Once you trust the data shape and values, you can replace the \texttt{print} lin
 
 \subsection{Conditionals for Classification}
 \label{sec:ses3_conditionals}
+
+\begin{tcolorbox}[title=Task 4: Use an if-else statement to classify each sample]
+
+\end{tcolorbox}
+
 
 A \textbf{conditional} lets your program \textbf{make a decision} based on data. In many application, the most common form is an \textbf{if--else} statement:
 \begin{itemize}
