@@ -334,3 +334,35 @@ Throughout the semester, always remember the following workflow:
     \item Pull the latest changes in Codespaces after syncing.
 \end{enumerate}
 
+\section*{How to Stop a GitHub Codespace to Save CPU/Compute Time}
+
+To stop GitHub Codespaces from using compute or CPU time, you should \textbf{stop the codespace} when you are not using it. A stopped codespace keeps your saved work, but all running processes are halted, so compute usage stops.
+
+\subsection*{Ways to Stop a Codespace}
+
+\begin{itemize}
+    \item \textbf{In the browser:} Open your codespace and choose \textbf{Stop codespace}.
+    \item \textbf{In VS Code:} Open the Command Palette and select \texttt{Codespaces: Stop Codespace}.
+    \item \textbf{Using the CLI:}
+\end{itemize}
+
+\begin{verbatim}
+gh codespace stop
+\end{verbatim}
+
+Then choose the codespace you want to stop.
+
+\subsection*{Important Details}
+
+\begin{itemize}
+    \item \textbf{Idle timeout:} Codespaces automatically stop after a period of inactivity. The default timeout is usually 30 minutes, and you can change this in your Codespaces settings for new codespaces.
+    \item \textbf{Storage still remains:} Stopping a codespace saves compute time, but the codespace still uses storage until it is deleted. If you no longer need it, delete it to avoid storage charges.
+\end{itemize}
+
+\subsection*{Recommended Workflow}
+
+\begin{enumerate}
+    \item Commit and push your changes.
+    \item Stop the codespace.
+    \item Delete old unused codespaces to avoid storage costs.
+\end{enumerate}
