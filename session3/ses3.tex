@@ -4,11 +4,17 @@
 \section{Introduction}
 
 \begin{tcolorbox}[title=Goal]
-TODO similar to how we write in session5/ses5.tex
+\textbf{Build} a simple rule-based Iris classifier using dictionaries, lists, loops, and conditionals, while keeping the logic sequential so it can be refactored into functions in Session 4.
 \end{tcolorbox}
 
 \begin{tcolorbox}[title=You will work in]
-TODO similar to how we write in session5/ses5.tex
+Use the following file for this session:
+\begin{itemize}
+    \item \texttt{session3/session3\_iris\_template.py} (main student file)
+\end{itemize}
+\textbf{How to run the file:} Always run this script from the project root using the terminal command: \\
+\texttt{python3 session3/session3\_iris\_template.py} \\
+\textbf{Do not edit other files.} We will reuse this file in later sessions.
 \end{tcolorbox}
 
 This session is a continuation of Session 2 (variables and basic data types) and is designed to bridge you into Session 4.
@@ -60,13 +66,13 @@ label_key = "species"
 
 \section{Python Lists}
 
-A list in Python is a versatile data structure used to store ordered collections of items. Lists are ordered, mutable (you can change their contents), and can contain any type of data, such as numbers, strings, or even other lists (or dictionaries, as we'll see later).
+A list in Python is a versatile data structure used to store ordered collections of items. Lists are ordered, mutable (you can change their contents). List can contain any type of data, such as numbers, strings, or even other lists (or dictionaries, as we'll see later).
 
 Here's an example of a list containing numerical values, representing petal lengths:
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines, label=code:IrisPetalLengths]{python}
 iris_petal_lengths = [
-    1.4, 1.4, 1.7, 1.5,
+    1.4, 10.1, 1.7, 1.5,
     4.7, 4.5, 6.0, 5.1,
 ]
 \end{minted}
@@ -74,7 +80,7 @@ iris_petal_lengths = [
 \subsection{Accessing items in a list:} Python lists are indexed starting from zero. You access individual items using square brackets:
 \begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
 first_petal_length = iris_petal_lengths[0]   # 1.4
-second_petal_length = iris_petal_lengths[1]  # 1.4
+second_petal_length = iris_petal_lengths[1]  # 10.1
 \end{minted}
 
 \subsection{Changing list items:} 
@@ -118,6 +124,9 @@ sample = {
 
 In this example, "id", "sepal\_length", "sepal\_width", "petal\_length", "petal\_width", and "species" are keys, and their corresponding values are the data associated with each key. Notice that values can be of different types, including strings, nested dictionaries, and lists.
 
+\begin{lectureronly}
+Ask student, about which is string, which is number, and which is a label. This is a good opportunity to reinforce the concept of data types in the context of dictionaries.
+\end{lectureronly}
 
 \subsection{Creating Dictionaries}
 \label{subsubsec:creating_dicts}
@@ -174,8 +183,13 @@ flower_sample1 = dict(
 
 Regardless of the method you choose, the variable now holds a dictionary representing a flower's measurements.
 
-\subsubsection{Canonical Keys are Important!}
+\begin{tcolorbox}[title=Canonical Keys are Important!]
 Before you start the task, it is critical to use these exact keys: \texttt{id}, \texttt{sepal\_length}, \texttt{sepal\_width}, \texttt{petal\_length}, \texttt{petal\_width}, and \texttt{species}. Later code (in Session 4 and beyond) relies on these canonical names for dictionary lookups. If you misspell them, the code will fail to find the values!
+\end{tcolorbox}
+
+
+
+
 
 \subsection{Your Task: Replacing sequential variable declaration with dict}
 Open the file \texttt{session3/session3\_iris\_template.py}. 
@@ -195,6 +209,8 @@ Use the same measurements from Session 2 but without the \texttt{\_2} suffix whe
 \begin{tcolorbox}[title=Checkpoint]
 You should have two dictionaries defined: \texttt{flower1} and \texttt{flower2}, using literal syntax \texttt{\{\}}.
 \end{tcolorbox}
+
+
 \begin{tcolorbox}[title=Common Mistakes]
 Make sure you didn't forget commas at the end of each key-value pair, and ensure the keys have quotes around them (e.g., \texttt{"sepal\_length"}).
 \end{tcolorbox}
@@ -284,12 +300,18 @@ for sample in dataset:
   \item On each iteration, \texttt{sample} refers to a \emph{different} dictionary.
 \end{itemize}
 
-\subsubsection{Why Printing First Helps}
+\begin{tcolorbox}[title=Interesting fact]
 The \texttt{print} step is a good beginner-friendly debugging habit:
 \begin{itemize}
   \item It confirms the keys (like \texttt{"id"} and \texttt{"petal\_length"}) actually exist.
   \item It lets you check that values look reasonable before adding more logic.
+  \item 
 \end{itemize}
+\end{tcolorbox}
+
+
+
+
 
 \noindent
 Once you trust the data shape and values, you can replace the \texttt{print} line with classification or processing code.
@@ -300,7 +322,7 @@ Once you trust the data shape and values, you can replace the \texttt{print} lin
 \subsection{Conditionals for Classification}
 \label{sec:ses3_conditionals}
 
-A \textbf{conditional} lets your program \textbf{make a decision} based on data. In Python, the most common form is an \textbf{if--else} statement:
+A \textbf{conditional} lets your program \textbf{make a decision} based on data. In many application, the most common form is an \textbf{if--else} statement:
 \begin{itemize}
   \item if a condition is \texttt{True}, run the indented ``if'' block;
   \item otherwise, run the indented ``else'' block.
