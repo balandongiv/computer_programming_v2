@@ -25,11 +25,11 @@ species = "please_change_me"
 # petal_area = ???? * ????
 # print("\nPetal Area:", petal_area)  Uncomment the area
 
-threshold = 2.0
-feature_name = "petal_length"
-positive_label = "setosa"
-negative_label = "not_setosa"
-label_key = "species"
+THRESHOLD = 2.0
+FEATURE_NAME = "petal_length"
+POSITIVE_LABEL = "setosa"
+NEGATIVE_LABEL = "not_setosa"
+LABEL_KEY = "species"
 
 # Task 5: Comparing with threshold
-# is_short_petal = ???? < threshold
+# is_short_petal = ???? < THRESHOLD

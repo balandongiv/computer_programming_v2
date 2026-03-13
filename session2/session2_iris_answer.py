@@ -31,13 +31,13 @@ print("\nPetal Area:", petal_area)
 
 # Task 4: Define rule variables and comparison
 # We use these variables in the next session for our rule-based classifier
-threshold = 2.0
-feature_name = "petal_length"
-positive_label = "setosa"
-negative_label = "not_setosa"
-label_key = "species"
+THRESHOLD = 2.0
+FEATURE_NAME = "petal_length"
+POSITIVE_LABEL = "setosa"
+NEGATIVE_LABEL = "not_setosa"
+LABEL_KEY = "species"
 
-is_short_petal = petal_length < threshold
+is_short_petal = petal_length < THRESHOLD
 print("\n=== Comparison ===")
 print("is_short_petal (petal_length < threshold):", is_short_petal)
 

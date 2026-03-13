@@ -4,6 +4,11 @@ This version keeps the same rule from Session 3.
 The goal is to help a beginner see where each part came from.
 We keep the code simple and close to the original step-by-step style.
 """
+LABEL_KEY = "species"
+THRESHOLD = 2.0
+FEATURE_NAME = "petal_length"
+POSITIVE_LABEL = "setosa"
+NEGATIVE_LABEL = "not_setosa"
 
 
 def make_print_status(status_text):
@@ -28,15 +33,11 @@ def compute_threshold_prediction(sample):
     Returns:
         str: The predicted label.
     """
-    threshold = 2.0
-    feature_name = "petal_length"
-    positive_label = "setosa"
-    negative_label = "not_setosa"
 
-    if sample[feature_name] < threshold:
-        y_pred = positive_label
+    if sample[FEATURE_NAME] < THRESHOLD:
+        y_pred = POSITIVE_LABEL
     else:
-        y_pred = negative_label
+        y_pred = NEGATIVE_LABEL
 
     return y_pred
 
@@ -54,14 +55,11 @@ def derive_true_label(sample):
     Returns:
         str: The true label for this lesson.
     """
-    label_key = "species"
-    positive_label = "setosa"
-    negative_label = "not_setosa"
 
-    if sample[label_key] == positive_label:
-        y_true = positive_label
+    if sample[LABEL_KEY] == POSITIVE_LABEL:
+        y_true = POSITIVE_LABEL
     else:
-        y_true = negative_label
+        y_true = NEGATIVE_LABEL
 
     return y_true
 
@@ -125,7 +123,7 @@ def run_prediction_loop(dataset):
     correct = 0      # Count of correct predictions
     wrong = 0        # Count of wrong predictions
     total = 0        # Total samples processed
-    y_pred_list = [] # List of all predictions made
+    y_pred_list = []  # List of all predictions made
 
     print("\n=== Start session 4 Prediction Loop ===")
 
@@ -147,8 +145,6 @@ def run_prediction_loop(dataset):
             f"id={sample['id']} | true={y_true} | pred={y_pred} | "
             f"petal_length={sample['petal_length']}"
         )
-
-
 
     return correct, wrong, total, y_pred_list
 
