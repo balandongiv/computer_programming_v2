@@ -36,7 +36,7 @@ def determine_binary_label(sample, settings):
         return settings["negative_label"]
 
 
-def determine_true_binary_label(sample, settings):
+def compute_prediction(sample, threshold):
     """Convert the sample's true species into a binary label (setosa vs not_setosa).
     
     Args:
@@ -48,95 +48,26 @@ def determine_true_binary_label(sample, settings):
         
     Note: Later sessions rely on this exact function signature.
     """
-    if sample[settings["label_key"]] == settings["positive_label"]:
-        return settings["positive_label"]
+
+    positive_label = "setosa"
+    negative_label = "not_setosa"
+    feature_name = "petal_length"
+    if sample[feature_name] < threshold:
+        y_pred = positive_label
     else:
-        return settings["negative_label"]
+        y_pred = negative_label
+    return y_pred
 
-
-def evaluate_prediction(y_pred, y_true):
-    """Return True if prediction matches truth, else False."""
-    return y_pred == y_true
-
-
-def classify_sample(sample, settings):
-    """Classify one sample using decomposed helper.
-    
-    Args:
-        sample (dict): A single flower dictionary.
-        settings (dict): The settings dictionary.
-        
-    Returns:
-        str: The predicted label.
-    """
-    return determine_binary_label(sample, settings)
-
-
-def load_iris_data(filepath):
-    """Load Iris dataset from a CSV file and return a list of dict samples.
-    
-    Values read from CSV start as strings, so we convert numeric columns to float.
-    
-    Args:
-        filepath (str): Path to the CSV file.
-        
-    Returns:
-        list: A list of dictionaries, each representing a sample.
-    """
-    dataset = []
-    with open(filepath, "r", encoding="utf-8", newline="") as csv_file:
-        reader = csv.DictReader(csv_file)
-        for row in reader:
-            dataset.append(
-                {
-                    "id": row["id"],
-                    "sepal_length": float(row["sepal_length"]),
-                    "sepal_width": float(row["sepal_width"]),
-                    "petal_length": float(row["petal_length"]),
-                    "petal_width": float(row["petal_width"]),
-                    "species": row["species"],
-                }
-            )
-    return dataset
-
-
-def get_default_settings():
-    """Return the Session 2/3 rule settings (kept stable across sessions).
-    
-    Returns:
-        dict: A dictionary of canonical settings.
-        
-    Note: We enforce these names so the next session's template can import your work without changes.
-    """
-    return {
-        "threshold": 2.0,
-        "feature_name": "petal_length",
-        "positive_label": "setosa",
-        "negative_label": "not_setosa",
-        "label_key": "species",
-    }
-
-
-def update_metrics(metrics, y_pred, y_true):
-    """Update correct/wrong/total counters and append predictions.
-    
-    Args:
-        metrics (dict): The metrics dictionary tracking accuracy.
-        y_pred (str): The predicted label.
-        y_true (str): The true label.
-        
-    Side Effects:
-        Modifies the `metrics` dictionary in place.
-    """
-    is_correct = evaluate_prediction(y_pred, y_true)
-    if is_correct:
-        metrics["correct"] += 1
+def derive_true_label(sample, settings):
+    label_key = "species"
+    positive_label = "setosa"
+    negative_label = "not_setosa"
+    # 2. Derive true label (y_true) from the dataset sample
+    if sample[label_key] == positive_label:
+        y_true = positive_label
     else:
-        metrics["wrong"] += 1
-    
-    # ALWAYS increment metrics["total"] for every sample.
-    metrics["total"] += 1
-    metrics["y_pred_list"].append(y_pred)
+        y_true = negative_label
+    return y_true
 
 
 def initialize_predictions(dataset, settings):
@@ -152,8 +83,8 @@ def initialize_predictions(dataset, settings):
     metrics = {"correct": 0, "wrong": 0, "total": 0, "y_pred_list": []}
 
     for sample in dataset:
-        y_pred = classify_sample(sample, settings)
-        y_true = determine_true_binary_label(sample, settings)
+        y_pred = compute_prediction(sample, settings)
+        y_true = derive_true_label(sample, settings)
         update_metrics(metrics, y_pred, y_true)
         print(
             f"id={sample['id']} | true={y_true} | pred={y_pred} | "
@@ -173,40 +104,40 @@ def setup_application(filepath):
     result = initialize_predictions(dataset, settings)
     return settings, dataset, result
 
+def setup_application_list():
+    """Combination of  Task 1 and Task 2 in session 3, but now in a function."""
+    # Task 1 in session 3: Define dictionaries for flower1 and flower2 using canonical keys
+
+    flower1 = {
+        "id": "flower1",
+        "sepal_length": 5.1,
+        "sepal_width": 3.5,
+        "petal_length": 1.4,
+        "petal_width": 0.2,
+        "species": "setosa"
+    }
+
+
+    flower2 = {
+        "id": "flower2",
+        "sepal_length": 4.9,
+        "sepal_width": 3.0,
+        "petal_length": 1.4,
+        "petal_width": 0.2,
+        "species": "setosa"
+    }
+
+    # Task 2 in session 3: Build the dataset list
+    # Combine our dictionaries into a single list
+    dataset = [flower1, flower2]
+    return dataset
 
 def main():
-    """Entry point for session 4 run."""
-    print("=== Student Label ===")
-    student_id = "YOUR_ID_HERE"
-    full_name = "YOUR_FULL_NAME_HERE"
-    print("Student ID:", student_id)
-    print("Full Name:", full_name)
 
-    make_print_status("Loading data and running predictions")
+
+    # make_print_status("Loading data and running predictions")
     _, _, result = setup_application("session4/iris_data.csv")
-    make_print_status("Run complete")
-
-    print("\n=== Final Summary ===")
-    print("Correct:", result["correct"])
-    print("Wrong:", result["wrong"])
-    print("Total:", result["total"])
-    print("Accuracy (%):", round(result["accuracy"], 2))
-    print("All predictions:", result["y_pred_list"])
-    print("\nTry changing the threshold in get_default_settings() to see how accuracy changes!")
-
-
-# --- Self-Check / Testing Block ---
-def _test_update_metrics():
-    """Verify that update_metrics correctly increments total for all samples, including wrong ones."""
-    test_metrics = {"correct": 0, "wrong": 0, "total": 0, "y_pred_list": []}
-    # Provide one correct and one wrong prediction
-    update_metrics(test_metrics, "setosa", "setosa")
-    update_metrics(test_metrics, "not_setosa", "setosa")
-    
-    assert test_metrics["total"] == 2, f"Expected total=2, got {test_metrics['total']}. Did you forget to increment total for wrong predictions?"
-    print("[Self-Check Passed] update_metrics increments total correctly.")
 
 
 if __name__ == "__main__":
-    _test_update_metrics()
     main()
