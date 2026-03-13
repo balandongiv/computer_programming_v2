@@ -37,11 +37,11 @@ Parameterizing functions is akin to how APIs expose configuration options (e.g.,
 \noindent
 Example:
 \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
-def greet(name, punctuation="!"):   # name and punctuation are parameters
-    print("Hello", name + punctuation)
+def make_print_status(status_text):
+    print(f"[STATUS] {status_text}")
 
-greet("Ada")                        # "Ada" is an argument
-greet(name="Ada", punctuation="?")  # both are arguments (keyword style)
+make_print_status("Build dataset")                     # "Build dataset" is an argument
+make_print_status("Training model")                    # "Training model" is an argument
 \end{minted}
 
 \noindent
@@ -106,7 +106,7 @@ Session 5 is a refactor focused on \textbf{interfaces}, not new logic. Keep the 
 \subsection{Canonical Function Set (Session 5)}
 Complete these functions in \texttt{session5\_iris\_template.py}. The table below shows the mapping:
 
-\input{session5/tab5.tex}
+% \input{session5/tab5.tex}
 
 
 \input{session5/ses5_positional_argument.tex}
