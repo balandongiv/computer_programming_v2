@@ -4,11 +4,11 @@ iterating over it, applying a threshold rule, and computing accuracy metrics.
 """
 
 # Session 2 continuity variables (Rule settings). Do not change these.
-threshold = 2.0
-feature_name = "petal_length"
-positive_label = "setosa"
-negative_label = "not_setosa"
-label_key = "species"
+THRESHOLD = 2.0
+FEATURE_NAME = "petal_length"
+POSITIVE_LABEL = "setosa"
+NEGATIVE_LABEL = "not_setosa"
+LABEL_KEY = "species"
 
 # Task 1: Define dictionaries for flower1 and flower2 using canonical keys
 # We remove the sequential variables and group them logically.
@@ -39,23 +39,23 @@ dataset = [flower1, flower2]
 correct = 0      # Count of correct predictions
 wrong = 0        # Count of wrong predictions
 total = 0        # Total samples processed
-y_pred_list = [] # List of all predictions made
+y_pred_list = []  # List of all predictions made
 
 print("\n=== Start session 3 Prediction Loop ===")
 
 # Task 4 & 5: Iterate and classify
 for sample in dataset:
     # 1. Compute prediction (y_pred)
-    if sample[feature_name] < threshold:
-        y_pred = positive_label
+    if sample[FEATURE_NAME] < THRESHOLD:
+        y_pred = POSITIVE_LABEL
     else:
-        y_pred = negative_label
-        
+        y_pred = NEGATIVE_LABEL
+
     # 2. Derive true label (y_true) from the dataset sample
-    if sample[label_key] == positive_label:
-        y_true = positive_label
+    if sample[LABEL_KEY] == POSITIVE_LABEL:
+        y_true = POSITIVE_LABEL
     else:
-        y_true = negative_label
+        y_true = NEGATIVE_LABEL
 
     # 3. Update correct or wrong counter
     if y_pred == y_true:
@@ -66,7 +66,7 @@ for sample in dataset:
     # 4. ALWAYS increment total for every sample processed
     # Does total increase for each sample? If not, fix it.
     total += 1
-    
+
     # Append the prediction to our list
     y_pred_list.append(y_pred)
 

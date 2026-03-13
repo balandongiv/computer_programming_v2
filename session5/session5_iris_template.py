@@ -128,7 +128,7 @@ def update_metrics(metrics, y_pred, y_true):
     metrics["y_pred_list"].append(y_pred)
 
 
-def initialize_predictions(dataset, settings, print_each=True):
+def make_prediction(dataset, settings, print_each=True):
     """Run prediction loop with optional per-sample logging.
 
     Session 4 always printed each sample line.
@@ -149,12 +149,6 @@ def initialize_predictions(dataset, settings, print_each=True):
         y_true = determine_true_binary_label(sample, settings)
         update_metrics(metrics, y_pred, y_true)
 
-        # TODO 2: Use print_each to control output
-        if print_each:
-            print(
-                f"id={sample['id']} | true={y_true} | pred={y_pred} | "
-                f"petal_length={sample['petal_length']}"
-            )
 
     accuracy = (metrics["correct"] / metrics["total"]) * \
         100 if metrics["total"] else 0.0
@@ -187,7 +181,7 @@ def setup_application(filepath=None, threshold=None, print_each=True, use_fit=Fa
     elif threshold is not None:
         settings["threshold"] = threshold
 
-    result = initialize_predictions(dataset, settings, print_each=print_each)
+    result = make_prediction(dataset, settings, print_each=print_each)
     return settings, dataset, result
 
 
