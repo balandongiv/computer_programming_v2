@@ -15,7 +15,7 @@ def make_print_status(status_text):
     print(f"[STATUS] {status_text}")
 
 
-def compute_prediction(sample):
+def compute_threshold_prediction(sample):
     """Predict the label for one flower sample.
 
     This uses the same rule from Session 3:
@@ -132,7 +132,7 @@ def run_prediction_loop(dataset):
     # Task 4 and Task 5 from Session 3
     for sample in dataset:
         # 1. Compute prediction
-        y_pred = compute_prediction(sample)
+        y_pred = compute_threshold_prediction(sample)
 
         # 2. Derive true label
         y_true = derive_true_label(sample)
