@@ -40,88 +40,172 @@ So far, we have not been using keyword arguments in our code, but we will start 
 
 % In this snippet, the parameters \texttt{width=1000} and \texttt{height=1000} for the \texttt{tk.Canvas} function are perfect examples of keyword arguments. Here, we're specifying the canvas size directly by naming the parameters and their desired values. This approach gives us clarity and control over the canvas dimensions without much thought about changing them later on.
 
-\subsection{Introduce \texttt{fit()} that have ONE keyword argument}
-To understand the concept of keyword arguments, we will introduce a new feature to our classifier: the ability to "fit" a threshold from the dataset instead of hardcoding it.
+% \subsection{Introduce \texttt{fit()} that have ONE keyword argument}
+% To understand the concept of keyword arguments, we will introduce a new feature to our classifier: the ability to "fit" a threshold from the dataset instead of hardcoding it.
 
-In real machine learning, \texttt{fit()} means "learn parameters from data". We will learn \textbf{one} number (a threshold) from the dataset. 
-The helper function \texttt{fit\_threshold\_from\_setosa} calculates the average petal length of setosa samples to dynamically set the threshold.
-You will call this through \texttt{setup\_application(..., use\_fit=True)}.
+% In real machine learning, \texttt{fit()} means "learn parameters from data". We will learn \textbf{one} number (a threshold) from the dataset. 
+% The helper function \texttt{fit\_threshold\_from\_setosa} calculates the average petal length of setosa samples to dynamically set the threshold.
+% You will call this through \texttt{setup\_application(..., use\_fit=True)}.
 
-\begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
-def fit_threshold_from_setosa(dataset, fallback_threshold=2.0):
-    """Learn a simple threshold as mean petal_length over setosa samples."""
-    total = 0.0
-    count = 0
+% \begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
+% def fit_threshold_from_setosa(dataset, fallback_threshold=2.0):
+%     """Learn a simple threshold as mean petal_length over setosa samples."""
+%     total = 0.0
+%     count = 0
 
-    for sample in dataset:
-        if sample["species"] == "setosa":
-            total += sample["petal_length"]
-            count += 1
+%     for sample in dataset:
+%         if sample["species"] == "setosa":
+%             total += sample["petal_length"]
+%             count += 1
 
-    return total / count if count > 0 else fallback_threshold
-\end{minted}
+%     return total / count if count > 0 else fallback_threshold
+% \end{minted}
 
-This example also interesting, because we can see that both the keyword argument can exist together with the positional argument in the same function. The \texttt{dataset} is a positional argument, while \texttt{fallback\_threshold} is a keyword argument with a default value of 2.0. This means that when calling \texttt{fit\_threshold\_from\_setosa}, you can provide just the dataset as a positional argument, and it will use the default fallback threshold if needed. Alternatively, you can also specify a custom fallback threshold using the keyword argument if you want to override the default behavior.
+% This example also interesting, because we can see that both the keyword argument can exist together with the positional argument in the same function. The \texttt{dataset} is a positional argument, while \texttt{fallback\_threshold} is a keyword argument with a default value of 2.0. This means that when calling \texttt{fit\_threshold\_from\_setosa}, you can provide just the dataset as a positional argument, and it will use the default fallback threshold if needed. Alternatively, you can also specify a custom fallback threshold using the keyword argument if you want to override the default behavior.
 
 
 \subsection{Two keyword argument}
-It is also possible to have multiple keyword arguments in a function. For example, in the \texttt{setup\_application} function. For example
+While seems overkill to using a keyword argument with only two parameter, but for the sake of learning, we will just do it.
+% It is also possible to have multiple keyword arguments in a function. For example, in the \texttt{setup\_application} function. For example
 
-recall that
 \begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
-def classify_sample(sample, settings):
-    """Classify one sample and return prediction."""
-    return determine_binary_label(sample, settings)
+def calculate_accuracy(correct, total):
+    """Calculate accuracy percentage.
+
+    Args:
+        correct (int): Number of correct predictions.
+        total (int): Number of processed samples.
+
+    Returns:
+        float: Accuracy percentage.
+    """
+    if total > 0:
+        accuracy = (correct / total) * 100
+    else:
+        accuracy = 0.0
+
+    return accuracy
+
 \end{minted}
+
+
 and we can refactor it to have two keyword arguments like this:
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
-def classify_sample(sample=sample, settings=settings):
-    """Classify one sample and return prediction."""
-    return determine_binary_label(sample, settings)
+
+def calculate_accuracy(correct=0, total=0):
+        """Calculate accuracy percentage.
+
+    Args:
+        correct (int): Number of correct predictions.
+        total (int): Number of processed samples.
+
+    Returns:
+        float: Accuracy percentage.
+    """
+    if total > 0:
+        accuracy = (correct / total) * 100
+    else:
+        accuracy = 0.0
+
+    return accuracy
+
 \end{minted}
-The advantage of this approach now is that, you can swap the order of the arguments when calling the function without affecting its behavior, as long as all required arguments are provided. For example, you can call \texttt{classify\_sample(settings=settings, sample=sample)} and it will work just fine.
+The advantage of this approach now is that, you can swap the order of the arguments when calling the function without affecting its behavior, as long as all required arguments are provided. 
+
+For example, you can call \texttt{calculate\_accuracy(total=total, correct=correct)} and it will work just fine.
+
 \subsubsection{Your Task:}
-In the code template, refactor the \texttt{classify\_sample} function to have two keyword arguments: \texttt{sample} and \texttt{settings}. Then, update all call sites of this function to use keyword arguments instead of positional arguments.
 
-Also, you need to update, in the function calling , to put the keyword arguments in the correct order, or you can swap the order of the arguments when calling the function without affecting its behavior, as long as all required arguments are provided. For example, you can call \texttt{classify\_sample(settings=settings, sample=sample)} and it will work just fine.
 
-\begin{tcolorbox}[title=Checkpoint]
-Your \texttt{setup\_application} should pass \texttt{print\_each} down to \texttt{initialize\_predictions}, and it should return \texttt{settings}, \texttt{dataset}, and \texttt{result}.
+\begin{tcolorbox}[title=Task 1: Create a two keyword argument function]
+ refactor the \texttt{calculate\_accuracy} function to have two keyword arguments
 \end{tcolorbox}
 
+In the code template, refactor the \texttt{calculate\_accuracy} function to have two keyword arguments: \texttt{total} and \texttt{correct}. Then, update all call sites of this function to use keyword arguments instead of positional arguments.
+
+Also, you need to update, in the function calling , to put the keyword arguments in the correct order, or you can swap the order of the arguments when calling the function without affecting its behavior, as long as all required arguments are provided. For example, you can call \texttt{calculate\_accuracy(total=total, correct=correct)} and it will work just fine.
+% TODO
+% \begin{tcolorbox}[title=Checkpoint]
+% Your \texttt{setup\_application} should pass \texttt{print\_each} down to \texttt{initialize\_predictions}, and it should return \texttt{settings}, \texttt{dataset}, and \texttt{result}.
+% \end{tcolorbox}
+
 \subsection{Many many keyword}
-It is also possible to have many keyword arguments in a function. For example, in the \texttt{setup\_application} function, you can have multiple keyword arguments to control different aspects of the application setup. 
+It is also possible to have many keyword arguments in a function. For example, in the \texttt{update\_result\_counts} function, you can have multiple keyword arguments to control different aspects of Updating the counters and prediction list for one sample. 
 
-Recall that in previous session the setup application function accept 3 positional arguments, which means the order of the arguments matters. If you want to change the threshold, you have to pass the file path and print\_each value as well, even if you want to keep them as default. This can be inconvenient and error-prone. 
+% update_result_counts(
+%             correct, wrong, total, y_pred_list, y_pred, y_true
+%         )
+
+Recall that in previous session the setup application function accept 6 positional arguments, which means the order of the arguments matters. 
+% If you want to change the threshold, you have to pass the file path and print\_each value as well, even if you want to keep them as default. 
+This can be inconvenient and error-prone. 
+
 \begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
-    def setup_application(filepath, threshold, print_each):
+def update_result_counts(correct, wrong, total, y_pred_list, y_pred, y_true):
+    """Update the counters and prediction list for one sample.
 
-    dataset = load_iris_data(filepath)
-    settings = get_default_settings()
+    Args:
+        correct (int): Current number of correct predictions.
+        wrong (int): Current number of wrong predictions.
+        total (int): Current number of processed samples.
+        y_pred_list (list): Current list of predictions.
+        y_pred (str): Predicted label.
+        y_true (str): True label.
 
-        settings["threshold"] = threshold
+    Returns:
+        tuple: Updated correct, wrong, total, y_pred_list
+    """
+    if y_pred == y_true:
+        correct += 1
+    else:
+        wrong += 1
 
-    result = initialize_predictions(dataset, settings, print_each=print_each)
-    return settings, dataset, result
+    total += 1
+    y_pred_list.append(y_pred)
+
+    return correct, wrong, total, y_pred_list
 \end{minted}
 
-With keyword arguments, you can specify only the parameters you want to override, and the rest will use their default values. For example, you can refactor the \texttt{setup\_application}
+With keyword arguments, you can specify only the parameters you want to override, and the rest will use their default values. 
 
 
-For instance, you can have a keyword argument for the file path, another for the threshold, and another for whether to print each prediction.
+For instance, below are incomplete example, but given your experience in task 1, I expect you can do it, but you can refactor it as.
 \begin{minted}[fontsize=\small, linenos, breaklines=true]{python}
-    def setup_application(filepath=None, threshold=None, print_each=False):
+def update_result_counts(correct=0, wrong, total, y_pred_list, y_pred, y_true):
+    """Update the counters and prediction list for one sample.
 
-    dataset = load_iris_data(filepath)
-    settings = get_default_settings()
+    Args:
+        correct (int): Current number of correct predictions.
+        wrong (int): Current number of wrong predictions.
+        total (int): Current number of processed samples.
+        y_pred_list (list): Current list of predictions.
+        y_pred (str): Predicted label.
+        y_true (str): True label.
 
-        settings["threshold"] = threshold
+    Returns:
+        tuple: Updated correct, wrong, total, y_pred_list
+    """
+    if y_pred == y_true:
+        correct += 1
+    else:
+        wrong += 1
 
-    result = initialize_predictions(dataset, settings, print_each=print_each)
-    return settings, dataset, result
+    total += 1
+    y_pred_list.append(y_pred)
+
+    return correct, wrong, total, y_pred_list
 \end{minted}
-    
+
+Now that you have refactored, try to refactor the others as well.
+Based on the docstring,which expect an integer, we set the default value of \texttt{correct} to 0. 
+Similarly, we can set default values for the other parameters as well, such as \texttt{wrong} and  \texttt{total} equal to 0.
+However, if you notice, the \texttt{y\_pred\_list} is a list, and it is not a good idea to set it equal to zero.
+
+Similarly, for the \texttt{y\_pred} and \texttt{y\_true} parameters, which are expected to be strings, it is not appropriate to set their default values to zero either. So,we will set it to None, which is a common practice in Python to indicate that a parameter is optional and does not have a meaningful default value.
+
+
+
 \subsubsection{Your Task:Update}
 now in the code, refactor the \texttt{setup\_application} function to have multiple keyword arguments: \texttt{filepath}, \texttt{threshold}, \texttt{print\_each}, and \texttt{use\_fit}. Then, update the function logic to apply the fit or threshold overrides based on the provided arguments.
 
