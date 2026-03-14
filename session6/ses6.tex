@@ -3,14 +3,15 @@
 \section{Introduction}
 
 \begin{tcolorbox}[title=Goal]
-\textbf{Refactor} your Session 5 functional pipeline into a class (\texttt{IrisRuleClassifier}) that bundles configuration (threshold and labels) with behavior (prediction and evaluation). 
+\textbf{Refactor} your Session 5 functional pipeline into a class called \texttt{IrisRuleClassifier} that bundles configuration (threshold and labels) together with behavior (prediction and evaluation methods).
 
+\medskip
 \textbf{What is Object-Oriented Programming (OOP)?}
 \begin{itemize}\setlength{\itemsep}{2pt}
     \item A \textbf{class} is a blueprint that describes what data and behavior a thing should have.
     \item An \textbf{object} is a single instance created from that blueprint.
     \item An \textbf{attribute} is data stored on the object (for example, \texttt{self.threshold}).
-    \item A \textbf{method} is a function stored on the class that operates on the object (for example, \texttt{predict()} and \texttt{evaluate()}).
+    \item A \textbf{method} is a function stored on the class that operates on the object.
 \end{itemize}
 \end{tcolorbox}
 
@@ -24,181 +25,547 @@ Use the following file for this session:
 \textbf{Do not edit files outside} \texttt{session6/}.
 \end{tcolorbox}
 
-In session 4 and session 5, you built an Iris classifier using \textbf{functions}.
-Your pipeline worked, but you may have noticed a design pattern:
-many functions needed the same configuration values (for example, the threshold and the label names), so you passed a dictionary called \texttt{settings} around repeatedly.
+In Sessions 4 and 5, you built an Iris classifier using \textbf{functions}.
+Your pipeline worked, but you may have noticed something repetitive: many functions needed the same configuration values (for example, the threshold, the positive label, and the negative label).
+You solved this by passing a \texttt{settings} dictionary from function to function.
 
+\medskip
 \noindent
-\textbf{Why refactor?}
-That function-based design is fine for one small classifier, but it becomes awkward as soon as you want to run experiments:
+\textbf{Why refactor now?}
+Passing settings around is fine for one small pipeline, but it becomes awkward as soon as your program grows:
 \begin{itemize}\setlength{\itemsep}{2pt}
-    \item If you want 10 classifiers with 10 thresholds, you now need 10 different \texttt{settings} dictionaries.
-    \item Every time you call a function, you must remember to pass the correct \texttt{settings}.
-    \item If you add one new setting later, you must update many function signatures and many function calls.
+    \item If you want 10 classifiers with 10 thresholds, you need 10 separate \texttt{settings} dictionaries.
+    \item Every function call must include the correct \texttt{settings} reference.
+    \item Adding a new setting forces you to update many function signatures and many call sites.
 \end{itemize}
 
 \noindent
-This session (Session 6), you refactor your session 5 design using \textbf{Object-Oriented Programming (OOP)}.
-The core idea is simple:
+In Session 6 we solve this by using a \textbf{class}.
+The core idea is:
 \begin{quote}
-\textbf{Bundle the data (configuration) and the behavior (functions) together.}
+\textbf{Bundle the configuration (data) and the behavior (functions) into one place.}
 \end{quote}
 
 \noindent
 \textbf{Refactoring promise:} the classifier rule itself stays the same.
-This session reorganizes code, but it should \textbf{not change} what "setosa" means or how the threshold rule works.
+This session reorganizes where the code lives, but it does \textbf{not} change what ``setosa'' means or how the threshold rule works.
 
-\subsection{Transition Map: Session 5 Functions $\rightarrow$ Session 6 Class}
-The classifier logic itself (if petal\_length < threshold ...) remains exactly the same.
+\section{What You Will Learn}
+By the end of this session, you will be able to:
+\begin{enumerate}
+    \item \textbf{Define a class} with \texttt{\_\_init\_\_}, attributes, and methods.
+    \item \textbf{Understand \texttt{self}} and why every method receives it as the first parameter.
+    \item \textbf{Convert functions into methods} by replacing global references with \texttt{self.attribute} references.
+    \item \textbf{Call methods on an object}, for example \texttt{classifier.predict(sample)}.
+    \item \textbf{Build a complete prediction pipeline} inside a class.
+\end{enumerate}
+
+\section{Transition Map: Session 5 Functions $\rightarrow$ Session 6 Class}
+
+The classifier logic (if \texttt{petal\_length < threshold} ...) stays exactly the same.
 What changes is \textit{where} that logic lives and \textit{how} you access it.
 
+\medskip
 \noindent
-Use this table as your translation guide. It shows how session 5 functions and settings translate into session 6 attributes and methods:
+Use this table as your translation guide:
 
 \input{session6/tab6.tex}
 
-\section{The Blueprint and Data (\texttt{\_\_init\_\_})}
+\section{The Blueprint: Defining a Class}
 
-\begin{tcolorbox}[title=Do: Define the Blueprint and Data (\texttt{\_\_init\_\_})]
-A class starts with a special constructor method called \texttt{\_\_init\_\_}.
-This method runs \textbf{automatically} when you create a new object.
-Its job is to put the object into a valid starting state.
+A class is like a \textbf{blueprint} for building objects.
+Think of a cookie cutter: the cutter itself is the class, and every cookie you make from it is one object (or ``instance'').
 
-In session 5, you used \texttt{get\_default\_settings()} to build a dictionary.
-In session 6, you store that information as \textbf{attributes} on \texttt{self}.
-\texttt{self} is how a method refers to the current object.
+\medskip
+\noindent
+The class definition in Python looks like this:
 
 \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
 class IrisRuleClassifier:
-    def __init__(self, threshold=2.0):
-        # Store configuration inside the instance (self)
-        self.threshold = threshold
-        
-        # We enforce these attribute names so later sessions can reuse your class!
-        self.positive_label = "setosa"
-        self.negative_label = "not_setosa"
+    # Everything indented here belongs to the class
+    pass
 \end{minted}
 
-\textbf{Task:}
-\begin{enumerate}
-    \item Define this \texttt{\_\_init\_\_} method inside the \texttt{IrisRuleClassifier} class.
-    \item In \texttt{main()}, create an instance: \texttt{my\_clf = IrisRuleClassifier(threshold=2.5)}.
-    \item Print the stored threshold: \texttt{print("Threshold:", my\_clf.threshold)}.
-\end{enumerate}
+\noindent
+The class name uses \textbf{CamelCase} by convention (each word starts with a capital letter).
+
+\subsection{What is \texttt{self}?}
+
+Every method inside a class receives a special first argument called \texttt{self}.
+\textbf{\texttt{self} means ``this specific object''.}
+
+\medskip
+\noindent
+When you write:
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+self.threshold = 2.0
+\end{minted}
+
+\noindent
+you are storing the value \texttt{2.0} \textbf{inside this particular object}.
+A different object can store a different value at the same attribute name without interfering.
+
+\medskip
+\noindent
+You do \textbf{not} pass \texttt{self} yourself when calling a method.
+Python passes it automatically.
+When you write \texttt{classifier.predict(sample)}, Python actually calls
+\texttt{IrisRuleClassifier.predict(classifier, sample)} behind the scenes.
+
+\subsection{Task 1: Define the \_\_init\_\_ Method}
+
+\begin{tcolorbox}[title=Task 1: Define the \_\_init\_\_ Method]
+The special method \texttt{\_\_init\_\_} (two underscores on each side) runs \textbf{automatically} whenever you create a new object.
+Its job is to store the object's starting configuration.
+
+\medskip
+\noindent
+In your template, find the comment labelled \textbf{Task 1}.
+Complete the \texttt{\_\_init\_\_} method so that it stores:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item \texttt{self.threshold} --- the classification boundary (default value \texttt{2.0})
+    \item \texttt{self.positive\_label} --- the string \texttt{"setosa"}
+    \item \texttt{self.negative\_label} --- the string \texttt{"not\_setosa"}
+\end{itemize}
 \end{tcolorbox}
 
+\noindent
+Once you complete \texttt{\_\_init\_\_}, you can create an object like this:
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+classifier = IrisRuleClassifier(threshold=2.0)
+print("Threshold:", classifier.threshold)
+print("Positive label:", classifier.positive_label)
+\end{minted}
+
+\noindent
+Notice that you \textbf{do not} pass \texttt{self} when creating the object or when accessing attributes.
+Python handles \texttt{self} for you.
+
 \begin{tcolorbox}[title=Checkpoint]
-You should be able to create two objects with different thresholds and see that each object stores its own value:
+Create two classifiers with different thresholds and verify that each object remembers its own value:
 \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
 clf_a = IrisRuleClassifier(threshold=1.5)
 clf_b = IrisRuleClassifier(threshold=2.5)
-print(clf_a.threshold, clf_b.threshold)  # should print two different numbers
+print(clf_a.threshold, clf_b.threshold)  # should print: 1.5 2.5
 \end{minted}
+If you see two different numbers, you have successfully stored configuration inside an object.
 \end{tcolorbox}
+
 \begin{tcolorbox}[title=Common Mistake]
-Forgetting \texttt{self}.
-Inside methods you must write \texttt{self.threshold}, not just \texttt{threshold}, because \texttt{threshold} is not a global variable.
+Forgetting \texttt{self.} inside a method.
+Writing just \texttt{threshold = threshold} inside \texttt{\_\_init\_\_} creates a local variable that disappears after the method ends.
+You must write \texttt{self.threshold = threshold} to store it on the object.
 \end{tcolorbox}
 
-\section{The Logic (\texttt{predict})}
+\section{Methods: Functions That Belong to an Object}
 
-\begin{tcolorbox}[title=Do: Implement predict]
-In session 5, you wrote \texttt{classify\_sample(sample, settings)}.
-In session 6, this becomes a \textbf{method}.
-Because \texttt{threshold} and the labels already live on \texttt{self}, you no longer need a \texttt{settings} dictionary argument.
+A \textbf{method} is simply a function that lives inside a class.
+The only real difference from a regular function is:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item a regular function stands alone and has no built-in access to shared data,
+    \item a method belongs to an object and can read or update the object's data through \texttt{self}.
+\end{itemize}
 
-Conceptually, you are changing:
-\texttt{classify\_sample(sample, settings)} $\rightarrow$ \texttt{my\_clf.predict(sample)}
+\noindent
+Even if a method does not use any attribute (like the simple status printer below), it still receives \texttt{self} as its first parameter because it belongs to the class.
 
+\subsection{Example: Refactoring a Function into a Method}
+
+Before asking you to refactor the prediction methods yourself, let's see one complete example of how to convert a standalone function into a method.
+
+\medskip
+\noindent
+In Session 5, you may have used a standalone function like \texttt{make\_print\_status} that printed status messages.
+In Session 6, we convert it into a class method called \texttt{print\_status}.
+
+\medskip
+\noindent
+\textbf{The standalone function version (Session 5 style):}
 \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
-    def predict(self, sample):
-        # We assume sample is a dict with 'petal_length'
-        if sample["petal_length"] < self.threshold:
-            return self.positive_label
-        return self.negative_label
+def make_print_status(status_text):
+    print(f"[STATUS] {status_text}")
 \end{minted}
 
-\textbf{Task:} Add this method to your class (indented inside the class). Identify which inputs are "per sample" and which inputs are "settings".
-\texttt{sample} changes every iteration, so it stays an argument. \texttt{threshold} is a setting, so it becomes \texttt{self.threshold}.
-\end{tcolorbox}
+\noindent
+\textbf{The class method version (Session 6 style):}
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+class IrisRuleClassifier:
+    # ... __init__ above ...
 
-\begin{tcolorbox}[title=Checkpoint]
-Call \texttt{my\_clf.predict(...)} on a single dictionary and make sure you get either \texttt{"setosa"} or \texttt{"not\_setosa"}.
-\end{tcolorbox}
-\begin{tcolorbox}[title=Common Mistake]
-Forgetting to include \texttt{self} as the first parameter of a method. If you define \texttt{def predict(sample):}, Python will raise a TypeError when you call it!
-\end{tcolorbox}
+    def print_status(self, status_text):
+        """Print a status message."""
+        print(f"[STATUS] {status_text}")
+\end{minted}
 
-\section{Processing the Dataset (Evaluation)}
-
-\begin{tcolorbox}[title=Do: Implement evaluate]
-In session 5, you had a function \texttt{initialize\_predictions} that looped over the data.
-We will now create a method \texttt{evaluate(self, dataset)} that does the entire prediction loop and calculates accuracy.
-
-\textbf{Why make this a method?}
-Because evaluation depends on \texttt{predict()}, and \texttt{predict()} depends on the object's configuration.
-By keeping them together, you avoid passing settings around.
-
-\textbf{Task:} Implement the \texttt{evaluate(self, dataset)} method. 
-\begin{itemize}\setlength{\itemsep}{2pt}
-    \item The evaluation loop should call \texttt{self.predict(sample)}.
-    \item Determine truth (if species is "setosa", truth is \texttt{self.positive\_label}, else \texttt{self.negative\_label}).
-    \item The method should keep counting logic local (\texttt{correct}, \texttt{total}).
-    \item \textbf{CRITICAL:} Ensure \texttt{total += 1} runs for every sample, even if the prediction is wrong.
-    \item Return accuracy (\texttt{correct / total} if \texttt{total > 0} else \texttt{0.0}).
-\end{itemize}
-\end{tcolorbox}
-
-\begin{tcolorbox}[title=Checkpoint]
-\begin{itemize}\setlength{\itemsep}{2pt}
-    \item Accuracy is a number between 0.0 and 1.0.
-    \item Test your method on a dataset with at least one misclassified sample and confirm that \texttt{total} equals the number of samples.
-\end{itemize}
-\end{tcolorbox}
-\begin{tcolorbox}[title=Common Mistake]
-Forgetting to increment \texttt{total} for every sample, even wrong ones. If you only increment total when correct, your accuracy will always be 100\% (which is wrong!).
-\end{tcolorbox}
-
-\section{Putting it all together (Main Script)}
-
-\begin{tcolorbox}[title=Do: Use the Class in \texttt{main()}]
-Now you can use your class to test different classifiers easily.
-The workflow becomes:
-\begin{enumerate}
-    \item Use the provided \texttt{dataset} (list of dictionaries).
-    \item Create one or more classifier objects (each with its own threshold).
-    \item Ask each object to evaluate itself on the dataset.
+\noindent
+\textbf{What changed?}
+\begin{enumerate}\setlength{\itemsep}{2pt}
+    \item The function is now \textbf{indented inside the class}.
+    \item It receives \texttt{self} as the first parameter (even though it does not use any attributes).
+    \item You call it using \texttt{classifier.print\_status("Build dataset")} instead of \texttt{make\_print\_status("Build dataset")}.
 \end{enumerate}
 
+\noindent
+\textbf{How to call it:}
 \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
-# Create Objects with different configurations
-clf_strict = IrisRuleClassifier(threshold=1.5)   # Strict threshold
-clf_loose  = IrisRuleClassifier(threshold=2.5)   # Loose threshold
-
-# Evaluate each one
-print("Strict Classifier Accuracy:", clf_strict.evaluate(dataset))
-print("Loose Classifier Accuracy: ", clf_loose.evaluate(dataset))
+classifier = IrisRuleClassifier()
+classifier.print_status("Build dataset")
+classifier.print_status("Run prediction loop")
 \end{minted}
 
-Notice that the dataset is passed in, but the threshold is not. The threshold lives inside each object!
+\noindent
+This reads naturally: ``ask this classifier object to print a status message''.
+
+\medskip
+\noindent
+\textbf{This method is already complete in your template.}
+From Section 6.6 onward, you will refactor the remaining methods yourself.
+
+\section{The Prediction Methods}
+
+Now we come to the first methods that use \texttt{self.threshold} and \texttt{self.positive\_label}.
+This is the most important benefit of storing configuration inside the object: you no longer need to pass those values as arguments every time.
+
+\subsection{Task 2: Implement compute\_threshold\_prediction}
+
+\begin{tcolorbox}[title=Task 2: Implement compute\_threshold\_prediction]
+This method predicts the label for \textbf{one flower sample} using the threshold rule from Session 3.
+
+\medskip
+\noindent
+In Session 5, the equivalent function used global names like \texttt{THRESHOLD}, \texttt{POSITIVE\_LABEL}, and \texttt{NEGATIVE\_LABEL}.
+In Session 6, you replace those with object attributes:
+
+\begin{center}
+\texttt{THRESHOLD} $\rightarrow$ \texttt{self.threshold} \\
+\texttt{POSITIVE\_LABEL} $\rightarrow$ \texttt{self.positive\_label} \\
+\texttt{NEGATIVE\_LABEL} $\rightarrow$ \texttt{self.negative\_label}
+\end{center}
+
+\medskip
+\noindent
+In your template, find the comment labelled \textbf{Task 2}.
+Complete \texttt{compute\_threshold\_prediction(self, sample)} so that:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item if \texttt{sample["petal\_length"] < self.threshold}, return \texttt{self.positive\_label}
+    \item otherwise, return \texttt{self.negative\_label}
+\end{itemize}
+\end{tcolorbox}
+
+\noindent
+For example, given a sample with \texttt{petal\_length = 1.4} and a threshold of \texttt{2.0}:
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+sample = {"petal_length": 1.4, "species": "setosa", "id": "flower1"}
+classifier = IrisRuleClassifier(threshold=2.0)
+prediction = classifier.compute_threshold_prediction(sample)
+print(prediction)  # should print: setosa
+\end{minted}
+
+\begin{tcolorbox}[title=Checkpoint]
+Test your method on a single sample by hand.
+A sample with \texttt{petal\_length = 1.4} and \texttt{threshold = 2.0} should return \texttt{"setosa"}.
+A sample with \texttt{petal\_length = 4.5} and \texttt{threshold = 2.0} should return \texttt{"not\_setosa"}.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Common Mistake]
+Using \texttt{threshold} instead of \texttt{self.threshold} inside the method.
+Inside a class method, all object data must be accessed through \texttt{self}.
+\end{tcolorbox}
+
+\subsection{Task 3: Implement derive\_true\_label}
+
+\begin{tcolorbox}[title=Task 3: Implement derive\_true\_label]
+The Iris dataset contains three species: \texttt{"setosa"}, \texttt{"versicolor"}, and \texttt{"virginica"}.
+But our classifier is a \textbf{binary} classifier --- it only uses two lesson labels: \texttt{"setosa"} and \texttt{"not\_setosa"}.
+
+\medskip
+\noindent
+This method converts the real species name into the simplified lesson label so we can compare the prediction to the truth.
+
+\medskip
+\noindent
+\textbf{Important:} this method has exactly one job --- return the correct lesson label for \textbf{one sample}.
+It does \textit{not} update any counters. It \textit{only} returns a string.
+
+\medskip
+\noindent
+In your template, find the comment labelled \textbf{Task 3}.
+Complete \texttt{derive\_true\_label(self, sample)} so that:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item if \texttt{sample["species"] == self.positive\_label}, return \texttt{self.positive\_label}
+    \item otherwise, return \texttt{self.negative\_label}
+\end{itemize}
+\end{tcolorbox}
+
+\noindent
+For example:
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+sample_setosa     = {"species": "setosa",     "petal_length": 1.4}
+sample_versicolor = {"species": "versicolor", "petal_length": 4.7}
+
+print(classifier.derive_true_label(sample_setosa))      # setosa
+print(classifier.derive_true_label(sample_versicolor))  # not_setosa
+\end{minted}
+
+\begin{tcolorbox}[title=Checkpoint]
+Try the method on both a setosa sample and a non-setosa sample.
+Both should return the correct lesson label, not the raw species string.
+\end{tcolorbox}
+
+\section{The Evaluation Methods}
+
+The next three methods form the evaluation pipeline.
+Each method has one specific job, and they work together in \texttt{run\_prediction\_loop}.
+
+\subsection{Task 4: Implement update\_result\_counts}
+
+\begin{tcolorbox}[title=Task 4: Implement update\_result\_counts]
+After predicting and finding the true label for one sample, we need to update our running totals.
+This method takes the current counters as inputs, updates them, and returns them.
+
+\medskip
+\noindent
+\textbf{Why return values instead of just changing something?}
+Because beginners find explicit return values easier to follow than hidden state changes.
+When you return the updated values, you can immediately see what changed.
+
+\medskip
+\noindent
+In your template, find the comment labelled \textbf{Task 4}.
+Complete \texttt{update\_result\_counts(self, correct, wrong, total, y\_pred\_list, y\_pred, y\_true)} so that it:
+\begin{enumerate}
+    \item Compares \texttt{y\_pred} and \texttt{y\_true}.
+    \item If they match, increments \texttt{correct} by 1; otherwise increments \texttt{wrong} by 1.
+    \item Always increments \texttt{total} by 1 (even when the prediction is wrong).
+    \item Appends \texttt{y\_pred} to \texttt{y\_pred\_list}.
+    \item Returns the tuple \texttt{(correct, wrong, total, y\_pred\_list)}.
+\end{enumerate}
+\end{tcolorbox}
+
+\noindent
+The return tuple lets the caller unpack the updated values cleanly:
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+correct, wrong, total, y_pred_list = classifier.update_result_counts(
+    correct, wrong, total, y_pred_list, y_pred, y_true
+)
+\end{minted}
+
+\begin{tcolorbox}[title=Checkpoint]
+\textbf{Critical self-check:} does \texttt{total} increase by 1 for every sample, even when the prediction is wrong?
+If you only increment \texttt{total} when the prediction is correct, your accuracy will always report 100\% --- which is wrong!
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Common Mistake]
+Placing \texttt{total += 1} inside the \texttt{if} block.
+It must be outside and after both branches so it runs no matter what.
+\end{tcolorbox}
+
+\subsection{Task 5: Implement calculate\_accuracy}
+
+\begin{tcolorbox}[title=Task 5: Implement calculate\_accuracy]
+Once the prediction loop is done, we want to express the classifier's performance as a percentage.
+Accuracy is simply the number of correct predictions divided by the total number of samples, multiplied by 100.
+
+\medskip
+\noindent
+In your template, find the comment labelled \textbf{Task 5}.
+Complete \texttt{calculate\_accuracy(self, correct, total)} so that:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item If \texttt{total > 0}, return \texttt{(correct / total) * 100}.
+    \item If \texttt{total == 0} (empty dataset), return \texttt{0.0} to avoid a division-by-zero error.
+\end{itemize}
+\end{tcolorbox}
+
+\noindent
+Protecting against division by zero is a good beginner habit.
+In a real project, you might also log a warning if the dataset is empty.
+
+\begin{tcolorbox}[title=Checkpoint]
+Call \texttt{classifier.calculate\_accuracy(50, 50)} and confirm you get \texttt{100.0}. \\
+Call \texttt{classifier.calculate\_accuracy(40, 50)} and confirm you get \texttt{80.0}. \\
+Call \texttt{classifier.calculate\_accuracy(0, 0)} and confirm you get \texttt{0.0}.
+\end{tcolorbox}
+
+\subsection{Task 6: Implement run\_prediction\_loop}
+
+\begin{tcolorbox}[title=Task 6: Implement run\_prediction\_loop]
+This is the ``orchestrator'' method.
+It loops through every sample in the dataset, calls the other methods for each sample, and returns the final evaluation counters.
+
+\medskip
+\noindent
+\textbf{What you will see here} is the main benefit of grouping methods in a class:
+one method can call other methods on the same object using \texttt{self.method\_name(...)}.
+
+\medskip
+\noindent
+In your template, find the comment labelled \textbf{Task 6}.
+Complete \texttt{run\_prediction\_loop(self, dataset)} so that it:
+\begin{enumerate}
+    \item Starts \texttt{correct}, \texttt{wrong}, \texttt{total} at \texttt{0}.
+    \item Starts \texttt{y\_pred\_list} as an empty list \texttt{[]}.
+    \item Prints a header line: \texttt{"\textbackslash n=== Start Session 6 Prediction Loop ==="}.
+    \item Loops through each \texttt{sample} in \texttt{dataset}:
+    \begin{enumerate}
+        \item Calls \texttt{self.compute\_threshold\_prediction(sample)} to get \texttt{y\_pred}.
+        \item Calls \texttt{self.derive\_true\_label(sample)} to get \texttt{y\_true}.
+        \item Calls \texttt{self.update\_result\_counts(...)} and unpacks the returned tuple.
+        \item Prints one trace line per sample (see format below).
+    \end{enumerate}
+    \item Returns the tuple \texttt{(correct, wrong, total, y\_pred\_list)}.
+\end{enumerate}
+
+\medskip
+\noindent
+Use this per-sample trace format inside the loop:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+print(
+    f"id={sample['id']} | true={y_true} | pred={y_pred} | "
+    f"petal_length={sample['petal_length']}"
+)
+\end{minted}
+\end{tcolorbox}
+
+\noindent
+This method is the clearest example in Session 6 of methods calling each other.
+\texttt{run\_prediction\_loop} does not contain the prediction logic itself --- it \textbf{delegates} to \texttt{compute\_threshold\_prediction} and \texttt{derive\_true\_label}.
+That is good design: each method stays focused on its own single job.
+
+\begin{tcolorbox}[title=Checkpoint]
+Run your script.
+You should see one trace line per flower sample printed to the terminal.
+The trace lines should show the correct \texttt{true} and \texttt{pred} labels.
+\end{tcolorbox}
+
+\subsection{Task 7: Implement print\_summary}
+
+\begin{tcolorbox}[title=Task 7: Implement print\_summary]
+After the prediction loop finishes, we want to display a clean summary of the results.
+This method receives all the values it needs as arguments and prints them.
+
+\medskip
+\noindent
+In your template, find the comment labelled \textbf{Task 7}.
+Complete \texttt{print\_summary(self, correct, wrong, total, y\_pred\_list, accuracy)} so that it prints a summary in this format:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+=== Session 6 Summary ===
+Correct: <correct>
+Wrong:   <wrong>
+Total:   <total>
+Accuracy (%): <accuracy rounded to 2 decimal places>
+All predictions: <y_pred_list>
+\end{minted}
+\end{tcolorbox}
+
+\noindent
+Use \texttt{round(accuracy, 2)} to limit the decimal places.
+
+\begin{tcolorbox}[title=Checkpoint]
+After completing Task 7 and Task 8, you should see a summary block at the bottom of your output.
+On the provided dataset, which contains only setosa flowers, you should see \texttt{Accuracy (\%): 100.0}.
+\end{tcolorbox}
+
+\section{Using the Class in main()}
+
+\subsection{Task 8: Use the Class in main()}
+
+\begin{tcolorbox}[title=Task 8: Use the Class in main()]
+Now that all the methods are complete, connect them inside \texttt{main()}.
+
+\medskip
+\noindent
+In your template, find the comment labelled \textbf{Task 8}.
+Complete the \texttt{main()} function so that it:
+\begin{enumerate}
+    \item Calls \texttt{setup\_application\_list()} to load the dataset.
+    \item Creates a \texttt{classifier = IrisRuleClassifier(threshold=2.0)}.
+    \item Calls \texttt{classifier.print\_status("Build dataset")}.
+    \item Calls \texttt{classifier.print\_status("Run prediction loop")}.
+    \item Calls \texttt{classifier.run\_prediction\_loop(dataset)} and unpacks the returned tuple.
+    \item Calls \texttt{classifier.calculate\_accuracy(correct, total)} to get \texttt{accuracy}.
+    \item Calls \texttt{classifier.print\_status("Print summary")}.
+    \item Calls \texttt{classifier.print\_summary(correct, wrong, total, y\_pred\_list, accuracy)}.
+\end{enumerate}
+\end{tcolorbox}
+
+\noindent
+When your \texttt{main()} is complete, calling the classifier should look clean and readable:
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+def main():
+    dataset = setup_application_list()
+
+    classifier = IrisRuleClassifier(threshold=2.0)
+
+    classifier.print_status("Build dataset")
+    classifier.print_status("Run prediction loop")
+
+    correct, wrong, total, y_pred_list = classifier.run_prediction_loop(dataset)
+    accuracy = classifier.calculate_accuracy(correct, total)
+
+    classifier.print_status("Print summary")
+    classifier.print_summary(correct, wrong, total, y_pred_list, accuracy)
+\end{minted}
+
+\noindent
+Compare this to the function-based Session 5 version.
+Notice that you no longer pass a \texttt{settings} dictionary anywhere.
+The threshold and labels live inside the \texttt{classifier} object.
+
+\begin{tcolorbox}[title=Checkpoint]
+Run your completed file using the terminal command: \\
+\texttt{python3 session6/session6\_iris\_template.py}
+
+\medskip
+\noindent
+You should see output similar to:
+\begin{verbatim}
+[STATUS] Build dataset
+[STATUS] Run prediction loop
+
+=== Start Session 6 Prediction Loop ===
+id=flower1 | true=setosa | pred=setosa | petal_length=1.4
+...
+
+[STATUS] Print summary
+
+=== Session 6 Summary ===
+Correct: 50
+Wrong:   0
+Total:   50
+Accuracy (%): 100.0
+All predictions: ['setosa', 'setosa', ...]
+\end{verbatim}
 \end{tcolorbox}
 
 \section{Review and Next Steps}
 
 \textbf{Summary:}
 \begin{itemize}
-    \item \textbf{Classes} group data (attributes) and behavior (methods) together.
-    \item \textbf{Objects} remember their own configuration, allowing you to create many variations easily.
-    \item Object-oriented design is the foundation of reusable software libraries. Machine-learning libraries like \texttt{scikit-learn} use objects to encapsulate models!
+    \item \textbf{Classes} group data (attributes) and behavior (methods) together in one place.
+    \item \textbf{Objects} remember their own configuration, which means each object can operate independently.
+    \item \textbf{\texttt{self}} is how a method accesses the object's own attributes and other methods.
+    \item \textbf{\texttt{\_\_init\_\_}} is the constructor: it runs automatically when an object is created and sets up starting data.
+    \item Methods can call each other inside the same class using \texttt{self.method\_name(...)}.
+    \item Object-oriented design is the foundation of major machine learning libraries like \texttt{scikit-learn}.
 \end{itemize}
 
 \textbf{Review Questions:}
 \begin{enumerate}
     \item What does \texttt{self} refer to inside a method?
-    \item Why did we move \texttt{threshold} from a dictionary into \texttt{self.threshold}?
-    \item Why is inheritance useful? (Think ahead: what if we wanted a new classifier that guessed randomly, but shared the same evaluation logic?)
+    \item What is the difference between \texttt{threshold} and \texttt{self.threshold} inside a method?
+    \item Why did we give \texttt{derive\_true\_label} only one job (convert a species name to a lesson label)?
+    \item Why does \texttt{total += 1} need to be outside the \texttt{if/else} block in \texttt{update\_result\_counts}?
+    \item How would you create a second classifier with a different threshold without changing the first one?
 \end{enumerate}
 
-\textbf{Micro-Exercise:} Create two classifier objects with different thresholds (e.g., 1.4 and 5.0) and compare their accuracies. Can you find a threshold that performs perfectly on the provided dataset?
+\textbf{Micro-Exercise:} Create two classifier objects with different thresholds and compare their accuracies on the same dataset.
+For example, try \texttt{threshold=1.4} and \texttt{threshold=5.0}.
+Which one performs best?
 
-\textbf{Stretch Exercise:} Write an additional method on the class called \texttt{predict\_all(self, dataset)} that returns a list of predictions for the entire dataset, rather than just returning accuracy.
+\textbf{Stretch Exercise:} Add a new method called \texttt{predict\_all(self, dataset)} that returns a list of predicted labels for the entire dataset, without running the full evaluation loop.
