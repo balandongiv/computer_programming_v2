@@ -123,7 +123,7 @@ def run_prediction_loop(dataset):
     Returns:
         tuple: correct, wrong, total, y_pred_list, accuracy
     """
-    # Task 3 from Session 3: initialize metrics and predictions
+    # Task III from Session III: initialize metrics and predictions
     correct = 0      # Count of correct predictions
     wrong = 0        # Count of wrong predictions
     total = 0        # Total samples processed
@@ -131,7 +131,7 @@ def run_prediction_loop(dataset):
 
     print("\n=== Start session 4 Prediction Loop ===")
 
-    # Task 4 and Task 5 from Session 3
+    # Task IV and Task V from Session III
     for sample in dataset:
         print("\nProcessing sample with id:", sample["id"])
 
@@ -175,9 +175,9 @@ def print_summary(correct, wrong, total, y_pred_list, accuracy):
 
 # Task 2: Build the dataset list
 def setup_application_list():
-    """Combination of Task 1 and Task 2 in session 3, but now in a function."""
+    """Combination of Task I and Task II in session III, but now in a function."""
 
-    # Task 1 in session 3: Define dictionaries for flower1 and flower2 using canonical keys
+    # Task I in session III: Define dictionaries for flower1 and flower2 using canonical keys
     # Paste the two dictionaries you created in Session 3 here, but make sure to use the same keys as in the original dataset (id, sepal_length, sepal_width, petal_length, petal_width, species). Here, we already define the flower1, but you should also define flower2 with the same keys.
     flower1 = {
         "id": "flower1",
