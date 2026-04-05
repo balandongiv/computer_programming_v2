@@ -27,78 +27,141 @@ print(f"[STATUS] {status_text}")
 \end{minted}
 & Optional helper for readable progress logs. \\
 \hline
-\texttt{determine\_binary\_label(sample, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-if sample[settings["feature_name"]] < settings["threshold"]:
-	return settings["positive_label"]
-return settings["negative_label"]
+\texttt{compute\_threshold\_prediction(sample)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+	if sample[FEATURE_NAME] < THRESHOLD:
+		y_pred = POSITIVE_LABEL
+	else:
+		y_pred = NEGATIVE_LABEL
 \end{minted}
-& (binary: setosa vs not\_setosa). \\
+& This function shall return the y\_pred which is a binary label (setosa vs not\_setosa). \\
 \hline
-\texttt{determine\_true\_binary\_label(sample, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-if sample[settings["label_key"]] == settings["positive_label"]:
-	return settings["positive_label"]
-return settings["negative_label"]
+\texttt{derive\_true\_label(sample)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+% def derive_true_label(sample):
+	if sample[LABEL_KEY] == POSITIVE_LABEL:
+		y_true = POSITIVE_LABEL
+	else:
+		y_true = NEGATIVE_LABEL
+
+	return y_true
 \end{minted}
-& Converts species labels into binary truth labels. \\
+& Not to be confuse with the compute\_threshold\_prediction, this is compare the labels. Converts species labels into binary truth labels.It shall return the y\_true \\
+% \hline
+% \texttt{evaluate\_prediction(y\_pred, y\_true)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+% return (y_pred == y_true)
+% \end{minted}
+% & Returns a boolean correctness flag. \\
 \hline
-\texttt{evaluate\_prediction(y\_pred, y\_true)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-return (y_pred == y_true)
-\end{minted}
-& Returns a boolean correctness flag. \\
-\hline
-\texttt{update\_metrics(metrics, y\_pred, y\_true)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-if y_pred == y_true:
-	metrics["correct"] += 1
-else:
-	metrics["wrong"] += 1
-metrics["total"] += 1
-metrics["y_pred_list"].append(y_pred)
+\texttt{update\_result\_counts(correct, wrong, total, y\_pred\_list, y\_pred, y\_true)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+
+    if y_pred == y_true:
+        correct += 1
+    else:
+        wrong += 1
+
+    total += 1
+    y_pred_list.append(y_pred)
+
 \end{minted}
 & Refactors the counter update + prediction list append block. \\
 \hline
-\texttt{classify\_sample(sample, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-return determine_binary_label(sample, settings)
+\texttt{calculate\_accuracy(correct, total)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+
+    if total > 0:
+        accuracy = (correct / total) * 100
+    else:
+        accuracy = 0.0
+
+
 \end{minted}
-& Keeps the main loop clean and prepares for Session 5/6 changes. \\
+& Calculates accuracy as a percentage after the loop is complete. \\
 \hline
-\texttt{load\_iris\_data(filepath)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-dataset = []
-with open(filepath, "r", encoding="utf-8") as f:
-	reader = csv.DictReader(f)
-	for row in reader:
-		dataset.append({...})
+\texttt{run\_prediction\_loop(dataset)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+
+    # Task 3 from Session 3: initialize metrics and predictions
+    correct = 0      # Count of correct predictions
+    wrong = 0        # Count of wrong predictions
+    total = 0        # Total samples processed
+    y_pred_list = []  # List of all predictions made
+
+    print("\n=== Start session 4 Prediction Loop ===")
+
+    # Task 4 and Task 5 from Session 3
+    for sample in dataset:
+        # 1. Compute prediction
+        y_pred = compute_threshold_prediction(sample)
+
+        # 2. Derive true label
+        y_true = derive_true_label(sample)
+
+        # 3. Update counters and prediction list
+        correct, wrong, total, y_pred_list = update_result_counts(
+            correct, wrong, total, y_pred_list, y_pred, y_true
+        )
+
+        # 4. Print one line for this sample
+        print(
+            f"id={sample['id']} | true={y_true} | pred={y_pred} | "
+            f"petal_length={sample['petal_length']}"
+        )
+
 \end{minted}
-& \textbf{Remark:} this session we load the dataset from \texttt{CSV} (not JSON). Convert numeric fields to \texttt{float}. \\
+& Wraps the beginner prediction loop into one function. \\
 \hline
-\texttt{get\_default\_settings()} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-return {
-	"threshold": 2.0, "feature_name": "petal_length",
-	"positive_label": "setosa", "negative_label": "not_setosa",
-	"label_key": "species"
-}
+\texttt{print\_summary(correct, wrong, total, y\_pred\_list, accuracy)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+    print("\n=== session 4 Summary ===")
+    print("Correct:", correct)
+    print("Wrong:", wrong)
+    print("Total:", total)
+    print("Accuracy (%):", round(accuracy, 2))
+    print("All predictions:", y_pred_list)
 \end{minted}
-& Keeps Session 2/3 naming stable; no external settings file yet. \\
+& Prints the final beginner-friendly summary. \\
+
 \hline
-\texttt{initialize\_predictions(dataset, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-for sample in dataset:
-	y_pred = classify_sample(sample, settings)
-	y_true = determine_true_binary_label(sample, settings)
-	update_metrics(metrics, y_pred, y_true)
-	print(f"id=... | true=... | pred=... | petal_length=...")
+\texttt{setup\_application\_list()} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+
+
+    flower1 = {
+        "id": "flower1",
+        "sepal_length": 5.1,
+        "sepal_width": 3.5,
+        "petal_length": 1.4,
+        "petal_width": 0.2,
+        "species": "setosa"
+    }
+
+    flower2 = {
+        "id": "flower2",
+        "sepal_length": 4.9,
+        "sepal_width": 3.0,
+        "petal_length": 1.4,
+        "petal_width": 0.2,
+        "species": "setosa"
+    }
+
+    # Task 2 in session 3: Build the dataset list
+    # Combine our dictionaries into a single list
+    dataset = [flower1, flower2]
 \end{minted}
-& This is the session 3 loop, but decomposed into functions. \\
-\hline
-\texttt{setup\_application(filepath)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-dataset = load_iris_data(filepath)
-settings = get_default_settings()
-result = initialize_predictions(dataset, settings)
-\end{minted}
-& Small pipeline wrapper for readability. \\
+& Builds the beginner example dataset directly in code. \\
 \hline
 \texttt{main()} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-print("Correct:", result["correct"])
+
+    make_print_status("Build dataset")
+    dataset = setup_application_list()
+
+    make_print_status("Run prediction loop")
+    correct, wrong, total, y_pred_list = run_prediction_loop(dataset)
+    accuracy = calculate_accuracy(correct, total)
+
+    make_print_status("Print summary")
+    print_summary(correct, wrong, total, y_pred_list, accuracy)
+
+
+if __name__ == "__main__":
+    main()
 \end{minted}
-& Runs the whole program and prints the final summary. \\
+& Runs the full beginner version end to end. \\
 \hline
 \end{longtable}
 \end{landscape}

@@ -11,13 +11,17 @@ POSITIVE_LABEL = "setosa"
 NEGATIVE_LABEL = "not_setosa"
 
 
+# Task 1: Add function that prints a status message
 def make_print_status(status_text):
     """Print a small status message.
 
     Args:
         status_text (str): A short message to show what the program is doing.
     """
+    # student should paste the statement print(f"[STATUS] {status_text}")
     print(f"[STATUS] {status_text}")
+    # Comment out the print statement for now, but you can uncomment it to see status messages.
+    pass
 
 
 def compute_threshold_prediction(sample):
@@ -92,13 +96,13 @@ def update_result_counts(correct, wrong, total, y_pred_list, y_pred, y_true):
 def calculate_accuracy(correct, total):
     """Calculate accuracy percentage.
 
-    Args:
-        correct (int): Number of correct predictions.
-        total (int): Number of processed samples.
+        Args:
+                correct (int): Number of correct predictions.
+                        total (int): Number of processed samples.
 
-    Returns:
-        float: Accuracy percentage.
-    """
+                            Returns:
+                                    float: Accuracy percentage.
+                                        """
     if total > 0:
         accuracy = (correct / total) * 100
     else:
@@ -129,6 +133,8 @@ def run_prediction_loop(dataset):
 
     # Task 4 and Task 5 from Session 3
     for sample in dataset:
+        print("\nProcessing sample with id:", sample["id"])
+
         # 1. Compute prediction
         y_pred = compute_threshold_prediction(sample)
 
@@ -167,10 +173,12 @@ def print_summary(correct, wrong, total, y_pred_list, accuracy):
     print("All predictions:", y_pred_list)
 
 
+# Task 2: Build the dataset list
 def setup_application_list():
     """Combination of Task 1 and Task 2 in session 3, but now in a function."""
-    # Task 1 in session 3: Define dictionaries for flower1 and flower2 using canonical keys
 
+    # Task 1 in session 3: Define dictionaries for flower1 and flower2 using canonical keys
+    # Paste the two dictionaries you created in Session 3 here, but make sure to use the same keys as in the original dataset (id, sepal_length, sepal_width, petal_length, petal_width, species). Here, we already define the flower1, but you should also define flower2 with the same keys.
     flower1 = {
         "id": "flower1",
         "sepal_length": 5.1,
@@ -180,32 +188,42 @@ def setup_application_list():
         "species": "setosa"
     }
 
-    flower2 = {
-        "id": "flower2",
-        "sepal_length": 4.9,
-        "sepal_width": 3.0,
-        "petal_length": 1.4,
-        "petal_width": 0.2,
-        "species": "setosa"
-    }
+    # flower2 = {
+    #     "id": "flower2",
+    #     "sepal_length": 4.9,
+    #     "sepal_width": 3.0,
+    #     "petal_length": 1.4,
+    #     "petal_width": 0.2,
+    #     "species": "setosa"
+    # }
 
     # Task 2 in session 3: Build the dataset list
     # Combine our dictionaries into a single list
-    dataset = [flower1, flower2]
+    dataset = [flower1
+               #    , flower2
+               ]
+    print("Dataset:", dataset)
     return dataset
 
 
 def main():
     """Run the full beginner version of the program."""
+
+    # Task 1 Session 4 : Add function that prints a status message
     make_print_status("Build dataset")
+
+    # Task 2 Session 4: Build the dataset list
     dataset = setup_application_list()
 
-    make_print_status("Run prediction loop")
-    correct, wrong, total, y_pred_list = run_prediction_loop(dataset)
-    accuracy = calculate_accuracy(correct, total)
+    # Task 3 Session 4: Success so far
+    # make_print_status("Run prediction loop")  # Uncomment this line to see status messages
 
-    make_print_status("Print summary")
-    print_summary(correct, wrong, total, y_pred_list, accuracy)
+    # Task 4 Session 4:
+    correct, wrong, total, y_pred_list = run_prediction_loop(dataset)
+    # accuracy = calculate_accuracy(correct, total)
+
+    # make_print_status("Print summary")
+    # print_summary(correct, wrong, total, y_pred_list, accuracy)
 
 
 if __name__ == "__main__":
