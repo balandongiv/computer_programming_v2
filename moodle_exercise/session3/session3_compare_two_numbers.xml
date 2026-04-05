@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name><text>Compare Two Numbers</text></name>
+    <questiontext format="html"><text><![CDATA[
+<p>Write a Python program that creates <code>x = 15</code> and <code>y = 9</code>. If <code>x</code> is greater than <code>y</code>, print <code>x is bigger</code>.</p>
+<p><strong>Expected output:</strong></p>
+<pre>x is bigger</pre>
+    ]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[
+<p>Use the <code>&gt;</code> operator and print the exact message shown in the question.</p>
+    ]]></text></generalfeedback>
+    <defaultgrade>3</defaultgrade><penalty>0</penalty><hidden>0</hidden><idnumber></idnumber>
+    <coderunnertype>python3</coderunnertype><prototypetype>0</prototypetype><allornothing>1</allornothing><penaltyregime>10, 20, ...</penaltyregime><precheck>0</precheck><hidecheck>0</hidecheck><showsource>0</showsource>
+    <answerboxlines>10</answerboxlines><answerboxcolumns>100</answerboxcolumns>
+    <answerpreload><![CDATA[x = 15
+y = 9
+
+# Write the if statement here
+if :
+    print()
+]]></answerpreload>
+    <globalextra></globalextra><useace></useace><resultcolumns></resultcolumns><template></template><iscombinatortemplate></iscombinatortemplate><allowmultiplestdins></allowmultiplestdins><answer><![CDATA[x = 15
+y = 9
+if x > y:
+    print("x is bigger")
+]]></answer><validateonsave>1</validateonsave><testsplitterre></testsplitterre><language></language><acelang></acelang><sandbox></sandbox><grader></grader><cputimelimitsecs></cputimelimitsecs><memlimitmb></memlimitmb><sandboxparams></sandboxparams><templateparams></templateparams><hoisttemplateparams>1</hoisttemplateparams><templateparamslang>None</templateparamslang><templateparamsevalpertry>0</templateparamsevalpertry><templateparamsevald>{}</templateparamsevald><twigall>0</twigall><uiplugin></uiplugin><uiparameters></uiparameters><attachments>0</attachments><attachmentsrequired>0</attachmentsrequired><maxfilesize>10240</maxfilesize><filenamesregex></filenamesregex><filenamesexplain></filenamesexplain><displayfeedback>1</displayfeedback><giveupallowed>0</giveupallowed><prototypeextra></prototypeextra>
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="1.0000000"><testcode><text></text></testcode><stdin><text></text></stdin><expected><text>x is bigger</text></expected><extra><text></text></extra><display><text>SHOW</text></display></testcase>
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000"><testcode><text></text></testcode><stdin><text></text></stdin><expected><text>x is bigger</text></expected><extra><text></text></extra><display><text>HIDE</text></display></testcase>
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000"><testcode><text></text></testcode><stdin><text></text></stdin><expected><text>x is bigger</text></expected><extra><text></text></extra><display><text>HIDE</text></display></testcase>
+    </testcases>
+    <tags><tag><text>session3</text></tag><tag><text>session3_compare_two_numbers</text></tag><tag><text>control-flow</text></tag></tags>
+  </question>
+</quiz>

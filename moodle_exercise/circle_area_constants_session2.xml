@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name>
+      <text>Calculate and Print Two Circle Areas</text>
+    </name>
+
+    <questiontext format="html">
+      <text><![CDATA[
+<p dir="ltr" style="text-align: left;">
+Write a Python program that creates the following variables:
+</p>
+<ul>
+  <li><code>pi = 3.14159</code></li>
+  <li><code>radius1 = 10</code></li>
+  <li><code>radius2 = 12</code></li>
+</ul>
+
+<p>Then calculate:</p>
+<ul>
+  <li><code>area1 = pi * radius1 * radius1</code></li>
+  <li><code>area2 = pi * radius2 * radius2</code></li>
+</ul>
+
+<p>Print <code>area1</code> on the first line and <code>area2</code> on the second line.</p>
+
+<p><strong>Expected output:</strong></p>
+<pre>314.159
+452.38896</pre>
+      ]]></text>
+    </questiontext>
+
+    <generalfeedback format="html">
+      <text><![CDATA[
+<p>Common mistakes for this question include:</p>
+<ul>
+  <li>Typing the wrong value for <code>pi</code>, <code>radius1</code>, or <code>radius2</code></li>
+  <li>Using addition instead of multiplication when calculating the area</li>
+  <li>Forgetting that the radius must be multiplied by itself</li>
+  <li>Printing the variable names instead of their values</li>
+  <li>Printing the answers in the wrong order</li>
+</ul>
+      ]]></text>
+    </generalfeedback>
+
+    <defaultgrade>3</defaultgrade>
+    <penalty>0</penalty>
+    <hidden>0</hidden>
+    <idnumber></idnumber>
+
+    <coderunnertype>python3</coderunnertype>
+    <prototypetype>0</prototypetype>
+    <allornothing>0</allornothing>
+    <penaltyregime>10, 20, ...</penaltyregime>
+    <precheck>0</precheck>
+    <hidecheck>0</hidecheck>
+    <showsource>0</showsource>
+
+    <answerboxlines>12</answerboxlines>
+    <answerboxcolumns>100</answerboxcolumns>
+
+    <answerpreload><![CDATA[# Create the variables below
+pi = 3.14159
+radius1 = 10
+radius2 = 12
+
+# Calculate the first area here
+area1 = 
+
+# Calculate the second area here
+area2 = 
+
+# Print the answers here
+print(area1)
+print(area2)
+]]></answerpreload>
+
+    <globalextra></globalextra>
+    <useace></useace>
+    <resultcolumns></resultcolumns>
+    <template><![CDATA[import contextlib
+import io
+import json
+
+student_code = """{{ STUDENT_ANSWER | e('py') }}"""
+stdout_buffer = io.StringIO()
+checks = [
+    ("Check the first printed line: area1", "314.159", 0, 1.5),
+    ("Check the second printed line: area2", "452.38896", 1, 1.5),
+]
+
+try:
+    compiled = compile(student_code, "<student>", "exec")
+    with contextlib.redirect_stdout(stdout_buffer):
+        exec(compiled, {"__name__": "__main__"})
+
+    output_lines = stdout_buffer.getvalue().splitlines()
+    rows = [["Check", "Expected", "Got", "Comment", "Mark", "iscorrect"]]
+    total_awarded = 0.0
+
+    for label, expected, target_index, mark in checks:
+        if len(output_lines) <= target_index:
+            got = "(missing output line)"
+            comment = f"Expected line {target_index + 1}, but your program printed only {len(output_lines)} line(s)."
+            awarded = 0.0
+            iscorrect = 0
+        else:
+            got = output_lines[target_index]
+            if got == expected:
+                comment = f"Line {target_index + 1} is correct."
+                awarded = mark
+                iscorrect = 1
+            else:
+                comment = f"Line {target_index + 1} is incorrect."
+                awarded = 0.0
+                iscorrect = 0
+
+        total_awarded += awarded
+        rows.append([label, expected, got, comment, f"{awarded:.1f}/{mark:.1f}", iscorrect])
+
+    fraction = total_awarded / 3.0
+except Exception as exc:
+    rows = [[
+        "Check",
+        "Expected",
+        "Got",
+        "Comment",
+        "Mark",
+        "iscorrect"
+    ], [
+        "Program execution",
+        "Program runs successfully",
+        f"{type(exc).__name__}: {exc}",
+        "Your program did not run successfully.",
+        "0.0/3.0",
+        0
+    ]]
+    fraction = 0.0
+
+print(json.dumps({
+    "fraction": fraction,
+    "testresults": rows
+}))]]></template>
+    <iscombinatortemplate>1</iscombinatortemplate>
+    <allowmultiplestdins></allowmultiplestdins>
+    <answer></answer>
+    <validateonsave>1</validateonsave>
+    <testsplitterre></testsplitterre>
+    <language></language>
+    <acelang></acelang>
+    <sandbox></sandbox>
+    <grader>TemplateGrader</grader>
+    <cputimelimitsecs></cputimelimitsecs>
+    <memlimitmb></memlimitmb>
+    <sandboxparams></sandboxparams>
+    <templateparams></templateparams>
+    <hoisttemplateparams>1</hoisttemplateparams>
+    <templateparamslang>None</templateparamslang>
+    <templateparamsevalpertry>0</templateparamsevalpertry>
+    <templateparamsevald>{}</templateparamsevald>
+    <twigall>0</twigall>
+    <uiplugin></uiplugin>
+    <uiparameters></uiparameters>
+    <attachments>0</attachments>
+    <attachmentsrequired>0</attachmentsrequired>
+    <maxfilesize>10240</maxfilesize>
+    <filenamesregex></filenamesregex>
+    <filenamesexplain></filenamesexplain>
+    <displayfeedback>1</displayfeedback>
+    <giveupallowed>0</giveupallowed>
+    <prototypeextra></prototypeextra>
+
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="0.0000000">
+        <testcode>
+          <text>Run the program and grade each printed line separately.</text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text></text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>SHOW</text>
+        </display>
+      </testcase>
+    </testcases>
+
+    <tags>
+      <tag>
+        <text>session2</text>
+      </tag>
+    </tags>
+  </question>
+</quiz>

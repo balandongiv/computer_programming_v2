@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name><text>Find a Remainder</text></name>
+    <questiontext format="html"><text><![CDATA[
+<p>Write a Python program that creates <code>number = 17</code> and <code>divisor = 5</code>, stores the remainder in <code>remainder</code> using the modulo operator, and prints <code>remainder</code>.</p>
+<p><strong>Expected output:</strong></p>
+<pre>2</pre>
+    ]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[
+<p>Use the modulo operator <code>%</code>. Do not print the quotient.</p>
+    ]]></text></generalfeedback>
+    <defaultgrade>3</defaultgrade><penalty>0</penalty><hidden>0</hidden><idnumber></idnumber>
+    <coderunnertype>python3</coderunnertype><prototypetype>0</prototypetype><allornothing>1</allornothing><penaltyregime>10, 20, ...</penaltyregime><precheck>0</precheck><hidecheck>0</hidecheck><showsource>0</showsource>
+    <answerboxlines>10</answerboxlines><answerboxcolumns>100</answerboxcolumns>
+    <answerpreload><![CDATA[# Create the variables below
+number = 17
+divisor = 5
+
+# Find the remainder here
+remainder =
+
+# Print the result here
+print(remainder)
+]]></answerpreload>
+    <globalextra></globalextra><useace></useace><resultcolumns></resultcolumns><template></template><iscombinatortemplate></iscombinatortemplate><allowmultiplestdins></allowmultiplestdins><answer><![CDATA[number = 17
+divisor = 5
+remainder = number % divisor
+print(remainder)
+]]></answer><validateonsave>1</validateonsave><testsplitterre></testsplitterre><language></language><acelang></acelang><sandbox></sandbox><grader></grader><cputimelimitsecs></cputimelimitsecs><memlimitmb></memlimitmb><sandboxparams></sandboxparams><templateparams></templateparams><hoisttemplateparams>1</hoisttemplateparams><templateparamslang>None</templateparamslang><templateparamsevalpertry>0</templateparamsevalpertry><templateparamsevald>{}</templateparamsevald><twigall>0</twigall><uiplugin></uiplugin><uiparameters></uiparameters><attachments>0</attachments><attachmentsrequired>0</attachmentsrequired><maxfilesize>10240</maxfilesize><filenamesregex></filenamesregex><filenamesexplain></filenamesexplain><displayfeedback>1</displayfeedback><giveupallowed>0</giveupallowed><prototypeextra></prototypeextra>
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="1.0000000"><testcode><text></text></testcode><stdin><text></text></stdin><expected><text>2</text></expected><extra><text></text></extra><display><text>SHOW</text></display></testcase>
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000"><testcode><text></text></testcode><stdin><text></text></stdin><expected><text>2</text></expected><extra><text></text></extra><display><text>HIDE</text></display></testcase>
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000"><testcode><text></text></testcode><stdin><text></text></stdin><expected><text>2</text></expected><extra><text></text></extra><display><text>HIDE</text></display></testcase>
+    </testcases>
+    <tags><tag><text>session3</text></tag><tag><text>session3_find_remainder</text></tag><tag><text>arithmetic</text></tag></tags>
+  </question>
+</quiz>

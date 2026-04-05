@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name>
+      <text>Calculate Future Value Using Compound Interest</text>
+    </name>
+
+    <questiontext format="html">
+      <text><![CDATA[
+<p dir="ltr" style="text-align: left;">
+Write a Python program to calculate the future value of an investment using the compound interest formula:
+</p>
+
+<pre>A = P * (1 + r) ** n</pre>
+
+<p>Use the following values:</p>
+<ul>
+  <li><code>P = 100</code> for the principal amount</li>
+  <li><code>r = 0.05</code> for the annual interest rate</li>
+  <li><code>n = 7</code> for the number of years</li>
+</ul>
+
+<p>Then print the future value <code>A</code>.</p>
+
+<p><strong>Expected output:</strong></p>
+<pre>140.71004226562505</pre>
+      ]]></text>
+    </questiontext>
+
+    <generalfeedback format="html">
+      <text><![CDATA[
+<p>Common mistakes for this question include:</p>
+<ul>
+  <li>Using <code>5</code> instead of <code>0.05</code> for the interest rate</li>
+  <li>Forgetting the parentheses around <code>1 + r</code></li>
+  <li>Using multiplication instead of the power operator <code>**</code> for the number of years</li>
+  <li>Printing the wrong variable or not printing the result at all</li>
+</ul>
+      ]]></text>
+    </generalfeedback>
+
+    <defaultgrade>3</defaultgrade>
+    <penalty>0</penalty>
+    <hidden>0</hidden>
+    <idnumber></idnumber>
+
+    <coderunnertype>python3</coderunnertype>
+    <prototypetype>0</prototypetype>
+    <allornothing>1</allornothing>
+    <penaltyregime>10, 20, ...</penaltyregime>
+    <precheck>0</precheck>
+    <hidecheck>0</hidecheck>
+    <showsource>0</showsource>
+
+    <answerboxlines>12</answerboxlines>
+    <answerboxcolumns>100</answerboxcolumns>
+
+    <answerpreload><![CDATA[# Create the variables below
+P = 100
+r = 0.05
+n = 7
+
+# Calculate the future value here
+A = 
+
+# Print the result here
+print(A)
+]]></answerpreload>
+
+    <globalextra></globalextra>
+    <useace></useace>
+    <resultcolumns></resultcolumns>
+    <template></template>
+    <iscombinatortemplate></iscombinatortemplate>
+    <allowmultiplestdins></allowmultiplestdins>
+    <answer></answer>
+    <validateonsave>1</validateonsave>
+    <testsplitterre></testsplitterre>
+    <language></language>
+    <acelang></acelang>
+    <sandbox></sandbox>
+    <grader></grader>
+    <cputimelimitsecs></cputimelimitsecs>
+    <memlimitmb></memlimitmb>
+    <sandboxparams></sandboxparams>
+    <templateparams></templateparams>
+    <hoisttemplateparams>1</hoisttemplateparams>
+    <templateparamslang>None</templateparamslang>
+    <templateparamsevalpertry>0</templateparamsevalpertry>
+    <templateparamsevald>{}</templateparamsevald>
+    <twigall>0</twigall>
+    <uiplugin></uiplugin>
+    <uiparameters></uiparameters>
+    <attachments>0</attachments>
+    <attachmentsrequired>0</attachmentsrequired>
+    <maxfilesize>10240</maxfilesize>
+    <filenamesregex></filenamesregex>
+    <filenamesexplain></filenamesexplain>
+    <displayfeedback>1</displayfeedback>
+    <giveupallowed>0</giveupallowed>
+    <prototypeextra></prototypeextra>
+
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>140.71004226562505</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>SHOW</text>
+        </display>
+      </testcase>
+
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>140.71004226562505</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>HIDE</text>
+        </display>
+      </testcase>
+
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>140.71004226562505</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>HIDE</text>
+        </display>
+      </testcase>
+    </testcases>
+
+    <tags>
+      <tag>
+        <text>session2</text>
+      </tag>
+    </tags>
+  </question>
+</quiz>

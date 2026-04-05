@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name>
+      <text>Create and Print a Dictionary</text>
+    </name>
+
+    <questiontext format="html">
+      <text><![CDATA[
+<p dir="ltr" style="text-align: left;">
+Write a Python program that creates a dictionary to store information about a pet.
+</p>
+
+<p>Use a dictionary variable named <code>pet_info</code> with these key-value pairs:</p>
+<ul>
+  <li><code>"first_name": "Zoro"</code></li>
+  <li><code>"last_name": "Google"</code></li>
+  <li><code>"age": 5</code></li>
+  <li><code>"city": "Papar"</code></li>
+</ul>
+
+<p>Then print the dictionary.</p>
+
+<p><strong>Expected output:</strong></p>
+<pre>{'first_name': 'Zoro', 'last_name': 'Google', 'age': 5, 'city': 'Papar'}</pre>
+      ]]></text>
+    </questiontext>
+
+    <generalfeedback format="html">
+      <text><![CDATA[
+<p>Common mistakes for this question include:</p>
+<ul>
+  <li>Using a different variable name instead of <code>pet_info</code></li>
+  <li>Forgetting the curly braces <code>{ }</code> needed for a dictionary</li>
+  <li>Leaving out quotation marks around string keys or string values</li>
+  <li>Using the wrong separator inside the dictionary, such as <code>=</code> instead of <code>:</code></li>
+  <li>Printing only one value instead of printing the whole dictionary</li>
+</ul>
+      ]]></text>
+    </generalfeedback>
+
+    <defaultgrade>3</defaultgrade>
+    <penalty>0</penalty>
+    <hidden>0</hidden>
+    <idnumber></idnumber>
+
+    <coderunnertype>python3</coderunnertype>
+    <prototypetype>0</prototypetype>
+    <allornothing>1</allornothing>
+    <penaltyregime>10, 20, ...</penaltyregime>
+    <precheck>0</precheck>
+    <hidecheck>0</hidecheck>
+    <showsource>0</showsource>
+
+    <answerboxlines>14</answerboxlines>
+    <answerboxcolumns>100</answerboxcolumns>
+
+    <answerpreload><![CDATA[# Create the dictionary below
+pet_info = {
+    # Add the key-value pairs here
+}
+
+# Print the dictionary here
+print(pet_info)
+]]></answerpreload>
+
+    <globalextra></globalextra>
+    <useace></useace>
+    <resultcolumns></resultcolumns>
+    <template></template>
+    <iscombinatortemplate></iscombinatortemplate>
+    <allowmultiplestdins></allowmultiplestdins>
+    <answer></answer>
+    <validateonsave>1</validateonsave>
+    <testsplitterre></testsplitterre>
+    <language></language>
+    <acelang></acelang>
+    <sandbox></sandbox>
+    <grader></grader>
+    <cputimelimitsecs></cputimelimitsecs>
+    <memlimitmb></memlimitmb>
+    <sandboxparams></sandboxparams>
+    <templateparams></templateparams>
+    <hoisttemplateparams>1</hoisttemplateparams>
+    <templateparamslang>None</templateparamslang>
+    <templateparamsevalpertry>0</templateparamsevalpertry>
+    <templateparamsevald>{}</templateparamsevald>
+    <twigall>0</twigall>
+    <uiplugin></uiplugin>
+    <uiparameters></uiparameters>
+    <attachments>0</attachments>
+    <attachmentsrequired>0</attachmentsrequired>
+    <maxfilesize>10240</maxfilesize>
+    <filenamesregex></filenamesregex>
+    <filenamesexplain></filenamesexplain>
+    <displayfeedback>1</displayfeedback>
+    <giveupallowed>0</giveupallowed>
+    <prototypeextra></prototypeextra>
+
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>{'first_name': 'Zoro', 'last_name': 'Google', 'age': 5, 'city': 'Papar'}</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>SHOW</text>
+        </display>
+      </testcase>
+
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>{'first_name': 'Zoro', 'last_name': 'Google', 'age': 5, 'city': 'Papar'}</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>HIDE</text>
+        </display>
+      </testcase>
+
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>{'first_name': 'Zoro', 'last_name': 'Google', 'age': 5, 'city': 'Papar'}</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>HIDE</text>
+        </display>
+      </testcase>
+    </testcases>
+
+    <tags>
+      <tag>
+        <text>session2</text>
+      </tag>
+    </tags>
+  </question>
+</quiz>

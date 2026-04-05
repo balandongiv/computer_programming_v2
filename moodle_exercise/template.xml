@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name>
+      <text>Set Variables and Print Them</text>
+    </name>
+
+    <questiontext format="html">
+      <text><![CDATA[
+<p dir="ltr" style="text-align: left;">
+Write a Python program that:
+</p>
+<ol>
+  <li>Creates a variable <code>a</code> and sets it to <code>5</code></li>
+  <li>Creates a variable <code>b</code> and sets it to <code>"hello"</code></li>
+  <li>Creates a variable <code>c</code> and sets it to <code>[4, 2]</code></li>
+  <li>Prints each variable on a new line in this order: <code>a</code>, <code>b</code>, <code>c</code></li>
+</ol>
+
+<p><strong>Expected output:</strong></p>
+<pre>5
+hello
+[4, 2]</pre>
+      ]]></text>
+    </questiontext>
+
+    <generalfeedback format="html">
+      <text><![CDATA[
+<p>Make sure you:</p>
+<ul>
+  <li>Use the exact variable names: <code>a</code>, <code>b</code>, and <code>c</code></li>
+  <li>Assign the exact values requested</li>
+  <li>Print them in the correct order, one per line</li>
+</ul>
+      ]]></text>
+    </generalfeedback>
+
+    <defaultgrade>3</defaultgrade>
+    <penalty>0</penalty>
+    <hidden>0</hidden>
+    <idnumber></idnumber>
+
+    <coderunnertype>python3</coderunnertype>
+    <prototypetype>0</prototypetype>
+    <allornothing>1</allornothing>
+    <penaltyregime>10, 20, ...</penaltyregime>
+    <precheck>0</precheck>
+    <hidecheck>0</hidecheck>
+    <showsource>0</showsource>
+
+    <answerboxlines>12</answerboxlines>
+    <answerboxcolumns>100</answerboxcolumns>
+
+    <answerpreload><![CDATA[# Create the variables below
+a = 5
+b = "hello"
+c = [4, 2]
+
+# Print each variable on a new line
+print(a)
+print(b)
+print(c)
+]]></answerpreload>
+
+    <globalextra></globalextra>
+    <useace></useace>
+    <resultcolumns></resultcolumns>
+    <template></template>
+    <iscombinatortemplate></iscombinatortemplate>
+    <allowmultiplestdins></allowmultiplestdins>
+    <answer></answer>
+    <validateonsave>1</validateonsave>
+    <testsplitterre></testsplitterre>
+    <language></language>
+    <acelang></acelang>
+    <sandbox></sandbox>
+    <grader></grader>
+    <cputimelimitsecs></cputimelimitsecs>
+    <memlimitmb></memlimitmb>
+    <sandboxparams></sandboxparams>
+    <templateparams></templateparams>
+    <hoisttemplateparams>1</hoisttemplateparams>
+    <templateparamslang>None</templateparamslang>
+    <templateparamsevalpertry>0</templateparamsevalpertry>
+    <templateparamsevald>{}</templateparamsevald>
+    <twigall>0</twigall>
+    <uiplugin></uiplugin>
+    <uiparameters></uiparameters>
+    <attachments>0</attachments>
+    <attachmentsrequired>0</attachmentsrequired>
+    <maxfilesize>10240</maxfilesize>
+    <filenamesregex></filenamesregex>
+    <filenamesexplain></filenamesexplain>
+    <displayfeedback>1</displayfeedback>
+    <giveupallowed>0</giveupallowed>
+    <prototypeextra></prototypeextra>
+
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>5
+hello
+[4, 2]</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>SHOW</text>
+        </display>
+      </testcase>
+
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>5
+hello
+[4, 2]</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>HIDE</text>
+        </display>
+      </testcase>
+
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>5
+hello
+[4, 2]</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>HIDE</text>
+        </display>
+      </testcase>
+    </testcases>
+
+    <tags>
+      <tag>
+        <text>Python</text>
+      </tag>
+      <tag>
+        <text>Variables</text>
+      </tag>
+      <tag>
+        <text>Output</text>
+      </tag>
+    </tags>
+  </question>
+</quiz>

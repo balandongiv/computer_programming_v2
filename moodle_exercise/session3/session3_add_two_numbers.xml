@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name><text>Add Two Numbers</text></name>
+    <questiontext format="html"><text><![CDATA[
+<p>Write a Python program that creates <code>num1 = 8</code> and <code>num2 = 6</code>, stores their sum in <code>total</code>, and prints <code>total</code>.</p>
+<p><strong>Expected output:</strong></p>
+<pre>14</pre>
+    ]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[
+<p>Common mistakes include printing the wrong variable, forgetting to create <code>total</code>, or using the wrong operator.</p>
+    ]]></text></generalfeedback>
+    <defaultgrade>3</defaultgrade><penalty>0</penalty><hidden>0</hidden><idnumber></idnumber>
+    <coderunnertype>python3</coderunnertype><prototypetype>0</prototypetype><allornothing>1</allornothing><penaltyregime>10, 20, ...</penaltyregime><precheck>0</precheck><hidecheck>0</hidecheck><showsource>0</showsource>
+    <answerboxlines>10</answerboxlines><answerboxcolumns>100</answerboxcolumns>
+    <answerpreload><![CDATA[# Create the variables below
+num1 = 8
+num2 = 6
+
+# Add the numbers here
+total =
+
+# Print the result here
+print(total)
+]]></answerpreload>
+    <globalextra></globalextra><useace></useace><resultcolumns></resultcolumns><template></template><iscombinatortemplate></iscombinatortemplate><allowmultiplestdins></allowmultiplestdins><answer><![CDATA[num1 = 8
+num2 = 6
+total = num1 + num2
+print(total)
+]]></answer><validateonsave>1</validateonsave><testsplitterre></testsplitterre><language></language><acelang></acelang><sandbox></sandbox><grader></grader><cputimelimitsecs></cputimelimitsecs><memlimitmb></memlimitmb><sandboxparams></sandboxparams><templateparams></templateparams><hoisttemplateparams>1</hoisttemplateparams><templateparamslang>None</templateparamslang><templateparamsevalpertry>0</templateparamsevalpertry><templateparamsevald>{}</templateparamsevald><twigall>0</twigall><uiplugin></uiplugin><uiparameters></uiparameters><attachments>0</attachments><attachmentsrequired>0</attachmentsrequired><maxfilesize>10240</maxfilesize><filenamesregex></filenamesregex><filenamesexplain></filenamesexplain><displayfeedback>1</displayfeedback><giveupallowed>0</giveupallowed><prototypeextra></prototypeextra>
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="1.0000000"><testcode><text></text></testcode><stdin><text></text></stdin><expected><text>14</text></expected><extra><text></text></extra><display><text>SHOW</text></display></testcase>
+    </testcases>
+    <tags><tag><text>session3</text></tag><tag><text>session3_add_two_numbers</text></tag><tag><text>arithmetic</text></tag></tags>
+  </question>
+</quiz>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name>
+      <text>Print a Message and a Calculated Value</text>
+    </name>
+
+    <questiontext format="html">
+      <text><![CDATA[
+<p dir="ltr" style="text-align: left;">
+Write a Python program that uses the following code:
+</p>
+<pre>a = 10
+b = a * 5
+c = "Your result is: "
+print(c, b)</pre>
+
+<p>Create the variables exactly as shown and print the result.</p>
+
+<p><strong>Expected output:</strong></p>
+<pre>Your result is:  50</pre>
+      ]]></text>
+    </questiontext>
+
+    <generalfeedback format="html">
+      <text><![CDATA[
+<p>Common mistakes for this question include:</p>
+<ul>
+  <li>Changing the variable names instead of using <code>a</code>, <code>b</code>, and <code>c</code></li>
+  <li>Using the wrong arithmetic operation when calculating <code>b</code></li>
+  <li>Forgetting that <code>print(c, b)</code> prints the text and the number together</li>
+  <li>Adding different punctuation or words so the output does not match the expected result</li>
+</ul>
+      ]]></text>
+    </generalfeedback>
+
+    <defaultgrade>3</defaultgrade>
+    <penalty>0</penalty>
+    <hidden>0</hidden>
+    <idnumber></idnumber>
+
+    <coderunnertype>python3</coderunnertype>
+    <prototypetype>0</prototypetype>
+    <allornothing>1</allornothing>
+    <penaltyregime>10, 20, ...</penaltyregime>
+    <precheck>0</precheck>
+    <hidecheck>0</hidecheck>
+    <showsource>0</showsource>
+
+    <answerboxlines>12</answerboxlines>
+    <answerboxcolumns>100</answerboxcolumns>
+
+    <answerpreload><![CDATA[# Create the variables below
+a = 10
+b = 
+c = "Your result is: "
+
+# Print the text and the value here
+print(c, b)
+]]></answerpreload>
+
+    <globalextra></globalextra>
+    <useace></useace>
+    <resultcolumns></resultcolumns>
+    <template></template>
+    <iscombinatortemplate></iscombinatortemplate>
+    <allowmultiplestdins></allowmultiplestdins>
+    <answer></answer>
+    <validateonsave>1</validateonsave>
+    <testsplitterre></testsplitterre>
+    <language></language>
+    <acelang></acelang>
+    <sandbox></sandbox>
+    <grader></grader>
+    <cputimelimitsecs></cputimelimitsecs>
+    <memlimitmb></memlimitmb>
+    <sandboxparams></sandboxparams>
+    <templateparams></templateparams>
+    <hoisttemplateparams>1</hoisttemplateparams>
+    <templateparamslang>None</templateparamslang>
+    <templateparamsevalpertry>0</templateparamsevalpertry>
+    <templateparamsevald>{}</templateparamsevald>
+    <twigall>0</twigall>
+    <uiplugin></uiplugin>
+    <uiparameters></uiparameters>
+    <attachments>0</attachments>
+    <attachmentsrequired>0</attachmentsrequired>
+    <maxfilesize>10240</maxfilesize>
+    <filenamesregex></filenamesregex>
+    <filenamesexplain></filenamesexplain>
+    <displayfeedback>1</displayfeedback>
+    <giveupallowed>0</giveupallowed>
+    <prototypeextra></prototypeextra>
+
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>Your result is:  50</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>SHOW</text>
+        </display>
+      </testcase>
+
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>Your result is:  50</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>HIDE</text>
+        </display>
+      </testcase>
+
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000">
+        <testcode>
+          <text></text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text>Your result is:  50</text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>HIDE</text>
+        </display>
+      </testcase>
+    </testcases>
+
+    <tags>
+      <tag>
+        <text>session2</text>
+      </tag>
+    </tags>
+  </question>
+</quiz>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name><text>Choose a Discount Message</text></name>
+    <questiontext format="html"><text><![CDATA[
+<p>Write a Python program that creates <code>is_member = True</code>. If <code>is_member</code> is true, print <code>Discount given</code>. Otherwise, print <code>No discount</code>.</p>
+<p><strong>Expected output:</strong></p>
+<pre>Discount given</pre>
+    ]]></text></questiontext>
+    <generalfeedback format="html"><text><![CDATA[
+<p>Check the boolean value correctly and keep the output message exactly the same.</p>
+    ]]></text></generalfeedback>
+    <defaultgrade>3</defaultgrade><penalty>0</penalty><hidden>0</hidden><idnumber></idnumber>
+    <coderunnertype>python3</coderunnertype><prototypetype>0</prototypetype><allornothing>1</allornothing><penaltyregime>10, 20, ...</penaltyregime><precheck>0</precheck><hidecheck>0</hidecheck><showsource>0</showsource>
+    <answerboxlines>12</answerboxlines><answerboxcolumns>100</answerboxcolumns>
+    <answerpreload><![CDATA[is_member = True
+
+# Write the if-else statement here
+if :
+    print()
+else:
+    print()
+]]></answerpreload>
+    <globalextra></globalextra><useace></useace><resultcolumns></resultcolumns><template></template><iscombinatortemplate></iscombinatortemplate><allowmultiplestdins></allowmultiplestdins><answer><![CDATA[is_member = True
+if is_member:
+    print("Discount given")
+else:
+    print("No discount")
+]]></answer><validateonsave>1</validateonsave><testsplitterre></testsplitterre><language></language><acelang></acelang><sandbox></sandbox><grader></grader><cputimelimitsecs></cputimelimitsecs><memlimitmb></memlimitmb><sandboxparams></sandboxparams><templateparams></templateparams><hoisttemplateparams>1</hoisttemplateparams><templateparamslang>None</templateparamslang><templateparamsevalpertry>0</templateparamsevalpertry><templateparamsevald>{}</templateparamsevald><twigall>0</twigall><uiplugin></uiplugin><uiparameters></uiparameters><attachments>0</attachments><attachmentsrequired>0</attachmentsrequired><maxfilesize>10240</maxfilesize><filenamesregex></filenamesregex><filenamesexplain></filenamesexplain><displayfeedback>1</displayfeedback><giveupallowed>0</giveupallowed><prototypeextra></prototypeextra>
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="1.0000000"><testcode><text></text></testcode><stdin><text></text></stdin><expected><text>Discount given</text></expected><extra><text></text></extra><display><text>SHOW</text></display></testcase>
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000"><testcode><text></text></testcode><stdin><text></text></stdin><expected><text>Discount given</text></expected><extra><text></text></extra><display><text>HIDE</text></display></testcase>
+      <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000"><testcode><text></text></testcode><stdin><text></text></stdin><expected><text>Discount given</text></expected><extra><text></text></extra><display><text>HIDE</text></display></testcase>
+    </testcases>
+    <tags><tag><text>session3</text></tag><tag><text>session3_choose_discount_message</text></tag><tag><text>control-flow</text></tag></tags>
+  </question>
+</quiz>

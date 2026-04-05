@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name>
+      <text>Session 3 Iris Classification Submission</text>
+    </name>
+
+    <questiontext format="html">
+      <text><![CDATA[
+<p dir="ltr" style="text-align: left;">
+Submit the complete Session 3 code for lists, loops, and conditionals for Iris classification.
+</p>
+
+<p>Your submitted program should create the flower dictionaries, build the dataset list, run the prediction loop, and print the final summary.</p>
+
+<p>For grading, the program output must include these required lines:</p>
+<pre>id=flower1 | true=setosa | pred=setosa | petal_length=1.4
+id=flower2 | true=setosa | pred=setosa | petal_length=1.4
+Correct: 2
+Wrong: 0
+Total: 2
+Accuracy (%): 100.0
+All predictions: ['setosa', 'setosa']</pre>
+
+<p>You may print other lines from the tutorial as well, but your program must include these exact required lines.</p>
+      ]]></text>
+    </questiontext>
+
+    <generalfeedback format="html">
+      <text><![CDATA[
+<p>Common mistakes for this submission include:</p>
+<ul>
+  <li>Changing the rule-setting variable names such as <code>THRESHOLD</code>, <code>FEATURE_NAME</code>, or <code>LABEL_KEY</code></li>
+  <li>Building <code>flower2</code> with the wrong keys or wrong values</li>
+  <li>Forgetting to append predictions to <code>y_pred_list</code></li>
+  <li>Not incrementing <code>total</code> for every sample processed</li>
+  <li>Printing trace lines in a different format from the required tutorial format</li>
+  <li>Computing the summary metrics incorrectly or printing the wrong final list of predictions</li>
+</ul>
+      ]]></text>
+    </generalfeedback>
+
+    <defaultgrade>10</defaultgrade>
+    <penalty>0</penalty>
+    <hidden>0</hidden>
+    <idnumber></idnumber>
+
+    <coderunnertype>python3</coderunnertype>
+    <prototypetype>0</prototypetype>
+    <allornothing>0</allornothing>
+    <penaltyregime>10, 20, ...</penaltyregime>
+    <precheck>0</precheck>
+    <hidecheck>0</hidecheck>
+    <showsource>0</showsource>
+
+    <answerboxlines>45</answerboxlines>
+    <answerboxcolumns>100</answerboxcolumns>
+
+    <answerpreload><![CDATA["""Session 3: Lists, Loops, and Conditionals for Iris classification.
+This script builds on Session 2 by converting variables to dictionaries, assembling a dataset list,
+iterating over it, applying a threshold rule, and computing accuracy metrics.
+"""
+
+# Write your full Session 3 code below.
+# Keep the required variable names exactly as shown in the tutorial.
+# Make sure your program prints the required trace and summary lines.
+]]></answerpreload>
+
+    <globalextra></globalextra>
+    <useace></useace>
+    <resultcolumns></resultcolumns>
+    <template><![CDATA[import contextlib
+import io
+import json
+
+student_code = """{{ STUDENT_ANSWER | e('py') }}"""
+stdout_buffer = io.StringIO()
+checks = [
+    ("flower1 trace line", "id=flower1 | true=setosa | pred=setosa | petal_length=1.4", 2.0),
+    ("flower2 trace line", "id=flower2 | true=setosa | pred=setosa | petal_length=1.4", 2.0),
+    ("Correct summary", "Correct: 2", 1.0),
+    ("Wrong summary", "Wrong: 0", 1.0),
+    ("Total summary", "Total: 2", 1.0),
+    ("Accuracy summary", "Accuracy (%): 100.0", 1.0),
+    ("Predictions list", "All predictions: ['setosa', 'setosa']", 2.0),
+]
+
+try:
+    compiled = compile(student_code, "<student>", "exec")
+    with contextlib.redirect_stdout(stdout_buffer):
+        exec(compiled, {"__name__": "__main__"})
+
+    output_lines = stdout_buffer.getvalue().splitlines()
+    rows = [[
+        "Check",
+        "Expected",
+        "Got",
+        "Comment",
+        "Mark",
+        "iscorrect"
+    ]]
+    total_awarded = 0.0
+
+    for label, expected_line, mark in checks:
+        if expected_line in output_lines:
+            got = expected_line
+            comment = "Required output line found."
+            awarded = mark
+            iscorrect = 1
+        else:
+            got = output_lines[-1] if output_lines else "(no output)"
+            comment = "Required output line not found."
+            awarded = 0.0
+            iscorrect = 0
+
+        total_awarded += awarded
+        rows.append([label, expected_line, got, comment, f"{awarded:.1f}/{mark:.1f}", iscorrect])
+
+    fraction = total_awarded / 10.0
+except Exception as exc:
+    rows = [[
+        "Check",
+        "Expected",
+        "Got",
+        "Comment",
+        "Mark",
+        "iscorrect"
+    ], [
+        "Program execution",
+        "Program runs successfully and prints all required lines",
+        f"{type(exc).__name__}: {exc}",
+        "Your program did not run successfully.",
+        "0.0/10.0",
+        0
+    ]]
+    fraction = 0.0
+
+print(json.dumps({
+    "fraction": fraction,
+    "testresults": rows
+}))]]></template>
+    <iscombinatortemplate>1</iscombinatortemplate>
+    <allowmultiplestdins></allowmultiplestdins>
+    <answer><![CDATA["""Session 3: Lists, Loops, and Conditionals for Iris classification.
+This script builds on Session 2 by converting variables to dictionaries, assembling a dataset list,
+iterating over it, applying a threshold rule, and computing accuracy metrics.
+"""
+
+# Session 2 continuity variables (Rule settings). Do not change these.
+THRESHOLD = 2.0
+FEATURE_NAME = "petal_length"
+POSITIVE_LABEL = "setosa"
+NEGATIVE_LABEL = "not_setosa"
+LABEL_KEY = "species"
+
+# Task 1: Define dictionaries for flower1 and flower2 using canonical keys
+# We remove the sequential variables and group them logically.
+flower1 = {
+    "id": "flower1",
+    "sepal_length": 5.1,
+    "sepal_width": 3.5,
+    "petal_length": 1.4,
+    "petal_width": 0.2,
+    "species": "setosa"
+}
+
+# TODO: create flower2 dict using values from Session 2 (use same keys as flower1, no _2 suffix)
+flower2 = {
+    "id": "flower2",
+    "sepal_length": 4.9,
+    "sepal_width": 3.0,
+    "petal_length": 1.4,
+    "petal_width": 0.2,
+    "species": "setosa"
+}
+
+# Task 2: Build the dataset list
+# Combine our dictionaries into a single list
+dataset = [flower1, flower2]
+
+# Task 3: Initialize metrics and predictions
+correct = 0      # Count of correct predictions
+wrong = 0        # Count of wrong predictions
+total = 0        # Total samples processed
+y_pred_list = []  # List of all predictions made
+
+print("\n=== Start session 3 Prediction Loop ===")
+
+# Task 4 & 5: Iterate and classify
+for sample in dataset:
+    # 1. Compute prediction (y_pred)
+    if sample[FEATURE_NAME] < THRESHOLD:
+        y_pred = POSITIVE_LABEL
+    else:
+        y_pred = NEGATIVE_LABEL
+
+    # 2. Derive true label (y_true) from the dataset sample
+    if sample[LABEL_KEY] == POSITIVE_LABEL:
+        y_true = POSITIVE_LABEL
+    else:
+        y_true = NEGATIVE_LABEL
+
+    # 3. Update correct or wrong counter
+    if y_pred == y_true:
+        correct += 1
+    else:
+        wrong += 1
+
+    # 4. ALWAYS increment total for every sample processed
+    # Does total increase for each sample? If not, fix it.
+    total += 1
+
+    # Append the prediction to our list
+    y_pred_list.append(y_pred)
+
+    # 5. Print per-sample trace exactly as required
+    print(
+        f"id={sample['id']} | true={y_true} | pred={y_pred} | "
+        f"petal_length={sample['petal_length']}"
+    )
+
+# Task 6: Compute and print final metrics
+accuracy = (correct / total) * 100 if total > 0 else 0.0
+
+print("\n=== session 3 Summary ===")
+print("Correct:", correct)
+print("Wrong:", wrong)
+print("Total:", total)
+print("Accuracy (%):", round(accuracy, 2))
+print("All predictions:", y_pred_list)
+]]></answer>
+    <validateonsave>1</validateonsave>
+    <testsplitterre></testsplitterre>
+    <language></language>
+    <acelang></acelang>
+    <sandbox></sandbox>
+    <grader>TemplateGrader</grader>
+    <cputimelimitsecs></cputimelimitsecs>
+    <memlimitmb></memlimitmb>
+    <sandboxparams></sandboxparams>
+    <templateparams></templateparams>
+    <hoisttemplateparams>1</hoisttemplateparams>
+    <templateparamslang>None</templateparamslang>
+    <templateparamsevalpertry>0</templateparamsevalpertry>
+    <templateparamsevald>{}</templateparamsevald>
+    <twigall>0</twigall>
+    <uiplugin></uiplugin>
+    <uiparameters></uiparameters>
+    <attachments>0</attachments>
+    <attachmentsrequired>0</attachmentsrequired>
+    <maxfilesize>10240</maxfilesize>
+    <filenamesregex></filenamesregex>
+    <filenamesexplain></filenamesexplain>
+    <displayfeedback>1</displayfeedback>
+    <giveupallowed>0</giveupallowed>
+    <prototypeextra></prototypeextra>
+
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="0.0000000">
+        <testcode>
+          <text>Check that the program prints all required Session 3 trace and summary lines.</text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text></text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>SHOW</text>
+        </display>
+      </testcase>
+    </testcases>
+
+    <tags>
+      <tag>
+        <text>session3</text>
+      </tag>
+      <tag>
+        <text>session3_submission_iris_classification</text>
+      </tag>
+      <tag>
+        <text>submission</text>
+      </tag>
+      <tag>
+        <text>output-check</text>
+      </tag>
+    </tags>
+  </question>
+</quiz>

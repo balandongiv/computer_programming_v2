@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name>
+      <text>Session 2 Flower Summary and Petal Area 2 Submission</text>
+    </name>
+
+    <questiontext format="html">
+      <text><![CDATA[
+<p dir="ltr" style="text-align: left;">
+Submit the complete Session 2 code for the flower variables practice.
+</p>
+
+<p>Your submitted program should include the variables and print statements from the tutorial, including the second flower with the <code>_2</code> suffix.</p>
+
+<p>For grading, the program output must include these required lines:</p>
+<pre>Sepal Length: 5.1
+Sepal Width: 3.5
+Petal Length: 1.4
+Petal Width: 0.2
+Species: setosa
+petal_length_text: 1.4 | type: &lt;class 'str'&gt;
+threshold_text: 2.0 | type: &lt;class 'str'&gt;
+threshold_number: 2.0 | type: &lt;class 'float'&gt;
+Petal Area 2: 0.27999999999999997</pre>
+
+<p>You may print other lines from the tutorial as well, but your program must include these exact required lines.</p>
+      ]]></text>
+    </questiontext>
+
+    <generalfeedback format="html">
+      <text><![CDATA[
+<p>Common mistakes for this submission include:</p>
+<ul>
+  <li>Changing variable names that later sessions depend on, such as <code>sepal_length</code>, <code>petal_length_text</code>, or <code>petal_area_2</code></li>
+  <li>Using the wrong values for the second flower variables</li>
+  <li>Forgetting to calculate <code>petal_area_2 = petal_length_2 * petal_width_2</code></li>
+  <li>Printing a different label instead of the exact labels required by the tutorial</li>
+  <li>Skipping the conversion output lines or printing the wrong Python types</li>
+  <li>Removing the final print statement for <code>petal_area_2</code></li>
+</ul>
+      ]]></text>
+    </generalfeedback>
+
+    <defaultgrade>10</defaultgrade>
+    <penalty>0</penalty>
+    <hidden>0</hidden>
+    <idnumber></idnumber>
+
+    <coderunnertype>python3</coderunnertype>
+    <prototypetype>0</prototypetype>
+    <allornothing>0</allornothing>
+    <penaltyregime>10, 20, ...</penaltyregime>
+    <precheck>0</precheck>
+    <hidecheck>0</hidecheck>
+    <showsource>0</showsource>
+
+    <answerboxlines>40</answerboxlines>
+    <answerboxcolumns>100</answerboxcolumns>
+
+    <answerpreload><![CDATA["""Session 2: practice variables, basic arithmetic, comparisons, type conversions, and adding a second flower.
+Note: Variable names must match exactly because later sessions import these names.
+"""
+
+# Write your full Session 2 code below.
+# Keep the required variable names exactly as shown in the tutorial.
+# Make sure your program prints the required tutorial lines,
+# including the conversion lines and:
+# Petal Area 2: 0.27999999999999997
+]]></answerpreload>
+
+    <globalextra></globalextra>
+    <useace></useace>
+    <resultcolumns></resultcolumns>
+    <template><![CDATA[import contextlib
+import io
+import json
+
+student_code = """{{ STUDENT_ANSWER | e('py') }}"""
+stdout_buffer = io.StringIO()
+checks = [
+    ("Sepal Length output", "Sepal Length: 5.1", 1.0),
+    ("Sepal Width output", "Sepal Width: 3.5", 1.0),
+    ("Petal Length output", "Petal Length: 1.4", 1.0),
+    ("Petal Width output", "Petal Width: 0.2", 1.0),
+    ("Species output", "Species: setosa", 1.0),
+    ("petal_length_text output", "petal_length_text: 1.4 | type: <class 'str'>", 1.0),
+    ("threshold_text output", "threshold_text: 2.0 | type: <class 'str'>", 1.0),
+    ("threshold_number output", "threshold_number: 2.0 | type: <class 'float'>", 1.0),
+    ("Petal Area 2 output", "Petal Area 2: 0.27999999999999997", 2.0),
+]
+
+try:
+    compiled = compile(student_code, "<student>", "exec")
+    with contextlib.redirect_stdout(stdout_buffer):
+        exec(compiled, {"__name__": "__main__"})
+
+    output_lines = stdout_buffer.getvalue().splitlines()
+    rows = [[
+        "Check",
+        "Expected",
+        "Got",
+        "Comment",
+        "Mark",
+        "iscorrect"
+    ]]
+    total_awarded = 0.0
+
+    for label, expected_line, mark in checks:
+        if expected_line in output_lines:
+            got = expected_line
+            comment = "Required output line found."
+            awarded = mark
+            iscorrect = 1
+        else:
+            got = output_lines[-1] if output_lines else "(no output)"
+            comment = "Required output line not found."
+            awarded = 0.0
+            iscorrect = 0
+
+        total_awarded += awarded
+        rows.append([label, expected_line, got, comment, f"{awarded:.1f}/{mark:.1f}", iscorrect])
+
+    fraction = total_awarded / 10.0
+except Exception as exc:
+    rows = [[
+        "Check",
+        "Expected",
+        "Got",
+        "Comment",
+        "Mark",
+        "iscorrect"
+    ], [
+        "Program execution",
+        "Program runs successfully and prints all required lines",
+        f"{type(exc).__name__}: {exc}",
+        "Your program did not run successfully.",
+        "0.0/10.0",
+        0
+    ]]
+    fraction = 0.0
+
+print(json.dumps({
+    "fraction": fraction,
+    "testresults": rows
+}))]]></template>
+    <iscombinatortemplate>1</iscombinatortemplate>
+    <allowmultiplestdins></allowmultiplestdins>
+    <answer><![CDATA["""Session 2: practice variables, basic arithmetic, comparisons, type conversions, and adding a second flower.
+Note: Variable names must match exactly because later sessions import these names.
+"""
+
+# Task 1: Print student summary (optional but good practice)
+id = "flower1"
+print("\n=== Flower Summary ===")
+print("ID:", id)
+# Task 2: Declare variables for one Iris flower
+# We define these variables to represent a single setosa flower.
+
+sepal_length = 5.1
+sepal_width = 3.5
+petal_length = 1.4
+petal_width = 0.2
+species = "setosa"
+
+print("\n=== Flower Summary ===")
+print("ID:", id)
+print("Sepal Length:", sepal_length)
+print("Sepal Width:", sepal_width)
+print("Petal Length:", petal_length)
+print("Petal Width:", petal_width)
+print("Species:", species)
+
+# Task 3: Compute petal area
+# Multiply petal_length and petal_width to get the area
+petal_area = petal_length * petal_width
+# Observe the exact floating-point output
+print("\nPetal Area:", petal_area)
+
+# Task 4: Define rule variables and comparison
+# We use these variables in the next session for our rule-based classifier
+THRESHOLD = 2.0
+FEATURE_NAME = "petal_length"
+POSITIVE_LABEL = "setosa"
+NEGATIVE_LABEL = "not_setosa"
+LABEL_KEY = "species"
+
+is_short_petal = petal_length < THRESHOLD
+print("\n=== Comparison ===")
+print("is_short_petal (petal_length < threshold):", is_short_petal)
+
+# Task 5: Type conversion practice
+petal_length_text = str(petal_length)
+threshold_text = "2.0"
+threshold_number = float(threshold_text)
+
+print("\n=== Conversions ===")
+print("petal_length_text:", petal_length_text,
+      "| type:", type(petal_length_text))
+print("threshold_text:", threshold_text, "| type:", type(threshold_text))
+print("threshold_number:", threshold_number, "| type:", type(threshold_number))
+
+# Task 6: Add a second flower using _2 suffix
+# It is important to keep the _2 suffix so Session 3 can convert them into a dictionary
+sepal_length_2 = 4.9
+sepal_width_2 = 3.0
+petal_length_2 = 1.4
+petal_width_2 = 0.2
+species_2 = "setosa"
+
+petal_area_2 = petal_length_2 * petal_width_2
+print("\n=== Flower 2 ===")
+print("Petal Area 2:", petal_area_2)
+]]></answer>
+    <validateonsave>1</validateonsave>
+    <testsplitterre></testsplitterre>
+    <language></language>
+    <acelang></acelang>
+    <sandbox></sandbox>
+    <grader>TemplateGrader</grader>
+    <cputimelimitsecs></cputimelimitsecs>
+    <memlimitmb></memlimitmb>
+    <sandboxparams></sandboxparams>
+    <templateparams></templateparams>
+    <hoisttemplateparams>1</hoisttemplateparams>
+    <templateparamslang>None</templateparamslang>
+    <templateparamsevalpertry>0</templateparamsevalpertry>
+    <templateparamsevald>{}</templateparamsevald>
+    <twigall>0</twigall>
+    <uiplugin></uiplugin>
+    <uiparameters></uiparameters>
+    <attachments>0</attachments>
+    <attachmentsrequired>0</attachmentsrequired>
+    <maxfilesize>10240</maxfilesize>
+    <filenamesregex></filenamesregex>
+    <filenamesexplain></filenamesexplain>
+    <displayfeedback>1</displayfeedback>
+    <giveupallowed>0</giveupallowed>
+    <prototypeextra></prototypeextra>
+
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="0.0000000">
+        <testcode>
+          <text>Check that the program prints all required Session 2 output lines.</text>
+        </testcode>
+        <stdin>
+          <text></text>
+        </stdin>
+        <expected>
+          <text></text>
+        </expected>
+        <extra>
+          <text></text>
+        </extra>
+        <display>
+          <text>SHOW</text>
+        </display>
+      </testcase>
+    </testcases>
+
+    <tags>
+      <tag>
+        <text>session2</text>
+      </tag>
+      <tag>
+        <text>session2_flower_summary_petal_area_2_submission</text>
+      </tag>
+      <tag>
+        <text>submission</text>
+      </tag>
+      <tag>
+        <text>output-check</text>
+      </tag>
+    </tags>
+  </question>
+</quiz>
