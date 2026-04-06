@@ -367,7 +367,7 @@ Next, we will introduce 3 conditional statements within the loop.Basiclly, this 
 \subsubsection{Using a Rule to Predict a Label}
 In our classifier, the decision rule compares \textbf{one feature value} to a \textbf{threshold}. The variable \texttt{feature\_name} tells us which feature to look up in the current \texttt{sample} dictionary:
 
-\begin{tcolorbox}[title=Task 4: Use an if-else statement to classify each sample]
+\begin{tcolorbox}[title=Task 4: Use an if-else statement to classify each sample based on the threshold rule]
 
 Use the if else statement, so that, if the chosen feature value is less than the threshold, set \texttt{y\_pred} to \texttt{positive\_label}; otherwise, set it to \texttt{negative\_label}.
 \end{tcolorbox}
@@ -416,14 +416,66 @@ We can read the code as follow
 \label{sec:ses3_required_bridge}
 Inside the loop, compute \texttt{y\_pred} using the Session 2 rule. Do \textbf{not} define any functions yet.
 
-\subsection{Task 3: Convert the True Label and Update Metrics}
-Inside the same loop:
-\begin{enumerate}
-    \item Convert the true label from \texttt{sample[label\_key]} to \texttt{y\_true} (if it is \texttt{positive\_label}, keep it; otherwise \texttt{negative\_label}).
-    \item Compare \texttt{y\_pred} and \texttt{y\_true}.
-    \item Update \texttt{correct}, \texttt{wrong}, and \textbf{always} update \texttt{total}.
-    \item Append \texttt{y\_pred} into \texttt{y\_pred\_list}.
-\end{enumerate}
+\subsection{Task 5: Derive the True Label (\texttt{y\_true})}
+The next placeholder in the template asks you to convert the stored species into the two-label format used by the rule. Keep this code inside the same \texttt{for} loop:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+    if sample[LABEL_KEY] == POSITIVE_LABEL:
+        y_true = POSITIVE_LABEL
+    else:
+        y_true = NEGATIVE_LABEL
+\end{minted}
+
+This step is important because we want the \texttt{true} label and the \texttt{predicted} label to use the same naming scheme:
+\begin{itemize}
+    \item if the flower really is \texttt{"setosa"}, then \texttt{y\_true} becomes \texttt{POSITIVE\_LABEL},
+    \item otherwise, \texttt{y\_true} becomes \texttt{NEGATIVE\_LABEL}.
+\end{itemize}
+
+\begin{tcolorbox}[title=Task 5:. Derive true label (y\_true) from the dataset sample]
+Read the real species from \texttt{sample[LABEL\_KEY]} and store the converted result in \texttt{y\_true}.
+\end{tcolorbox}
+
+\subsection{Task 6: Update Correct or Wrong Counter}
+Once both \texttt{y\_pred} and \texttt{y\_true} exist, compare them. If they match, increase \texttt{correct}; otherwise increase \texttt{wrong}.
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+    if y_pred == y_true:
+        correct += 1
+    else:
+        wrong += 1
+\end{minted}
+
+\begin{tcolorbox}[title=Task 6: Update correct or wrong counter]
+Only one counter should increase for each sample: either \texttt{correct} or \texttt{wrong}.
+\end{tcolorbox}
+
+\subsection{Task 7: Always Increment \texttt{total}}
+\begin{tcolorbox}[title=Task 7: ALWAYS increment total for every sample processed]
+Increase \texttt{total} once for every sample that goes through the loop.
+\end{tcolorbox}
+
+Every sample that reaches the loop has been processed, so \texttt{total} must increase every time, regardless of whether the prediction was right or wrong:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+    total += 1
+\end{minted}
+
+\subsection{Task 8: Append the Prediction to \texttt{y\_pred\_list}}
+\begin{tcolorbox}[title=Task 8: Append the prediction to our list]
+Store the current \texttt{y\_pred} by appending it to \texttt{y\_pred\_list}.
+\end{tcolorbox}
+
+The template also asks you to keep a record of all predictions. Add the current prediction to the list:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+    y_pred_list.append(y_pred)
+\end{minted}
+
+\noindent
+After Tasks 5 to 8, your loop is now doing four jobs:
+\begin{itemize}
+    \item converting the true species into \texttt{y\_true},
+    \item updating the correct/wrong counters,
+    \item increasing the total number of processed samples,
+    \item storing every prediction in \texttt{y\_pred\_list}.
+\end{itemize}
 
 \begin{tcolorbox}[title=Checkpoint]
 Your loop should be processing each sample. \textbf{Self-check:} Does \texttt{total} increase for every sample processed? Even if the prediction is wrong, \texttt{total} must increase by 1.
@@ -432,8 +484,12 @@ Your loop should be processing each sample. \textbf{Self-check:} Does \texttt{to
 Forgetting to increment \texttt{total} inside the loop, or accidentally only incrementing it if the prediction was correct.
 \end{tcolorbox}
 
-\subsection{Task 4: Print Per-Sample Trace Lines (Required Format)}
-For continuity with Session 4, print one line per sample exactly using this format inside the loop:
+\subsection{Task 9: Print Per-Sample Trace Lines}
+\begin{tcolorbox}[title=Task 9: Print per-sample trace exactly as required]
+Uncomment the print block so each processed sample shows its id, true label, predicted label, and petal length.
+\end{tcolorbox}
+
+The template leaves the print block commented out. Uncomment it so you can see exactly what happened for each flower:
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
 print(
     f"id={sample['id']} | true={y_true} | pred={y_pred} | "
@@ -441,13 +497,36 @@ print(
 )
 \end{minted}
 
-\subsection{Task 5: Final Summary (After the Loop)}
-After processing all samples, compute and print accuracy:
+\noindent
+This trace line is useful because it shows:
+\begin{itemize}
+    \item which flower is being processed,
+    \item the true label,
+    \item the predicted label,
+    \item the feature value used by the rule.
+\end{itemize}
+
+\subsection{Task 10: Final Summary (After the Loop)}
+\begin{tcolorbox}[title=Task 10: Compute and print final metrics]
+After the loop ends, compute \texttt{accuracy} and print the summary lines already present in the template.
+\end{tcolorbox}
+
+Task 10 happens \textbf{after} the loop finishes. First compute the accuracy:
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
 accuracy = (correct / total) * 100 if total > 0 else 0.0
 \end{minted}
 
-\begin{tcolorbox}[title=Checkpoint]
+Then uncomment the summary print statements already provided in the template:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+print("\n=== session 3 Summary ===")
+print("Correct:", correct)
+print("Wrong:", wrong)
+print("Total:", total)
+print("Accuracy (%):", round(accuracy, 2))
+print("All predictions:", y_pred_list)
+\end{minted}
+
+\begin{tcolorbox}[title=Checkpoint and this is what is expected in ITEL]
 You should see output similar to this at the end: \\
 \texttt{Correct: 2} \\
 \texttt{Wrong: 0} \\
