@@ -3,14 +3,20 @@ This script builds on Session 2 by converting variables to dictionaries, assembl
 iterating over it, applying a threshold rule, and computing accuracy metrics.
 """
 
-# Session 2 continuity variables (Rule settings). Do not change these.
+# Session 2 continuity variables (Rule settings). Do not change these."""
 THRESHOLD = 2.0
 FEATURE_NAME = "petal_length"
 POSITIVE_LABEL = "setosa"
 NEGATIVE_LABEL = "not_setosa"
 LABEL_KEY = "species"
 
-# Task 1: Define dictionaries for flower1 and flower2 using canonical keys
+# Initialize metrics and predictions
+correct = 0      # Count of correct predictions
+wrong = 0        # Count of wrong predictions
+total = 0        # Total samples processed
+y_pred_list = []  # List of all predictions made
+
+
 # We remove the sequential variables and group them logically.
 flower1 = {
     "id": "flower1",
@@ -21,7 +27,7 @@ flower1 = {
     "species": "setosa"
 }
 
-# TODO: create flower2 dict using values from Session 2 (use same keys as flower1, no _2 suffix)
+# Task 1: Create A dictionary for second flower
 flower2 = {
     "id": "flower2",
     "sepal_length": 4.9,
@@ -31,52 +37,48 @@ flower2 = {
     "species": "setosa"
 }
 
-# Task 2: Build the dataset list
+# Task 2: Create list of dictionaries
 # Combine our dictionaries into a single list
 dataset = [flower1, flower2]
 
-# Task 3: Initialize metrics and predictions
-correct = 0      # Count of correct predictions
-wrong = 0        # Count of wrong predictions
-total = 0        # Total samples processed
-y_pred_list = []  # List of all predictions made
-
 print("\n=== Start session 3 Prediction Loop ===")
 
-# Task 4 & 5: Iterate and classify
+# Task 3: Create a for loop to process the dataset
 for sample in dataset:
-    # 1. Compute prediction (y_pred)
+    print(sample["id"], sample["petal_length"], sample["species"])
+
+    # Task 4: Use an if-else statement to classify each sample based on the threshold rule
+    GG = sample[FEATURE_NAME]
     if sample[FEATURE_NAME] < THRESHOLD:
         y_pred = POSITIVE_LABEL
     else:
         y_pred = NEGATIVE_LABEL
 
-    # 2. Derive true label (y_true) from the dataset sample
+    # Task 5:. Derive true label (y_true) from the dataset sample
     if sample[LABEL_KEY] == POSITIVE_LABEL:
         y_true = POSITIVE_LABEL
     else:
         y_true = NEGATIVE_LABEL
 
-    # 3. Update correct or wrong counter
+    # Task 6: Update correct or wrong counter
     if y_pred == y_true:
         correct += 1
     else:
         wrong += 1
 
-    # 4. ALWAYS increment total for every sample processed
-    # Does total increase for each sample? If not, fix it.
+    # Task 7: ALWAYS increment total for every sample processed
     total += 1
 
-    # Append the prediction to our list
+    # Task 8: Append the prediction to our list
     y_pred_list.append(y_pred)
 
-    # 5. Print per-sample trace exactly as required
+    # Task 9: Print per-sample trace exactly as required
     print(
         f"id={sample['id']} | true={y_true} | pred={y_pred} | "
         f"petal_length={sample['petal_length']}"
     )
 
-# Task 6: Compute and print final metrics
+# Task 10: Compute and print final metrics
 accuracy = (correct / total) * 100 if total > 0 else 0.0
 
 print("\n=== session 3 Summary ===")
