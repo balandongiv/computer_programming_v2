@@ -1,4 +1,12 @@
 
+# Session 2 continuity variables (Rule settings). Do not change these.
+THRESHOLD = 2.0
+FEATURE_NAME = "petal_length"
+POSITIVE_LABEL = "setosa"
+NEGATIVE_LABEL = "not_setosa"
+LABEL_KEY = "species"
+
+
 correct = 0      # Count of correct predictions
 wrong = 0        # Count of wrong predictions
 total = 0        # Total samples processed
