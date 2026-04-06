@@ -330,13 +330,14 @@ for sample in dataset:
   \item On each iteration, \texttt{sample} refers to a \emph{different} dictionary.
 \end{itemize}
 
-\begin{tcolorbox}[title=Interesting fact]
+\begin{tcolorbox}[title=Good Practice]
 The \texttt{print} step is a good beginner-friendly debugging habit:
 \begin{itemize}
   \item It confirms the keys (like \texttt{"id"} and \texttt{"petal\_length"}) actually exist.
   \item It lets you check that values look reasonable before adding more logic.
-  \item 
 \end{itemize}
+
+Use debug line by line to understand what is happening inside the for loop
 \end{tcolorbox}
 
 
@@ -348,16 +349,16 @@ Once you trust the data shape and values, you can replace the \texttt{print} lin
 
 
 \section{Conditionals}
+A \textbf{conditional} lets your program \textbf{make a decision} based on data. In many application, the most common form is an \textbf{if--else} statement:
 
 \subsection{Conditionals for Classification}
+Next, we will introduce 3 conditional statements within the loop.Basiclly, this include the task 4, task 5, and task 6.
+
 \label{sec:ses3_conditionals}
 
-\begin{tcolorbox}[title=Task 4: Use an if-else statement to classify each sample]
-
-\end{tcolorbox}
 
 
-A \textbf{conditional} lets your program \textbf{make a decision} based on data. In many application, the most common form is an \textbf{if--else} statement:
+
 \begin{itemize}
   \item if a condition is \texttt{True}, run the indented ``if'' block;
   \item otherwise, run the indented ``else'' block.
@@ -366,41 +367,52 @@ A \textbf{conditional} lets your program \textbf{make a decision} based on data.
 \subsubsection{Using a Rule to Predict a Label}
 In our classifier, the decision rule compares \textbf{one feature value} to a \textbf{threshold}. The variable \texttt{feature\_name} tells us which feature to look up in the current \texttt{sample} dictionary:
 
+\begin{tcolorbox}[title=Task 4: Use an if-else statement to classify each sample]
+
+Use the if else statement, so that, if the chosen feature value is less than the threshold, set \texttt{y\_pred} to \texttt{positive\_label}; otherwise, set it to \texttt{negative\_label}.
+\end{tcolorbox}
+
+Specifically, we will use the following code pattern to classify each sample based on the rule defined in Session 2. This code should be placed inside the for loop that processes each sample:
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
-# Example rule: compare the chosen feature to a threshold
-if sample[feature_name] < threshold:
-    y_pred = positive_label
-else:
-    y_pred = negative_label
+    if sample[FEATURE_NAME] < THRESHOLD:
+        y_pred = POSITIVE_LABEL
+    else:
+        y_pred = NEGATIVE_LABEL
 \end{minted}
 
-\subsubsection{How to Read This Code}
+We can read the code as follow
 \begin{itemize}
-  \item \texttt{sample[feature\_name]} retrieves the feature value (e.g., \texttt{sample["petal\_length"]}).
-  \item \texttt{< threshold} checks whether that value is below the cutoff.
+  \item \texttt{sample[FEATURE\_NAME]} retrieves the feature value (e.g., \texttt{sample["petal\_length"]}).
+  \item \texttt{< THRESHOLD} checks whether that value is below the cutoff.
   \item \texttt{y\_pred} stores the predicted label for this sample.
 \end{itemize}
 
-\subsubsection{Common Beginner Notes}
+\begin{tcolorbox}[title=Common Mistakes]
+
 \begin{itemize}
   \item \textbf{Indentation matters:} the indented lines belong to the \texttt{if} or \texttt{else} block.
   \item \textbf{Exactly one branch runs:} either the \texttt{if} block or the \texttt{else} block, never both.
   \item If you want ``less than or equal,'' use \texttt{<=} instead of \texttt{<}.
 \end{itemize}
+\end{tcolorbox}
 
 
 
 
-\subsection{Task 1: Initialize Metrics and Predictions List}
-Before the loop, initialize counters and a list for predictions:
-\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
-correct = 0
-wrong = 0
-total = 0
-y_pred_list = []
-\end{minted}
 
-\subsection{Task 2: Classification Rule}
+
+
+
+% \subsection{Task 1: Initialize Metrics and Predictions List}
+% Before the loop, initialize counters and a list for predictions:
+% \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+% correct = 0
+% wrong = 0
+% total = 0
+% y_pred_list = []
+% \end{minted}
+
+\subsubsection{Assign Classification Rule}
 \label{sec:ses3_required_bridge}
 Inside the loop, compute \texttt{y\_pred} using the Session 2 rule. Do \textbf{not} define any functions yet.
 
