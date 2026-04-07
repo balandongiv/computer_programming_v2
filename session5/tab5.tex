@@ -90,7 +90,7 @@ for sample in dataset:
 dataset = load_iris_data(filepath)
 settings = get_default_settings()
 if use_fit:
-	settings["threshold"] = fit_th_from_setosa(dataset, settings["threshold"])
+	settings["threshold"] = fit_threshold_from_setosa(dataset, settings["threshold"])
 elif threshold is not None:
 	settings["threshold"] = threshold
 result = initialize_predictions(dataset, settings, print_each=print_each)
