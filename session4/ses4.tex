@@ -20,10 +20,10 @@ Use the following files for this session:
 
 This session is all about how functions can dramatically improve the way you structure your code, making it more organized and reusable. Think of \textbf{functions} as essential building blocks for any programmer. They allow you to break down complex projects into smaller, more manageable, and importantly, reusable parts. By learning to effectively use functions, you'll be writing Python code that is not only cleaner and more efficient but also significantly easier to understand and maintain.
 
-In Session 3, you built a solid foundation by learning about lists, loops for repetitive tasks, and conditional statements for decision-making. Now, we're going to elevate your Python skills further. This session, we'll focus on structuring your Python scripts more effectively using functions. We'll revisit code from a previous tutorial that was written sequentially and transform it by incorporating functions. 
+In Session 3, you built a solid foundation by learning about lists, loops for repetitive tasks, and conditional statements for decision-making. Now, we're going to elevate your Python skills further. This session, we'll focus on structuring your Python scripts more effectively using functions. We'll revisit code from a previous tutorial that was written sequentially and transform it by incorporating functions.
 
 \section{What You Will Learn}
-In this session, you will learn to:
+\textbf{In this session, you will learn to:}
 \begin{enumerate}\setlength{\itemsep}{5pt}
 \item \textbf{Refactor Code into Functions}: Take existing, sequential scripts and reorganize them using functions. This will teach you how to identify blocks of code that can be encapsulated into reusable functions.
 \item \textbf{Understand Functions}: Learn the fundamental concept of functions -- what they are, how they are structured in Python, and why they are so beneficial for writing efficient and organized code.
@@ -72,132 +72,292 @@ Complete these functions in \texttt{session4\_iris\_template.py}. The table belo
 
 \input{session4/tab4.tex}
 
-\section{Dataset}
-In typical machine learning work, you may load datasets from many formats.
+\begin{tcolorbox}[title=Good Practice]
+We deliberately keep the instruction verbose in this session. When students refactor code into functions, explicit guidance about inputs, outputs, and return values helps prevent structure mistakes.
+\end{tcolorbox}
+\section{Task 1 and Task 2: Setup Functions}
 
-\subsection{Task 1: Load the Dataset from CSV}
+\begin{tcolorbox}[title=Task 1: Create a helper function to print status updates]
+Replace \texttt{pass} inside \texttt{make\_print\_status(status\_text)} with the print statement below.
+\end{tcolorbox}
 
-In this course, we start with \texttt{CSV} because it is easy to inspect and easy to parse.
-
-\noindent
-\textbf{Remark (important for this session):} the provided \texttt{session4/iris\_data.csv} currently contains \textbf{only Iris setosa} samples.
-That means the \textbf{true label} (after binary conversion) will always be \texttt{setosa} for every row.
-You are still practicing a \textbf{binary classifier} (\texttt{setosa} vs \texttt{not\_setosa}) using the same session 3 rule. In later sessions, we will re-introduce \texttt{versicolor} and \texttt{virginica}.
-
-Load the dataset using \texttt{csv.DictReader}:
-\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
-import csv
-
-dataset = []
-with open("session4/iris_data.csv", "r", encoding="utf-8", newline="") as csv_file:
-    reader = csv.DictReader(csv_file)
-    for row in reader:
-        dataset.append(
-            {
-                "id": row["id"],
-                "sepal_length": float(row["sepal_length"]),
-                "sepal_width": float(row["sepal_width"]),
-                "petal_length": float(row["petal_length"]),
-                "petal_width": float(row["petal_width"]),
-                "species": row["species"],
-            }
-        )
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+print(f"[STATUS] {status_text}")
 \end{minted}
 
-Notice: values read from CSV start as strings, so we convert numeric columns using \texttt{float(...)}.
+This helper function is used in \texttt{main()} to show what the program is doing.
 
 \begin{tcolorbox}[title=Checkpoint]
-Your \texttt{load\_iris\_data} function should return a list of dictionaries with length 50.
-\end{tcolorbox}
-\begin{tcolorbox}[title=Common Mistakes]
-\textbf{FileNotFoundError}: Check if you are running the script from the correct directory (the repository root). \\
-\textbf{String Type Errors}: If you forget \texttt{float()}, calculations will fail later because Python cannot multiply strings.
+After completing the Task 1, when executing the code, the compiler will the \texttt{make\_print\_status("Build dataset")}, and in terminal, you should see a printed output of \:
+\texttt{[STATUS] Build dataset}
 \end{tcolorbox}
 
-\subsection{Task 2: Keep the Session 3 Rule Unchanged}
-Inside your \texttt{determine\_binary\_label} function, keep the same decision rule:
-\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
-if sample[settings["feature_name"]] < settings["threshold"]:
-    y_pred = settings["positive_label"]
+\begin{tcolorbox}[title=Task 2: Create the flower dataset]
+Inside \texttt{setup\_application\_list()}, complete the dataset setup so that the function builds the same flower dictionaries from Session 3 and returns the dataset list.
+\end{tcolorbox}
+
+The template already gives you \texttt{flower1}. Add \texttt{flower2} using the same canonical keys:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+flower2 = {
+    "id": "flower2",
+    "sepal_length": 4.9,
+    "sepal_width": 3.0,
+    "petal_length": 1.4,
+    "petal_width": 0.2,
+    "species": "setosa"
+}
+\end{minted}
+
+The answer file keeps \texttt{flower2} commented in the dataset list, so the dataset line currently remains:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+dataset = [flower1
+           #    , flower2
+           ]
+\end{minted}
+
+\begin{tcolorbox}[title=Good Practice]
+Keep the keys exactly the same as Session 3: \texttt{id}, \texttt{sepal\_length}, \texttt{sepal\_width}, \texttt{petal\_length}, \texttt{petal\_width}, and \texttt{species}. Refactoring should not invent new key names.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Checkpoint]
+\texttt{setup\_application\_list()} must finish with \texttt{return dataset}. If you forget the return statement, the dataset in \texttt{main()} will become \texttt{None}.
+\end{tcolorbox}
+
+\section{Main Flow Before the Loop}
+
+\begin{tcolorbox}[title=Task 3 : Show a status update before running prediction]
+In \texttt{main()}, keep the status call before the prediction loop:
+\end{tcolorbox}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+make_print_status("Run prediction loop")
+\end{minted}
+
+This line is already present in the template, but students should understand that it depends on Task 1 working correctly.
+
+\begin{tcolorbox}[title=Entry to Task 4 until Task 9: Run the same prediction loop from Session 3, Wrap the prediction workflow in a function]
+The function \texttt{run\_prediction\_loop(dataset)} becomes the new home for the Session 3 loop. You will keep the same beginner-friendly variables: \texttt{correct}, \texttt{wrong}, \texttt{total}, and \texttt{y\_pred\_list}.
+\end{tcolorbox}
+
+At the start of \texttt{run\_prediction\_loop(dataset)}, keep these initial values:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+correct = 0
+wrong = 0
+total = 0
+y_pred_list = []
+\end{minted}
+
+\begin{tcolorbox}[title=Good Practice]
+This function should \textbf{run the loop and return results}. It should not calculate the final accuracy. That job belongs to the accuracy function later.
+\end{tcolorbox}
+
+\section{Prediction Functions}
+
+\begin{tcolorbox}[title=Task 5: Predict the class using petal length]
+Replace \texttt{pass} inside \texttt{compute\_threshold\_prediction(sample)} with the same Session 3 rule and return the predicted label.
+\end{tcolorbox}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+if sample[FEATURE_NAME] < THRESHOLD:
+    y_pred = POSITIVE_LABEL
 else:
-    y_pred = settings["negative_label"]
+    y_pred = NEGATIVE_LABEL
+
 return y_pred
 \end{minted}
 
-\textbf{Canonical Names:} Notice how we use \texttt{settings["feature\_name"]}. We enforce these exact names so the next session's template can import your work without changes.
+\begin{tcolorbox}[title=Checkpoint]
+This function must return either \texttt{POSITIVE\_LABEL} or \texttt{NEGATIVE\_LABEL}. If you forget \texttt{return y\_pred}, later code will receive \texttt{None}.
+\end{tcolorbox}
 
-\section{Task 2.1: Convert the True Label into a Binary Label}
-In session 3, you used this block to convert a 3-class species into a binary truth label. Refactor that logic into the function:
-\texttt{determine\_true\_binary\_label(sample, settings)}.
+\begin{tcolorbox}[title=Task 6: Convert species into the lesson’s binary label]
+Inside \texttt{run\_prediction\_loop(dataset)}, add the function call that converts the real species into the binary lesson label.
+\end{tcolorbox}
 
-\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
-if sample[settings["label_key"]] == settings["positive_label"]:
-    return settings["positive_label"]
-return settings["negative_label"]
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+y_true = derive_true_label(sample)
 \end{minted}
 
-\section{Task 2.2: Update Metrics and Collect Predictions}
-In session 3, you updated counters and stored predictions.
-In Session 4, refactor that logic into a function:
-\texttt{update\_metrics(metrics, y\_pred, y\_true)}.
+The body of \texttt{derive\_true\_label(sample)} is already provided in the template:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+if sample[LABEL_KEY] == POSITIVE_LABEL:
+    y_true = POSITIVE_LABEL
+else:
+    y_true = NEGATIVE_LABEL
+
+return y_true
+\end{minted}
+
+\begin{tcolorbox}[title=Good Practice]
+Notice the separation of responsibilities:
+\begin{itemize}
+    \item \texttt{compute\_threshold\_prediction(sample)} predicts from the feature value,
+    \item \texttt{derive\_true\_label(sample)} converts the real species into the lesson's two-label format.
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Task 7: Update prediction counts and save results]
+Replace \texttt{pass} inside \texttt{update\_result\_counts(...)} with the Session 3 metric-update logic and return all updated values.
+\end{tcolorbox}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+if y_pred == y_true:
+    correct += 1
+else:
+    wrong += 1
+
+total += 1
+y_pred_list.append(y_pred)
+
+return correct, wrong, total, y_pred_list
+\end{minted}
 
 \begin{tcolorbox}[title=Checkpoint]
-Ensure your \texttt{update\_metrics} function updates \texttt{metrics["correct"]} or \texttt{metrics["wrong"]}, appends to \texttt{y\_pred\_list}, and \textbf{always} updates \texttt{metrics["total"]}.
-\end{tcolorbox}
-\begin{tcolorbox}[title=Common Mistakes]
-\textbf{Logic Bug:} Only incrementing \texttt{total} if the prediction was correct. Check your indentation to ensure \texttt{total} increases for every sample!
+\texttt{total} must increase for every processed sample, even when the prediction is wrong. The function must also return all four updated objects in the same order.
 \end{tcolorbox}
 
-\section{Task 3: Maintain Output Compatibility}
-Inside \texttt{initialize\_predictions}, use this per-sample output line (same as Session 3):
-\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+\section{Inside the Prediction Loop}
+
+Inside \texttt{run\_prediction\_loop(dataset)}, the order of work should now be:
+\begin{enumerate}
+    \item print the current sample id,
+    \item compute \texttt{y\_pred},
+    \item derive \texttt{y\_true},
+    \item update the counters and prediction list.
+\end{enumerate}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+for sample in dataset:
+    print("\nProcessing sample with id:", sample["id"])
+
+    y_pred = compute_threshold_prediction(sample)
+    y_true = derive_true_label(sample)
+    correct, wrong, total, y_pred_list = update_result_counts(
+        correct, wrong, total, y_pred_list, y_pred, y_true
+    )
+\end{minted}
+
+\begin{tcolorbox}[title=Task 8: Display the result for each sample]
+Uncomment the per-sample trace print block inside \texttt{run\_prediction\_loop(dataset)}.
+\end{tcolorbox}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
 print(
     f"id={sample['id']} | true={y_true} | pred={y_pred} | "
     f"petal_length={sample['petal_length']}"
 )
 \end{minted}
 
-Print final summary metrics in \texttt{main()}:
-\texttt{Correct}, \texttt{Wrong}, \texttt{Total}, \texttt{Accuracy (\%)}, \texttt{All predictions}.
+\begin{tcolorbox}[title=Checkpoint]
+The per-sample trace should still match Session 3 format exactly. This keeps the output compatible while the internal code structure changes.
+\end{tcolorbox}
 
-\subsection{Name Label (Required)}
-Include this in \texttt{main()}:
-\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
-print("=== Student Label ===")
+\begin{tcolorbox}[title=Task 9: Return the prediction loop results]
+Replace the placeholders at the end of \texttt{run\_prediction\_loop(dataset)} with the correct return values.
+\end{tcolorbox}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+return correct, wrong, total, y_pred_list
 \end{minted}
 
+\begin{tcolorbox}[title=Good Practice]
+Return values must stay in the same order as the variables received in \texttt{main()}. If the order changes, the wrong values will be assigned without an obvious syntax error.
+\end{tcolorbox}
+
+\section{Accuracy and Summary}
+
+\begin{tcolorbox}[title=Task 10: Compute the overall accuracy]
+One \texttt{calculate\_accuracy(correct, total)} function in the template is missing the return statement. Add the missing line:
+\end{tcolorbox}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+return accuracy
+\end{minted}
+
+\begin{tcolorbox}[title=Task 10: Calculate accuracy]
+In \texttt{main()}, keep the function call that computes the accuracy after the loop finishes:
+\end{tcolorbox}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+accuracy = calculate_accuracy(correct, total)
+\end{minted}
+
+\begin{tcolorbox}[title=Checkpoint]
+If \texttt{calculate\_accuracy(...)} does not return a value, \texttt{accuracy} in \texttt{main()} will become \texttt{None}.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Task 11: Show a status update before printing the summary]
+Replace the placeholder in \texttt{main()} with the exact status text from the answer file.
+\end{tcolorbox}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+make_print_status("Print summary")
+\end{minted}
+
+\begin{tcolorbox}[title=Task 12: Create and call the summary-report function]
+Call the summary function at the end of \texttt{main()}:
+\end{tcolorbox}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+print_summary(correct, wrong, total, y_pred_list, accuracy)
+\end{minted}
+
+The provided \texttt{print\_summary(...)} function already prints:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+print("\n=== session 4 Summary ===")
+print("Correct:", correct)
+print("Wrong:", wrong)
+print("Total:", total)
+print("Accuracy (%):", round(accuracy, 2))
+print("All predictions:", y_pred_list)
+\end{minted}
+
+\begin{tcolorbox}[title=Checkpoint]
+By the end of \texttt{main()}, the program should:
+\begin{itemize}
+    \item print a status for building the dataset,
+    \item print a status for running the prediction loop,
+    \item run the loop and collect results,
+    \item calculate the accuracy,
+    \item print a status for the summary,
+    \item print the final summary report.
+\end{itemize}
+\end{tcolorbox}
+
 \section{About \texttt{\_\_main\_\_}}
-At the bottom of your Python file, you will see:
-\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+At the bottom of the file, you will see:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
 if __name__ == "__main__":
     main()
 \end{minted}
 
-\noindent
-\textbf{Meaning:}
+This means:
 \begin{itemize}
-    \item When you run the file directly, Python sets \texttt{\_\_name\_\_} to \texttt{"\_\_main\_\_"} and \texttt{main()} executes.
-    \item When the file is imported by another file, \texttt{main()} does not automatically run.
+    \item when the file is run directly, \texttt{main()} executes,
+    \item when the file is imported somewhere else, \texttt{main()} does not run automatically.
 \end{itemize}
 
-\section{Review and Next Steps}
+\begin{tcolorbox}[title=Good Practice]
+\texttt{main()} should read like a short plan of the whole program. The detailed work should stay inside helper functions.
+\end{tcolorbox}
 
-\textbf{Summary:}
+\section{Summary and Review}
 \begin{itemize}
-    \item \textbf{Functions} allow you to bundle code into reusable blocks.
-    \item \textbf{CSV Loading} allows you to import external dataset files.
-    \item \textbf{Modular Design} sets you up to import these same functions in Session 5.
+    \item \textbf{Task 1 to Task 3} prepare the program flow.
+    \item \textbf{Task 5 to Task 9} move the Session 3 prediction loop into helper functions.
+    \item \textbf{Task 10 to Task 12} compute accuracy and print the final summary.
 \end{itemize}
 
-\textbf{Review Questions:}
+\textbf{Reflection Questions:}
 \begin{enumerate}
-    \item What is the purpose of \texttt{determine\_true\_binary\_label}?
-    \item Why must we convert numeric values from a CSV file using \texttt{float()}?
-    \item Why do we enforce exact keys like \texttt{feature\_name} inside the \texttt{settings} dictionary?
+    \item Why is \texttt{return} essential in functions such as \texttt{compute\_threshold\_prediction(...)} and \texttt{calculate\_accuracy(...)}?
+    \item Why is it useful to move the metric-update logic into \texttt{update\_result\_counts(...)}?
+    \item How does \texttt{main()} become easier to read after refactoring the Session 3 code into functions?
 \end{enumerate}
 
-\textbf{Micro-Exercise:} Change the \texttt{threshold} value in \texttt{get\_default\_settings()} and run the file. Observe how the accuracy changes!
-
-\begin{tcolorbox}[title=Real-World Hook]
-A rule-based classifier built with modular functions is exactly how basic medical triage rules or spam filters are initially designed before machine learning models are introduced!
-\end{tcolorbox}
+\textbf{Micro-Exercise:} Uncomment \texttt{flower2} inside the dataset list, run the program again, and observe how the loop results and summary update automatically.
