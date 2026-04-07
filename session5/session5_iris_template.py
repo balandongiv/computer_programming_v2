@@ -1,108 +1,23 @@
-"""Session 4: Move Session 3 code into functions.
+"""Session 5: Positional and keyword arguments with the iris classifier.
 
-This version keeps the same rule from Session 3.
-The goal is to help a beginner see where each part came from.
-We keep the code simple and close to the original step-by-step style.
+This session keeps the same classifier idea from Session 4.
+The new goal is to make the pipeline easier to control from function calls.
 """
-LABEL_KEY = "species"
-THRESHOLD = 2.0
-FEATURE_NAME = "petal_length"
-POSITIVE_LABEL = "setosa"
-NEGATIVE_LABEL = "not_setosa"
+
+import csv
+from helper.iris_utils import fit_threshold_from_setosa
+
+DEFAULT_IRIS_FILE = "session5/iris_data.csv"
 
 
 def make_print_status(status_text):
-    """Print a small status message.
-
-    Args:
-        status_text (str): A short message to show what the program is doing.
-    """
+    """Print a small status message."""
     print(f"[STATUS] {status_text}")
 
+# Task 1: Refactor calculate_accuracy to use keyword-friendly defaults
+def calculate_accuracy( < your_code > , < your_code > ):
+    """Calculate the accuracy percentage."""
 
-def compute_threshold_prediction(sample):
-    """Predict the label for one flower sample.
-
-    This uses the same rule from Session 3:
-    if petal_length is less than 2.0, predict "setosa".
-    Otherwise, predict "not_setosa".
-
-    Args:
-        sample (dict): One flower sample.
-
-    Returns:
-        str: The predicted label.
-    """
-
-    if sample[FEATURE_NAME] < THRESHOLD:
-        y_pred = POSITIVE_LABEL
-    else:
-        y_pred = NEGATIVE_LABEL
-
-    return y_pred
-
-
-def derive_true_label(sample):
-    """Convert the real species into the lesson label.
-
-    In this lesson, we only use two labels:
-    - "setosa"
-    - "not_setosa"
-
-    Args:
-        sample (dict): One flower sample.
-
-    Returns:
-        str: The true label for this lesson.
-    """
-
-    if sample[LABEL_KEY] == POSITIVE_LABEL:
-        y_true = POSITIVE_LABEL
-    else:
-        y_true = NEGATIVE_LABEL
-
-    return y_true
-
-# Task 2: Refactor to have 6 keyword arguments
-
-
-def update_result_counts(correct, wrong, total, y_pred_list, y_pred, y_true):
-    """Update the counters and prediction list for one sample.
-
-    Args:
-        correct (int): Current number of correct predictions.
-        wrong (int): Current number of wrong predictions.
-        total (int): Current number of processed samples.
-        y_pred_list (list): Current list of predictions.
-        y_pred (str): Predicted label.
-        y_true (str): True label.
-
-    Returns:
-        tuple: Updated correct, wrong, total, y_pred_list
-    """
-    if y_pred == y_true:
-        correct += 1
-    else:
-        wrong += 1
-
-    total += 1
-    y_pred_list.append(y_pred)
-
-    return correct, wrong, total, y_pred_list
-
-# Task 2: Refactor to have 2 keyword arguments
-
-
-def calculate_accuracy(correct, total):
-    """Calculate accuracy percentage.
-
-    Args:
-        correct (int): Number of correct predictions.
-        total (int): Number of processed samples.
-
-    Returns:
-        float: Accuracy percentage.
-    """
     if total > 0:
         accuracy = (correct / total) * 100
     else:
@@ -111,105 +26,192 @@ def calculate_accuracy(correct, total):
     return accuracy
 
 
-def run_prediction_loop(dataset):
-    """Run the same prediction loop from Session 3, but inside a function.
-
-    This function keeps the beginner-friendly variables:
-    correct, wrong, total, and y_pred_list.
+# Task 2: Build the keyword-friendly setup_application function
+def setup_application( < your_code > , < your_code > , < your_code > , < your_code > ):
+    """Set up the dataset, settings, metrics, and accuracy for one run.
 
     Args:
-        dataset (list): A list of flower dictionaries.
+        filepath (str | None): CSV path. Defaults to session5/iris_data.csv.
+        threshold (float | None): Manual threshold override.
+        print_each (bool): Whether to print one line per sample.
+        use_fit (bool): Whether to learn the threshold from the dataset.
 
     Returns:
-        tuple: correct, wrong, total, y_pred_list, accuracy
+        tuple: settings, dataset, metrics, accuracy
     """
-    # Task 3 from Session 3: initialize metrics and predictions
-    correct = 0      # Count of correct predictions
-    wrong = 0        # Count of wrong predictions
-    total = 0        # Total samples processed
-    y_pred_list = []  # List of all predictions made
+    # <your_code>: load the dataset, read the default settings, and apply the threshold rules
+    if filepath is None:
+        filepath = DEFAULT_IRIS_FILE
 
-    print("\n=== Start session 4 Prediction Loop ===")
+    dataset = load_iris_data(filepath)
+    settings = get_default_settings()
 
-    # Task 4 and Task 5 from Session 3
-    for sample in dataset:
-        # 1. Compute prediction
-        y_pred = compute_threshold_prediction(sample)
+    # <your_code>: apply the threshold priority order here
+    if use_fit:
+        settings["threshold"] = fit_threshold_from_setosa(dataset, settings)
+    elif threshold is not None:
+        settings["threshold"] = threshold
 
-        # 2. Derive true label
-        y_true = derive_true_label(sample)
+    metrics = initialize_predictions(dataset, settings, print_each)
 
-        # 3. Update counters and prediction list
-        correct, wrong, total, y_pred_list = update_result_counts(
-            correct, wrong, total, y_pred_list, y_pred, y_true
-        )
-
-        # 4. Print one line for this sample
-        print(
-            f"id={sample['id']} | true={y_true} | pred={y_pred} | "
-            f"petal_length={sample['petal_length']}"
-        )
-
-    return correct, wrong, total, y_pred_list
+    # Task 1: Refactor calculate_accuracy to use keyword-friendly defaults
+    accuracy = calculate_accuracy(
+        correct=metrics["correct"],
+        total=metrics["total"],
+    )
+    return settings, dataset, metrics, accuracy
 
 
-def print_summary(correct, wrong, total, y_pred_list, accuracy):
-    """Print the final results after the loop is finished.
+def get_default_settings():
+    """Return the default classifier settings for this lesson."""
+    return {
+        "label_key": "species",
+        "threshold": 2.0,
+        "feature_name": "petal_length",
+        "positive_label": "setosa",
+        "negative_label": "not_setosa",
+    }
+
+
+def load_iris_data(filepath):
+    """Load the iris dataset from a CSV file.
 
     Args:
-        correct (int): Number of correct predictions.
-        wrong (int): Number of wrong predictions.
-        total (int): Number of processed samples.
-        y_pred_list (list): List of predicted labels.
-        accuracy (float): Accuracy percentage.
+        filepath (str): Path to the CSV file.
+
+    Returns:
+        list: A list of flower dictionaries.
     """
-    print("\n=== session 4 Summary ===")
-    print("Correct:", correct)
-    print("Wrong:", wrong)
-    print("Total:", total)
-    print("Accuracy (%):", round(accuracy, 2))
-    print("All predictions:", y_pred_list)
+    dataset = []
+    with open(filepath, "r", encoding="utf-8", newline="") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            sample = {
+                "id": row["id"],
+                "sepal_length": float(row["sepal_length"]),
+                "sepal_width": float(row["sepal_width"]),
+                "petal_length": float(row["petal_length"]),
+                "petal_width": float(row["petal_width"]),
+                "species": row["species"],
+            }
+            dataset.append(sample)
 
-
-def setup_application_list():
-    """Combination of Task 1 and Task 2 in session 3, but now in a function."""
-    # Task 1 in session 3: Define dictionaries for flower1 and flower2 using canonical keys
-
-    flower1 = {
-        "id": "flower1",
-        "sepal_length": 5.1,
-        "sepal_width": 3.5,
-        "petal_length": 1.4,
-        "petal_width": 0.2,
-        "species": "setosa"
-    }
-
-    flower2 = {
-        "id": "flower2",
-        "sepal_length": 4.9,
-        "sepal_width": 3.0,
-        "petal_length": 1.4,
-        "petal_width": 0.2,
-        "species": "setosa"
-    }
-
-    # Task 2 in session 3: Build the dataset list
-    # Combine our dictionaries into a single list
-    dataset = [flower1, flower2]
     return dataset
 
 
+def determine_binary_label(sample, settings):
+    """Predict a binary label using the threshold rule."""
+    if sample[settings["feature_name"]] < settings["threshold"]:
+        return settings["positive_label"]
+    return settings["negative_label"]
+
+
+def determine_true_binary_label(sample, settings):
+    """Convert the real species into the lesson's binary label."""
+    if sample[settings["label_key"]] == settings["positive_label"]:
+        return settings["positive_label"]
+    return settings["negative_label"]
+
+
+def evaluate_prediction(y_pred, y_true):
+    """Return True when the prediction matches the real label."""
+    return y_pred == y_true
+
+
+def update_metrics(metrics, y_pred, y_true):
+    """Update the metrics dictionary after one prediction."""
+    is_correct = evaluate_prediction(y_pred, y_true)
+
+    if is_correct:
+        metrics["correct"] += 1
+    else:
+        metrics["wrong"] += 1
+
+    metrics["total"] += 1
+    metrics["y_pred_list"].append(y_pred)
+
+
+def classify_sample(sample, settings):
+    """Keep the classifier step separate from the loop."""
+    return determine_binary_label(sample, settings)
+
+
+def initialize_predictions(dataset, settings, print_each):
+    """Run the prediction loop and collect metrics.
+
+    Args:
+        dataset (list): The loaded dataset.
+        settings (dict): Classifier settings.
+        print_each (bool): Whether to print one line per sample.
+
+    Returns:
+        dict: Metrics collected during the loop.
+    """
+    metrics = {
+        "correct": 0,
+        "wrong": 0,
+        "total": 0,
+        "y_pred_list": [],
+    }
+
+    for sample in dataset:
+        y_pred = classify_sample(sample, settings)
+        y_true = determine_true_binary_label(sample, settings)
+        update_metrics(metrics, y_pred, y_true)
+
+        if print_each:
+            print(
+                f"id={sample['id']} | true={y_true} | pred={y_pred} | "
+                f"petal_length={sample['petal_length']}"
+            )
+
+    return metrics
+
+
+def print_summary(run_label, settings, metrics, accuracy):
+    """Print one experiment summary."""
+    print(f"\n=== {run_label} ===")
+    print("Threshold:", settings["threshold"])
+    print("Correct:", metrics["correct"])
+    print("Wrong:", metrics["wrong"])
+    print("Total:", metrics["total"])
+    print("Accuracy (%):", round(accuracy, 2))
+    print("All predictions:", metrics["y_pred_list"])
+
+
 def main():
-    """Run the full beginner version of the program."""
-    make_print_status("Build dataset")
-    dataset = setup_application_list()
+    """Run the Session 5 experiments."""
 
-    make_print_status("Run prediction loop")
-    correct, wrong, total, y_pred_list = run_prediction_loop(dataset)
-    accuracy = calculate_accuracy(correct, total)
+    make_print_status("Default run")
+    settings, dataset, metrics, accuracy = setup_application()
+    # print_summary("Default run", settings, metrics, accuracy)
 
-    make_print_status("Print summary")
-    print_summary(correct, wrong, total, y_pred_list, accuracy)
+    # Task 4: Add the positional override run in main()
+    # <your_code>: uncomment the positional override run below
+    # make_print_status("Positional override run")
+    # settings, dataset, metrics, accuracy = setup_application(
+    #     "session5/iris_data.csv", 1.8, False, False
+    # )
+    # print_summary("Positional override run", settings, metrics, accuracy)
+
+    # Task 5: Add the keyword override run in main()
+    # <your_code>: uncomment the keyword override run below
+    # make_print_status("Keyword override run")
+    # settings, dataset, metrics, accuracy = setup_application(
+    #     threshold=2.2,
+    #     print_each=False,
+    # )
+    # print_summary("Keyword override run", settings, metrics, accuracy)
+
+    # Task 6: Add the fit-based run in main()
+    # <your_code>: uncomment the fit-based run below
+    # make_print_status("Fit-based run")
+    # settings, dataset, metrics, accuracy = setup_application(
+    #     print_each=False,
+    #     use_fit=True,
+    # )
+    # print_summary("Fit-based run", settings, metrics, accuracy)
+    pass
 
 
 if __name__ == "__main__":

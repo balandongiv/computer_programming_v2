@@ -21,7 +21,6 @@ def make_print_status(status_text):
     # student should paste the statement print(f"[STATUS] {status_text}")
     print(f"[STATUS] {status_text}")
     # Comment out the print statement for now, but you can uncomment it to see status messages.
-    pass
 
 # Task 2: Create the flower dataset
 
@@ -40,20 +39,18 @@ def setup_application_list():
         "species": "setosa"
     }
 
-    # flower2 = {
-    #     "id": "flower2",
-    #     "sepal_length": 4.9,
-    #     "sepal_width": 3.0,
-    #     "petal_length": 1.4,
-    #     "petal_width": 0.2,
-    #     "species": "setosa"
-    # }
+    flower2 = {
+        "id": "flower2",
+        "sepal_length": 4.9,
+        "sepal_width": 3.0,
+        "petal_length": 1.4,
+        "petal_width": 0.2,
+        "species": "setosa"
+    }
 
     # Task 2 in session 3: Build the dataset list
     # Combine our dictionaries into a single list
-    dataset = [flower1
-               #    , flower2
-               ]
+    dataset = [flower1, flower2]
     print("Dataset:", dataset)
     # Note here that we return the dataset list from this function, so we can use it later in the main function.
     return dataset
@@ -273,6 +270,7 @@ def main():
 
     # Task 12: Create and call the summary-report function
     print_summary(correct, wrong, total, y_pred_list, accuracy)
+    print("\n=== End of session 4 ===")
 
 
 if __name__ == "__main__":

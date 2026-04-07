@@ -535,6 +535,24 @@ You should see output similar to this at the end: \\
 \texttt{All predictions: ['setosa', 'setosa']}
 \end{tcolorbox}
 
+\section{Expected Output When Submitting in Itel}
+
+In the terminal, you should see the following output when running the program:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+=== Start session 3 Prediction Loop ===
+flower1 1.4 setosa
+id=flower1 | true=setosa | pred=setosa | petal_length=1.4
+flower2 1.4 setosa
+id=flower2 | true=setosa | pred=setosa | petal_length=1.4
+
+=== session 3 Summary ===
+Correct: 2
+Wrong: 0
+Total: 2
+Accuracy (%): 100.0
+All predictions: ['setosa', 'setosa']
+\end{minted}
+
 \section{Summary \& Review}
 \begin{itemize}
     \item \textbf{Dictionaries:} You learned to store one object's features using named keys.

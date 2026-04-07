@@ -378,6 +378,35 @@ This means:
 \texttt{main()} should read like a short plan of the whole program. The detailed work should stay inside helper functions.
 \end{tcolorbox}
 
+\section{Expected Output When Submitting in Itel}
+
+In the terminal, you should see the following output when running the program:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+[STATUS] Build dataset
+Dataset: [{'id': 'flower1', 'sepal_length': 5.1, 'sepal_width': 3.5, 'petal_length': 1.4, 'petal_width': 0.2, 'species': 'setosa'}, {'id': 'flower2', 'sepal_length': 4.9, 'sepal_width': 3.0, 'petal_length': 1.4, 'petal_width': 0.2, 'species': 'setosa'}]
+[STATUS] Run prediction loop
+
+=== Start session 4 Prediction Loop ===
+
+Processing sample with id: flower1
+id=flower1 | true=setosa | pred=setosa | petal_length=1.4
+
+Processing sample with id: flower2
+id=flower2 | true=setosa | pred=setosa | petal_length=1.4
+[STATUS] Print summary
+
+=== session 4 Summary ===
+Correct: 2
+Wrong: 0
+Total: 2
+Accuracy (%): 100.0
+All predictions: ['setosa', 'setosa']
+
+=== End of session 4 ===
+\end{minted}
+
+
+
 \section{Summary and Review}
 \begin{itemize}
     \item \textbf{Task 1 to Task 3} prepare the program flow.
