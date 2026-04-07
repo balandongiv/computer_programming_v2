@@ -75,8 +75,9 @@ Complete these functions in \texttt{session4\_iris\_template.py}. The table belo
 \begin{tcolorbox}[title=Good Practice]
 We deliberately keep the instruction verbose in this session. When students refactor code into functions, explicit guidance about inputs, outputs, and return values helps prevent structure mistakes.
 \end{tcolorbox}
-\section{Task 1 and Task 2: Setup Functions}
+\section{Program Setup and First Helper Functions}
 
+\subsection{Task 1: Create a helper function to print status updates}
 \begin{tcolorbox}[title=Task 1: Create a helper function to print status updates]
 Replace \texttt{pass} inside \texttt{make\_print\_status(status\_text)} with the print statement below.
 \end{tcolorbox}
@@ -92,6 +93,7 @@ After completing the Task 1, when executing the code, the compiler will the \tex
 \texttt{[STATUS] Build dataset}
 \end{tcolorbox}
 
+\subsection{Task 2: Create the Flower Dataset}
 \begin{tcolorbox}[title=Task 2: Create the flower dataset]
 
 Inside \texttt{setup\_application\_list()}, complete the dataset setup so that the function builds the same flower dictionaries from Session 3 and returns the dataset list.
@@ -126,7 +128,9 @@ Keep the keys exactly the same as Session 3: \texttt{id}, \texttt{sepal\_length}
 \texttt{setup\_application\_list()} must finish with \texttt{return dataset}. If you forget the return statement, the dataset in \texttt{main()} will become \texttt{None}.
 \end{tcolorbox}
 
-\section{Main Flow Before the Loop}
+\section{Preparing the Main Program Flow}
+
+\subsection{Task 3: Show a status update before running prediction}
 
 \begin{tcolorbox}[title=Task 3 : Show a status update before running prediction]
 In \texttt{main()}, keep the status call before the prediction loop:
@@ -137,6 +141,8 @@ make_print_status("Run prediction loop")
 \end{minted}
 
 This line is already present in the template, but students should understand that it depends on Task 1 working correctly.
+
+\subsection{Task 4: Wrap the prediction workflow in a function}
 
 \begin{tcolorbox}[title={Entry to Task 4 until Task 9: Run the same prediction loop from Session 3, Wrap the prediction workflow in a function}]
 The function \texttt{run\_prediction\_loop(dataset)} becomes the new home for the Session 3 loop. You will keep the same beginner-friendly variables: \texttt{correct}, \texttt{wrong}, \texttt{total}, and \texttt{y\_pred\_list}.
@@ -155,7 +161,9 @@ y_pred_list = []
 This function should \textbf{run the loop and return results}. It should not calculate the final accuracy. That job belongs to the accuracy function later.
 \end{tcolorbox}
 
-\section{Prediction Functions}
+\section{Refactoring the Prediction Workflow}
+
+\subsection{Task 5: Predict the class using petal length}
 
 \begin{tcolorbox}[title=Task 5: Predict the class using petal length]
 Replace \texttt{pass} inside \texttt{compute\_threshold\_prediction(sample)} with the same Session 3 rule and return the predicted label.
@@ -173,6 +181,8 @@ return y_pred
 \begin{tcolorbox}[title=Checkpoint]
 This function must return either \texttt{POSITIVE\_LABEL} or \texttt{NEGATIVE\_LABEL}. If you forget \texttt{return y\_pred}, later code will receive \texttt{None}.
 \end{tcolorbox}
+
+\subsection{Task 6: Convert species into the lesson's binary label}
 
 \begin{tcolorbox}[title=Task 6: Convert species into the lesson’s binary label]
 Inside \texttt{run\_prediction\_loop(dataset)}, add the function call that converts the real species into the binary lesson label.
@@ -201,6 +211,8 @@ Notice the separation of responsibilities:
 \end{itemize}
 \end{tcolorbox}
 
+\subsection{Task 7: Update prediction counts and save results}
+
 In session 3, you updated counters and stored predictions.
 In Session 4, refactor that logic into a function:
 
@@ -225,7 +237,7 @@ return correct, wrong, total, y_pred_list
 Use the debug modes in your IDE to step through the code and verify that the counters update correctly for both correct and wrong predictions.
 \end{tcolorbox}
 
-\section{Inside the Prediction Loop}
+\section{Completing the Prediction Loop}
 
 Inside \texttt{run\_prediction\_loop(dataset)}, the order of work should now be:
 \begin{enumerate}
@@ -246,6 +258,8 @@ for sample in dataset:
     )
 \end{minted}
 
+\subsection{Task 8: Display the result for each sample}
+
 \begin{tcolorbox}[title=Task 8: Display the result for each sample]
 Uncomment the per-sample trace print block inside \texttt{run\_prediction\_loop(dataset)}.
 \end{tcolorbox}
@@ -261,6 +275,8 @@ print(
 The per-sample trace should still match Session 3 format exactly. This keeps the output compatible while the internal code structure changes.
 \end{tcolorbox}
 
+\subsection{Task 9: Return the prediction loop results}
+
 \begin{tcolorbox}[title=Task 9: Return the prediction loop results]
 Replace the placeholders at the end of \texttt{run\_prediction\_loop(dataset)} with the correct return values.
 \end{tcolorbox}
@@ -273,7 +289,9 @@ return correct, wrong, total, y_pred_list
 Return values must stay in the same order as the variables received in \texttt{main()}. If the order changes, the wrong values will be assigned without an obvious syntax error.
 \end{tcolorbox}
 
-\section{Accuracy and Summary}
+\section{Accuracy Calculation and Final Output}
+
+\subsection{Task 10: Return the computed accuracy}
 
 \begin{tcolorbox}[title=Task 10: Compute the overall accuracy]
 One \texttt{calculate\_accuracy(correct, total)} function in the template is missing the return statement. Add the missing line:
@@ -282,6 +300,8 @@ One \texttt{calculate\_accuracy(correct, total)} function in the template is mis
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
 return accuracy
 \end{minted}
+
+\subsection{Task 10: Call the accuracy function in \texttt{main()}}
 
 \begin{tcolorbox}[title=Task 10: Calculate accuracy]
 In \texttt{main()}, keep the function call that computes the accuracy after the loop finishes:
@@ -295,6 +315,8 @@ accuracy = calculate_accuracy(correct, total)
 If \texttt{calculate\_accuracy(...)} does not return a value, \texttt{accuracy} in \texttt{main()} will become \texttt{None}.
 \end{tcolorbox}
 
+\subsection{Task 11: Show a status update before printing the summary}
+
 \begin{tcolorbox}[title=Task 11: Show a status update before printing the summary]
 Replace the placeholder in \texttt{main()} with the exact status text from the answer file.
 \end{tcolorbox}
@@ -302,6 +324,8 @@ Replace the placeholder in \texttt{main()} with the exact status text from the a
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
 make_print_status("Print summary")
 \end{minted}
+
+\subsection{Task 12: Create and call the summary-report function}
 
 \begin{tcolorbox}[title=Task 12: Create and call the summary-report function]
 Call the summary function at the end of \texttt{main()}:
