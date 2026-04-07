@@ -93,6 +93,7 @@ After completing the Task 1, when executing the code, the compiler will the \tex
 \end{tcolorbox}
 
 \begin{tcolorbox}[title=Task 2: Create the flower dataset]
+
 Inside \texttt{setup\_application\_list()}, complete the dataset setup so that the function builds the same flower dictionaries from Session 3 and returns the dataset list.
 \end{tcolorbox}
 
@@ -109,11 +110,11 @@ flower2 = {
 }
 \end{minted}
 
-The answer file keeps \texttt{flower2} commented in the dataset list, so the dataset line currently remains:
+Also,  uncomment the line with \texttt{flower2} in the dataset list, so the dataset line currently remains:
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
-dataset = [flower1
-           #    , flower2
+dataset = [flower1,
+           flower2
            ]
 \end{minted}
 
@@ -137,7 +138,7 @@ make_print_status("Run prediction loop")
 
 This line is already present in the template, but students should understand that it depends on Task 1 working correctly.
 
-\begin{tcolorbox}[title=Entry to Task 4 until Task 9: Run the same prediction loop from Session 3, Wrap the prediction workflow in a function]
+\begin{tcolorbox}[title={Entry to Task 4 until Task 9: Run the same prediction loop from Session 3, Wrap the prediction workflow in a function}]
 The function \texttt{run\_prediction\_loop(dataset)} becomes the new home for the Session 3 loop. You will keep the same beginner-friendly variables: \texttt{correct}, \texttt{wrong}, \texttt{total}, and \texttt{y\_pred\_list}.
 \end{tcolorbox}
 
@@ -200,6 +201,9 @@ Notice the separation of responsibilities:
 \end{itemize}
 \end{tcolorbox}
 
+In session 3, you updated counters and stored predictions.
+In Session 4, refactor that logic into a function:
+
 \begin{tcolorbox}[title=Task 7: Update prediction counts and save results]
 Replace \texttt{pass} inside \texttt{update\_result\_counts(...)} with the Session 3 metric-update logic and return all updated values.
 \end{tcolorbox}
@@ -218,6 +222,7 @@ return correct, wrong, total, y_pred_list
 
 \begin{tcolorbox}[title=Checkpoint]
 \texttt{total} must increase for every processed sample, even when the prediction is wrong. The function must also return all four updated objects in the same order.
+Use the debug modes in your IDE to step through the code and verify that the counters update correctly for both correct and wrong predictions.
 \end{tcolorbox}
 
 \section{Inside the Prediction Loop}
@@ -337,10 +342,13 @@ if __name__ == "__main__":
 \end{minted}
 
 This means:
+\noindent
+\textbf{Meaning:}
 \begin{itemize}
-    \item when the file is run directly, \texttt{main()} executes,
-    \item when the file is imported somewhere else, \texttt{main()} does not run automatically.
+    \item When you run the file directly, Python sets \texttt{\_\_name\_\_} to \texttt{"\_\_main\_\_"} and \texttt{main()} executes.
+    \item When the file is imported by another file, \texttt{main()} does not automatically run.
 \end{itemize}
+
 
 \begin{tcolorbox}[title=Good Practice]
 \texttt{main()} should read like a short plan of the whole program. The detailed work should stay inside helper functions.
