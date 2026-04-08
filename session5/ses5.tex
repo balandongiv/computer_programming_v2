@@ -18,15 +18,14 @@ Use the following files for this session:
 \textbf{Do not edit the helper module.} We will only import and use it.
 \end{tcolorbox}
 
-Session 4 taught students how to move code into functions. That was the first major refactor: instead of keeping everything in one long script, students learned to divide the work into smaller parts such as prediction, counter updates, and summary printing.
+In the previous sessions (session 4), you wrote several \textbf{functions} and called them from a \texttt{main()} function.
+That already gave you a powerful skill. It was your the first major refactor: instead of keeping everything in one long script, students learned to divide the work into smaller parts such as prediction, counter updates, and summary printing.
 
-Session 5 continues that same refactoring mindset. This time, the classifier rule itself does \textbf{not} change. What changes is the \textbf{interface} of the program. Instead of forcing one fixed run style, we want the same pipeline to support:
-\begin{itemize}
-    \item a default run,
-    \item a run with positional overrides,
-    \item a run with keyword overrides,
-    \item and a run where the threshold is learned from the dataset through a helper function.
-\end{itemize}
+In this Session 5, we continues that same refactoring mindset (i.e., divide the work into smaller parts).but we make your functions \textbf{more flexible} by controlling them through \textbf{arguments} when you call them.
+
+\begin{tcolorbox}[title=Why this matters (Real-World Hook)]
+Parameterizing functions is akin to how APIs expose configuration options (e.g., passing options to a machine-learning model). It allows users to control the behavior of your code without having to rewrite its internal logic.
+\end{tcolorbox}
 
 This is an important programming idea. Good functions do not only hide logic. They also expose clean ways for a caller to control that logic.
 Because the positional section is for reading only, the implementation tasks begin in the keyword-argument section.
