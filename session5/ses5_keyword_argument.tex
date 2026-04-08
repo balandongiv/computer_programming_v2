@@ -26,13 +26,50 @@ So far, we have not been using keyword arguments in our code, but we will start 
 
 \subsection{Task 1: Refactor \texttt{calculate\_accuracy} to use keyword-friendly defaults}
 
-While seems overkill to using a keyword argument with only two parameter, but for the sake of learning, we will just do it.
+At first, this may seem unnecessary because \texttt{calculate\_accuracy} only uses two parameters. However, this is still a very useful practice for beginners. The goal of this task is not only to make this one function work, but also to help you understand how keyword arguments behave in Python.
+
+When a function uses keyword-friendly parameters:
+\begin{itemize}
+    \item the function call becomes easier to read,
+    \item the meaning of each value becomes clearer,
+    \item and the function becomes safer to use later when the program grows larger.
+\end{itemize}
+
+In this task, you will make a small refactor:
+\begin{itemize}
+    \item you will update the function header so both parameters have default values,
+    \item and then you will call the function using keyword arguments instead of a positional-style call.
+\end{itemize}
+
+Do not change the main accuracy logic. The purpose here is to improve the function interface, not to redesign how the calculation works.
 
 \begin{tcolorbox}[title=Task 1: Refactor \texttt{calculate\_accuracy} to use keyword-friendly defaults]
-In the template, find the \texttt{calculate\_accuracy} function.
+Work only in \texttt{session5/session5\_iris\_template.py}. Do not create a new file, and do not rename the function.
 
-Replace the \texttt{<your\_code>} marker with the keyword-friendly defaults so the header becomes:
-\texttt{def calculate\_accuracy(correct=0, total=0):}
+\begin{enumerate}
+    \item Find the function named \texttt{calculate\_accuracy}. Read the function carefully before editing anything so you understand what it already does.
+    \item Locate the \texttt{<your\_code>} marker in the function header.
+    \item Replace only the function header part so it becomes:
+    \texttt{def calculate\_accuracy(correct=0, total=0):}
+    \item Notice what this change means:
+    \begin{itemize}
+        \item \texttt{correct=0} gives the parameter \texttt{correct} a default value of \texttt{0},
+        \item \texttt{total=0} gives the parameter \texttt{total} a default value of \texttt{0},
+        \item so Python can still call the function even if no argument is passed in.
+    \end{itemize}
+    \item Keep the existing calculation logic and return statement inside the function body. Do not remove the accuracy logic that is already there.
+    \item After updating the function definition, go to \texttt{setup\_application(...)}.
+    \item Find the place where \texttt{calculate\_accuracy(...)} is called.
+    \item Change that call so it uses keyword arguments:
+    \texttt{correct=metrics["correct"]} and \texttt{total=metrics["total"]}.
+    \item Read the new function call slowly:
+    \begin{itemize}
+        \item the value from \texttt{metrics["correct"]} is being assigned to the parameter named \texttt{correct},
+        \item the value from \texttt{metrics["total"]} is being assigned to the parameter named \texttt{total}.
+    \end{itemize}
+    \item Quick check: \texttt{calculate\_accuracy(correct=8, total=10)} should return \texttt{80.0}.
+    \item Quick check: \texttt{calculate\_accuracy()} should not crash. Because the function now has default values, Python can call it even when no arguments are given.
+\end{enumerate}
 \end{tcolorbox}
 
 Use this exact function shape as the target:
@@ -42,7 +79,52 @@ def calculate_accuracy(correct=0, total=0):
     # <your_code>: keep the accuracy logic and return value here
 \end{minted}
 
-Then, inside \texttt{setup\_application(...)}, call the function with keyword arguments:
+\begin{tcolorbox}[title=First Unit Test for Task 1]
+If this is your first time using \texttt{unittest}, think of it as an automatic checker for your Python code. Instead of checking your function by hand every time, Python can run several checks for you and report whether your function behaves correctly.
+
+For Task 1, use the dedicated test file:
+\texttt{session5/test\_calculate\_accuracy.py}
+
+This test file checks only \texttt{calculate\_accuracy}. That is useful because you may still be working on the rest of \texttt{session5/session5\_iris\_template.py}.
+
+Run the test from the project root folder with this command:
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{bash}
+python3 -m unittest session5.test_calculate_accuracy -v
+\end{minted}
+
+What each part means:
+\begin{itemize}
+    \item \texttt{python3} starts Python,
+    \item \texttt{-m unittest} runs Python's built-in testing tool,
+    \item \texttt{session5.test\_calculate\_accuracy} points to the test file,
+    \item \texttt{-v} means ``verbose'' and shows each test name clearly.
+\end{itemize}
+
+How to read the result:
+\begin{itemize}
+    \item \texttt{OK} means all tests passed,
+    \item \texttt{FAIL} means the function ran, but at least one answer was wrong,
+    \item \texttt{ERROR} usually means Python could not read or run the function yet.
+\end{itemize}
+
+For this task, the most important checks are:
+\begin{itemize}
+    \item \texttt{calculate\_accuracy(correct=8, total=10)} should return \texttt{80.0},
+    \item \texttt{calculate\_accuracy()} should return \texttt{0.0} without crashing,
+    \item keyword calls and positional calls should match when the numbers are the same.
+\end{itemize}
+\end{tcolorbox}
+
+This code means:
+\begin{itemize}
+    \item the function is still named \texttt{calculate\_accuracy},
+    \item the parameter \texttt{correct} defaults to \texttt{0},
+    \item the parameter \texttt{total} defaults to \texttt{0},
+    \item and the existing logic inside the function should stay responsible for computing and returning the result.
+\end{itemize}
+
+Then, inside \texttt{setup\_application(...)}, update the function call to use keyword arguments:
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
 accuracy = calculate_accuracy(
@@ -50,19 +132,20 @@ accuracy = calculate_accuracy(
     total=metrics["total"],
 )
 \end{minted}
-The advantage of this approach now is that, you can swap the order of the arguments when calling the function without affecting its behavior, as long as all required arguments are provided. 
+
+Study this call carefully:
+\begin{itemize}
+    \item \texttt{correct=} tells Python exactly which parameter should receive \texttt{metrics["correct"]},
+    \item \texttt{total=} tells Python exactly which parameter should receive \texttt{metrics["total"]},
+    \item so the call is easier to read than simply writing two bare values in order.
+\end{itemize}
+
+The main advantage of this approach is that the parameter names are visible at the call site. A reader does not need to guess what each value means. Another advantage is that, when using keyword arguments, the order can be changed without changing the behavior, as long as the correct parameter names are used.
 
 For example, you can call \texttt{calculate\_accuracy(total=total, correct=correct)} and it will work just fine.
 
 
 
-\begin{tcolorbox}[title=Checkpoint]
-After Task 1, students should be able to explain two things:
-\begin{itemize}
-    \item why the function can now be called without providing both arguments,
-    \item and why the call site is easier to read when the names \texttt{correct=} and \texttt{total=} appear directly.
-\end{itemize}
-\end{tcolorbox}
 
 \begin{tcolorbox}[title=Line-by-Line Debugging for Task 1]
 Set a breakpoint on the line that calls \texttt{calculate\_accuracy(...)}.
