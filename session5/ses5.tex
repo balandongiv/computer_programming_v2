@@ -3,19 +3,19 @@
 \section{Introduction}
 
 \begin{tcolorbox}[title=Goal]
-\textbf{Refactor} the Session 4 classifier so the same prediction steps can be controlled from function calls. In this session, students learn how positional arguments depend on order, how keyword arguments improve readability, and how default values let one function support several run styles.
+\textbf{Refactor} the Session 4 classifier so the same prediction steps can be controlled from function calls. In this session, you will learn how positional arguments depend on order, how keyword arguments improve readability, and how default values let one function support several run styles.
 \end{tcolorbox}
 
 \begin{tcolorbox}[title=You will work in]
 Use the following file for this session:
 \begin{itemize}
-    \item \texttt{session5/session5\_iris\_template.py} (student template)
+    \item \texttt{session5/session5\_iris\_template.py} (session template)
 \end{itemize}
 \textbf{How to run the file:} Use the terminal command: \\
 \texttt{python3 session5/session5\_iris\_template.py}
 \end{tcolorbox}
 
-In Session 4, students moved the classifier into functions such as \texttt{derive\_true\_label(...)}, \texttt{update\_result\_counts(...)}, and \texttt{calculate\_accuracy(...)}.
+In Session 4, you moved the classifier into functions such as \texttt{derive\_true\_label(...)}, \texttt{update\_result\_counts(...)}, and \texttt{calculate\_accuracy(...)}.
 
 In Session 5, we keep those same ideas, but we make the function calls more flexible:
 \begin{itemize}
@@ -67,7 +67,7 @@ In the example above:
 \subsection{Why Session 5 Matters}
 In a real program, the same logic is often reused with slightly different settings. A good function should not force the caller to rewrite the internal code every time.
 
-Session 5 therefore teaches students a second level of refactoring:
+Session 5 therefore teaches a second level of refactoring:
 \begin{itemize}
     \item Session 4 refactored \textbf{structure} by moving code into functions.
     \item Session 5 refactors \textbf{interfaces} by improving how those functions are called.
@@ -88,7 +88,7 @@ Complete these functions in \texttt{session5\_iris\_template.py}. The table belo
 \input{session5/tab5.tex}
 
 \begin{tcolorbox}[title=Good Practice]
-This session is intentionally explicit. When students are learning arguments, confusion usually comes from two places:
+This session is intentionally explicit. When learners are studying arguments, confusion usually comes from two places:
 \begin{itemize}
     \item not knowing which function header changed,
     \item not knowing which call site must also change.
@@ -96,12 +96,13 @@ This session is intentionally explicit. When students are learning arguments, co
 That is why the instructions below always name both the task title and the matching comment in the template.
 \end{tcolorbox}
 
-\input{session5/ses5_keyword_argument.tex}
 \input{session5/ses5_positional_argument.tex}
+\input{session5/ses5_keyword_argument.tex}
+
 
 \section{A Reusable Line-by-Line Debugging Workflow}
 \begin{tcolorbox}[title=Line-by-Line Debugging Workflow]
-When students are unsure how an argument moves through the program, use this routine:
+When you are unsure how an argument moves through the program, use this routine:
 \begin{enumerate}
     \item Set a breakpoint on the line in \texttt{main()} that calls the function you want to study.
     \item Start the debugger and stop at that line before the function call happens.
@@ -119,14 +120,14 @@ This session keeps the same beginner-friendly classifier logic from Session 4, b
 
 \begin{itemize}
     \item The accuracy formula is still the same, but \texttt{calculate\_accuracy(...)} now uses default values so it can be called with keyword arguments.
-    \item The main wrapper function now has a clearer name: \texttt{run\_classifier\_pipeline(...)}. This helps students see that the function does more than setup.
+    \item The main wrapper function now has a clearer name: \texttt{run\_classifier\_pipeline(...)}. This helps make it clear that the function does more than setup.
     \item The prediction loop is still the same idea, but \texttt{run\_prediction\_loop(...)} now demonstrates a mixed call: one positional argument plus keyword arguments.
     \item The metric update logic is still the same, but \texttt{update\_result\_counts(...)} is now used as a second example of combining positional and keyword arguments in one call.
     \item The final runs in \texttt{main()} now show four calling styles: default call, positional override, keyword override, and reordered keyword override.
 \end{itemize}
 
 \begin{tcolorbox}[title=Why This Matters]
-Students should notice that Session 5 is not mainly about changing the classifier rule. It is about learning how to control the same rule more clearly from function calls.
+You should notice that Session 5 is not mainly about changing the classifier rule. It is about learning how to control the same rule more clearly from function calls.
 \end{tcolorbox}
 
 \section{Expected Output When Submitting in Itel}
@@ -200,4 +201,4 @@ All predictions: ['setosa', 'setosa', 'setosa', 'not_setosa', 'not_setosa', 'not
     \item When debugging, why is \textbf{Step Into} especially useful for studying arguments?
 \end{enumerate}
 
-\textbf{Micro-Exercise:} After students finish the tutorial, ask them to change the override threshold from \texttt{1.8} to \texttt{1.5}. Then ask them to compare the summary with the default run.
+\textbf{Micro-Exercise:} After you finish the tutorial, change the override threshold from \texttt{1.8} to \texttt{1.5}. Then compare the summary with the default run.

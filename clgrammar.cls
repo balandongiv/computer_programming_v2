@@ -11,11 +11,11 @@
 % -----------------------------------------------------------------------------
 \RequirePackage{iftex}
 \ifPDFTeX
-  \ClassError{clgrammar}{This class requires XeLaTeX or LuaLaTeX}{%
-    You loaded fontspec-dependent code. Compile with XeLaTeX or LuaLaTeX.}
+  \RequirePackage[T1]{fontenc}
+  \RequirePackage[utf8]{inputenc}
+\else
+  \RequirePackage{fontspec}
 \fi
-
-\RequirePackage{fontspec}
 \RequirePackage{xcolor}
 \RequirePackage[
   paper=a4paper,
