@@ -84,13 +84,17 @@ For this task, the most important checks are:
 \end{tcolorbox}
 
 \subsection{Task 2: Add keyword-friendly defaults to \texttt{run\_classifier\_pipeline}}
-In Python, a wrapper function becomes easier to reuse when its settings have default values. You can run the same pipeline with no arguments, positional overrides, or keyword overrides, while the function header still explains the meaning of each setting clearly.
+Notice that in Session 3, the helper function calls were placed directly inside \texttt{main()}. In this session, we wrap those same steps inside a reusable function named \texttt{run\_classifier\_pipeline(...)}.
+
+In Task 2, you will continue practicing by adding two keyword-friendly default arguments. Default values are essential because they let the pipeline run with sensible behavior even when no overrides are provided, while the optional settings, \texttt{threshold} and \texttt{print\_each}, become easier to read because their names are written explicitly.
+
+More importantly, the goal is to show that the same pipeline can be run with no arguments, with positional overrides, or with keyword overrides, while the function header still explains each setting clearly.
 
 \begin{tcolorbox}[title=Task 2: Add keyword-friendly defaults to \texttt{run\_classifier\_pipeline}]
 Work only in \texttt{session5/session5\_iris\_template.py}.
 
 \begin{enumerate}
-    \item Find the comment \texttt{\# Task 2: Rename setup\_application to run\_classifier\_pipeline}. It is directly above the function definition.
+    \item Find the comment \texttt{\# Task 2: Add keyword-friendly defaults to \texttt{run\_classifier\_pipeline}}. It is directly above the function definition.
     \item The function you should work toward is \texttt{run\_classifier\_pipeline(...)}.
     \item Focus on the function header so the defaults are explicit and easy to read.
     \item In the function header, replace the \texttt{<your\_code>} after \texttt{threshold=} with \texttt{2.0}.
@@ -135,7 +139,9 @@ After Task 2, you should be able to explain:
 \end{tcolorbox}
 
 \subsection{Task 3: Refactor \texttt{run\_prediction\_loop} to combine positional and keyword arguments}
-One useful Python feature is that a function call can mix positional and keyword arguments. The advantage is that the required data, \texttt{dataset}, stays short and natural as a positional argument, while the optional settings, \texttt{threshold} and \texttt{print\_each}, become easier to read because their names are written explicitly.
+One useful Python feature is that a function call can mix positional and keyword arguments. The advantage is that the required data, \texttt{dataset}, stays short and natural as a positional argument, while the optional settings, \texttt{threshold} and \texttt{print\_each}, become easier to read because their names are written explicitly. 
+
+% This also works well with default values, because default values make those optional settings truly optional. For example, if the function header is \texttt{def run\_prediction\_loop(dataset, threshold=2.0, print\_each=True):}, then the call \texttt{run\_prediction\_loop(dataset)} still works: Python automatically uses \texttt{threshold=2.0} and \texttt{print\_each=True}. If you want to change only one setting, you can override just that one and leave the other at its default, such as \texttt{run\_prediction\_loop(dataset, threshold=1.8)} or \texttt{run\_prediction\_loop(dataset, print\_each=False)}. In this way, default values provide sensible standard behavior, while keyword arguments make any override much easier to understand.
 
 \begin{tcolorbox}[title=Task 3: Refactor \texttt{run\_prediction\_loop} to combine positional and keyword arguments]
 Work only in \texttt{session5/session5\_iris\_template.py}.
