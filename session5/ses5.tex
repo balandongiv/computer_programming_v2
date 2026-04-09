@@ -3,41 +3,45 @@
 \section{Introduction}
 
 \begin{tcolorbox}[title=Goal]
-\textbf{Refactor} the Session 4 classifier so the same pipeline can be controlled from function calls. In this session, students learn how positional arguments depend on order, how keyword arguments improve readability, and how default values let one function support multiple run modes.
+\textbf{Refactor} the Session 4 classifier so the same prediction steps can be controlled from function calls. In this session, students learn how positional arguments depend on order, how keyword arguments improve readability, and how default values let one function support several run styles.
 \end{tcolorbox}
 
 \begin{tcolorbox}[title=You will work in]
-Use the following files for this session:
+Use the following file for this session:
 \begin{itemize}
     \item \texttt{session5/session5\_iris\_template.py} (student template)
-    \item \texttt{session5/iris\_data.csv} (dataset)
-    \item \texttt{session5/helper/iris\_utils.py} (provided helper module)
 \end{itemize}
 \textbf{How to run the file:} Use the terminal command: \\
-\texttt{python3 session5/session5\_iris\_template.py} \\
-\textbf{Do not edit the helper module.} We will only import and use it.
+\texttt{python3 session5/session5\_iris\_template.py}
 \end{tcolorbox}
 
-In the previous sessions (session 4), you wrote several \textbf{functions} and called them from a \texttt{main()} function.
-That already gave you a powerful skill. It was your the first major refactor: instead of keeping everything in one long script, students learned to divide the work into smaller parts such as prediction, counter updates, and summary printing.
+In Session 4, students moved the classifier into functions such as \texttt{derive\_true\_label(...)}, \texttt{update\_result\_counts(...)}, and \texttt{calculate\_accuracy(...)}.
 
-In this Session 5, we continues that same refactoring mindset (i.e., divide the work into smaller parts).but we make your functions \textbf{more flexible} by controlling them through \textbf{arguments} when you call them.
+In Session 5, we keep those same ideas, but we make the function calls more flexible:
+\begin{itemize}
+    \item we keep the same prediction rule,
+    \item we keep the same counters,
+    \item and we add better function interfaces with default values and keyword arguments.
+\end{itemize}
 
-\begin{tcolorbox}[title=Why this matters (Real-World Hook)]
-Parameterizing functions is akin to how APIs expose configuration options (e.g., passing options to a machine-learning model). It allows users to control the behavior of your code without having to rewrite its internal logic.
+\begin{tcolorbox}[title=Why this matters]
+Session 5 is the bridge between Session 4 and Session 6.
+\begin{itemize}
+    \item Session 4 organizes the code into separate functions.
+    \item Session 5 keeps those same functions, but improves how they are called.
+    \item Session 6 turns those same steps into methods on a class.
+\end{itemize}
 \end{tcolorbox}
-
-This is an important programming idea. Good functions do not only hide logic. They also expose clean ways for a caller to control that logic.
-Because the positional section is for reading only, the implementation tasks begin in the keyword-argument section.
 
 \section{What You Will Learn}
 \textbf{In this session, you will learn to:}
 \begin{enumerate}\setlength{\itemsep}{5pt}
 \item \textbf{Use positional arguments carefully}: understand how Python matches values by order.
 \item \textbf{Use keyword arguments clearly}: understand how Python matches values by parameter name.
+\item \textbf{Combine positional and keyword arguments}: use both styles in one function call.
 \item \textbf{Add default values}: make functions easier to call while keeping sensible behavior.
-\item \textbf{Build a small API-style pipeline}: let one setup function control loading data, applying thresholds, printing each sample, and using a fitted threshold.
-\item \textbf{Debug argument flow line by line}: inspect how values move from \texttt{main()} into helper functions.
+\item \textbf{Use clearer function names}: give a wrapper function a name that matches what it really does.
+\item \textbf{Prepare for Session 6}: see how the same steps can later move into a class.
 \end{enumerate}
 
 \subsection{Parameters and Arguments}
@@ -61,22 +65,21 @@ In the example above:
 \end{itemize}
 
 \subsection{Why Session 5 Matters}
-In a real project, it is common to reuse the same function many times with slightly different settings. If a function only works for one hardcoded situation, it becomes difficult to test, difficult to reuse, and difficult to extend.
+In a real program, the same logic is often reused with slightly different settings. A good function should not force the caller to rewrite the internal code every time.
 
 Session 5 therefore teaches students a second level of refactoring:
 \begin{itemize}
     \item Session 4 refactored \textbf{structure} by moving code into functions.
-    \item Session 5 refactors \textbf{interfaces} by making those functions easier to call in different ways.
+    \item Session 5 refactors \textbf{interfaces} by improving how those functions are called.
 \end{itemize}
 
 \section{Session 4 to Session 5 Refactor Map}
-The classifier concept remains the same, but the surrounding structure becomes more flexible:
+The classifier logic stays the same, but the interface becomes more flexible:
 \begin{itemize}
-    \item Session 4 static dataset setup $\rightarrow$ Session 5 CSV loading with \texttt{load\_iris\_data(filepath=None)}
-    \item Session 4 fixed prediction loop $\rightarrow$ Session 5 configurable loop with \texttt{initialize\_predictions(dataset, settings, print\_each=True)}
-    \item Session 4 positional accuracy calculation $\rightarrow$ Session 5 keyword-friendly \texttt{calculate\_accuracy(correct=0, total=0)}
-    \item Session 4 direct top-level flow $\rightarrow$ Session 5 orchestration through \texttt{setup\_application(filepath=None, threshold=None, print\_each=True, use\_fit=False)}
-    \item Session 4 one program run $\rightarrow$ Session 5 multiple program runs from the same \texttt{main()}
+    \item Session 4 separate top-level steps $\rightarrow$ Session 5 one wrapper function: \texttt{run\_classifier\_pipeline(threshold=2.0, print\_each=True)}
+    \item Session 4 positional accuracy call $\rightarrow$ Session 5 keyword-friendly \texttt{calculate\_accuracy(correct=0, total=0)}
+    \item Session 4 positional-only calls $\rightarrow$ Session 5 positional, keyword, and mixed calls
+    \item Session 4 helper functions $\rightarrow$ Session 5 keeps them, renames the main wrapper more clearly, and prepares them for Session 6 methods
 \end{itemize}
 
 \section{Canonical Function Set}
@@ -85,7 +88,12 @@ Complete these functions in \texttt{session5\_iris\_template.py}. The table belo
 \input{session5/tab5.tex}
 
 \begin{tcolorbox}[title=Good Practice]
-This session is intentionally verbose. When students are learning argument passing, confusion usually comes from two places: not knowing \textbf{which function header changed}, and not knowing \textbf{which call site must also change}. The instructions below therefore say both where to edit and what code to put there.
+This session is intentionally explicit. When students are learning arguments, confusion usually comes from two places:
+\begin{itemize}
+    \item not knowing which function header changed,
+    \item not knowing which call site must also change.
+\end{itemize}
+That is why the instructions below always name both the task title and the matching comment in the template.
 \end{tcolorbox}
 
 \input{session5/ses5_keyword_argument.tex}
@@ -93,32 +101,103 @@ This session is intentionally verbose. When students are learning argument passi
 
 \section{A Reusable Line-by-Line Debugging Workflow}
 \begin{tcolorbox}[title=Line-by-Line Debugging Workflow]
-When students are unsure how an argument moves through the program, use this debugging routine:
+When students are unsure how an argument moves through the program, use this routine:
 \begin{enumerate}
     \item Set a breakpoint on the line in \texttt{main()} that calls the function you want to study.
     \item Start the debugger and stop at that line before the function call happens.
     \item Read the argument values from left to right.
     \item Use \textbf{Step Into} to enter the function.
     \item Compare the values at the call site with the parameter names in the function header.
-    \item Keep a close eye on variables such as \texttt{filepath}, \texttt{threshold}, \texttt{print\_each}, and \texttt{use\_fit}.
-    \item If the behavior looks wrong, ask: ``Did the wrong value enter the wrong parameter?'' This question solves many beginner argument bugs.
+    \item Keep a close eye on variables such as \texttt{threshold}, \texttt{print\_each}, \texttt{y\_pred}, and \texttt{y\_true}.
+    \item If the behavior looks wrong, ask: ``Did the value go into the correct parameter?''
 \end{enumerate}
 \end{tcolorbox}
+
+\section{What Changed from Session 4}
+
+This session keeps the same beginner-friendly classifier logic from Session 4, but changes how that logic is \textbf{called}.
+
+\begin{itemize}
+    \item The accuracy formula is still the same, but \texttt{calculate\_accuracy(...)} now uses default values so it can be called with keyword arguments.
+    \item The main wrapper function now has a clearer name: \texttt{run\_classifier\_pipeline(...)}. This helps students see that the function does more than setup.
+    \item The prediction loop is still the same idea, but \texttt{run\_prediction\_loop(...)} now demonstrates a mixed call: one positional argument plus keyword arguments.
+    \item The metric update logic is still the same, but \texttt{update\_result\_counts(...)} is now used as a second example of combining positional and keyword arguments in one call.
+    \item The final runs in \texttt{main()} now show four calling styles: default call, positional override, keyword override, and reordered keyword override.
+\end{itemize}
+
+\begin{tcolorbox}[title=Why This Matters]
+Students should notice that Session 5 is not mainly about changing the classifier rule. It is about learning how to control the same rule more clearly from function calls.
+\end{tcolorbox}
+
+\section{Expected Output When Submitting in Itel}
+
+In the terminal, you should see output like the following when running the completed answer file:
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+[STATUS] Default run
+
+=== Start Session 5 Prediction Loop ===
+id=flower1 | true=setosa | pred=setosa | petal_length=1.4
+id=flower2 | true=setosa | pred=setosa | petal_length=1.5
+id=flower3 | true=setosa | pred=setosa | petal_length=1.3
+id=flower4 | true=not_setosa | pred=not_setosa | petal_length=4.5
+id=flower5 | true=not_setosa | pred=not_setosa | petal_length=4.7
+id=flower6 | true=not_setosa | pred=not_setosa | petal_length=5.1
+id=flower7 | true=not_setosa | pred=not_setosa | petal_length=6.0
+
+=== Session 5 Summary ===
+Correct: 7
+Wrong: 0
+Total: 7
+Accuracy (%): 100.0
+All predictions: ['setosa', 'setosa', 'setosa', 'not_setosa', 'not_setosa', 'not_setosa', 'not_setosa']
+[STATUS] Positional override run
+
+=== Start Session 5 Prediction Loop ===
+
+=== Session 5 Summary ===
+Correct: 7
+Wrong: 0
+Total: 7
+Accuracy (%): 100.0
+All predictions: ['setosa', 'setosa', 'setosa', 'not_setosa', 'not_setosa', 'not_setosa', 'not_setosa']
+[STATUS] Keyword override run
+
+=== Start Session 5 Prediction Loop ===
+
+=== Session 5 Summary ===
+Correct: 7
+Wrong: 0
+Total: 7
+Accuracy (%): 100.0
+All predictions: ['setosa', 'setosa', 'setosa', 'not_setosa', 'not_setosa', 'not_setosa', 'not_setosa']
+[STATUS] Reordered keyword run
+
+=== Start Session 5 Prediction Loop ===
+
+=== Session 5 Summary ===
+Correct: 7
+Wrong: 0
+Total: 7
+Accuracy (%): 100.0
+All predictions: ['setosa', 'setosa', 'setosa', 'not_setosa', 'not_setosa', 'not_setosa', 'not_setosa']
+\end{minted}
 
 \section{Summary and Review}
 \begin{itemize}
     \item Positional arguments are matched by order.
     \item Keyword arguments are matched by parameter name.
+    \item Positional and keyword arguments can be combined in one call, as long as the positional arguments come first.
     \item Default values let a function stay easy to call.
-    \item Session 5 turns the classifier into a more configurable pipeline without changing the core prediction rule.
+    \item Session 5 keeps the Session 4 logic, but gives it a clearer calling interface before Session 6 turns it into a class.
 \end{itemize}
 
 \textbf{Reflection Questions:}
 \begin{enumerate}
     \item Why can positional arguments become harder to read when a function has many parameters?
     \item Why does \texttt{calculate\_accuracy(correct=..., total=...)} make the call site easier to understand?
-    \item Why is the \texttt{use\_fit} flag a good example of controlling behavior from outside the function?
+    \item Why does the mixed call \texttt{run\_prediction\_loop(dataset, threshold=1.8, print\_each=False)} still work?
+    \item Why does the reordered call \texttt{run\_classifier\_pipeline(print\_each=False, threshold=1.8)} still work?
     \item When debugging, why is \textbf{Step Into} especially useful for studying arguments?
 \end{enumerate}
 
-\textbf{Micro-Exercise:} After students finish the tutorial, ask them to change the keyword override run from \texttt{threshold=2.2} to \texttt{threshold=1.5}. Then ask them to compare the predictions and summary with the fit-based run.
+\textbf{Micro-Exercise:} After students finish the tutorial, ask them to change the override threshold from \texttt{1.8} to \texttt{1.5}. Then ask them to compare the summary with the default run.

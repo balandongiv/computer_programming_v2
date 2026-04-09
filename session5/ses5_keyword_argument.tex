@@ -1,74 +1,55 @@
 \section{Working with Keyword Arguments}
-Keyword arguments solve a common readability problem. When a function accepts many parameters, a long positional call can become difficult to read. Unlike positional arguments, keyword arguments allow you to specify exactly which parameter is being assigned a value, enhancing readability and reducing errors. A keyword call makes the meaning visible because the parameter names appear directly in the function call.
+Session 5 keeps the same prediction rule from Session 4 and the same beginner-friendly flow that later becomes a class in Session 6. We are not adding a new classifier idea here. We are only changing how the same code is called from outside the functions.
 
-In this section, students will keep the same classifier behavior but improve the way the program is controlled from outside the function. This is where the implementation tasks begin.
-
-
-\subsubsection{Advantages of Keyword Arguments:}
-
+\subsubsection{Advantages of Keyword Arguments}
 There are several advantages:
 \begin{itemize}\setlength{\itemsep}{0pt}
-    \item Enhanced readability and clarity in function calls.
-    \item Flexible argument ordering, reducing potential errors.
-    \item Easy handling of optional parameters with default values.
+    \item The function call becomes easier to read.
+    \item The meaning of each value becomes visible at the call site.
+    \item Default values make a function easier to reuse.
+\end{itemize}
 
 \subsubsection{Keyword Argument Syntax}
-When you use keyword arguments, you specify the name of the parameter followed by an equal sign and the value it should receive within the function call. For example,
+When you use keyword arguments, you write the parameter name, then an equal sign, then the value. For example:
 \begin{center}
-    width=1000
+    \texttt{threshold=1.8}
 \end{center}
 
 \noindent
-The benefit of this approach is that you can rearrange the order of arguments when calling the function without affecting its behavior, as long as all required arguments are provided.
+Because the parameter name is written in the call, a reader can understand the call more quickly.
 
-So far, we have not been using keyword arguments in our code, but we will start introducing them in this session to give you more control over the behavior of your functions without having to change their internal logic.
+\subsubsection{Combining Positional and Keyword Arguments}
+Python also allows you to combine both styles in one function call. The positional arguments must come first, and the keyword arguments must come after them.
 
+\begin{center}
+    \texttt{run\_prediction\_loop(dataset, threshold=1.8, print\_each=False)}
+\end{center}
+
+\noindent
+In that example:
+\begin{itemize}
+    \item \texttt{dataset} is passed positionally,
+    \item \texttt{threshold=1.8} is passed by keyword,
+    \item \texttt{print\_each=False} is passed by keyword.
+\end{itemize}
 
 \subsection{Task 1: Refactor \texttt{calculate\_accuracy} to use keyword-friendly defaults}
-
-At first, this may seem unnecessary because \texttt{calculate\_accuracy} only uses two parameters. However, this is still a very useful practice for beginners. The goal of this task is not only to make this one function work, but also to help you understand how keyword arguments behave in Python.
-
-When a function uses keyword-friendly parameters:
-\begin{itemize}
-    \item the function call becomes easier to read,
-    \item the meaning of each value becomes clearer,
-    \item and the function becomes safer to use later when the program grows larger.
-\end{itemize}
-
-In this task, you will make a small refactor:
-\begin{itemize}
-    \item you will update the function header so both parameters have default values,
-    \item and then you will call the function using keyword arguments instead of a positional-style call.
-\end{itemize}
-
-Do not change the main accuracy logic. The purpose here is to improve the function interface, not to redesign how the calculation works.
+This is the smallest refactor in the session, but it is a very important one. The calculation stays exactly the same. Only the function interface changes.
 
 \begin{tcolorbox}[title=Task 1: Refactor \texttt{calculate\_accuracy} to use keyword-friendly defaults]
 Work only in \texttt{session5/session5\_iris\_template.py}. Do not create a new file, and do not rename the function.
 
 \begin{enumerate}
-    \item Find the function named \texttt{calculate\_accuracy}. Read the function carefully before editing anything so you understand what it already does.
-    \item Locate the \texttt{<your\_code>} marker in the function header.
-    \item Replace only the function header part so it becomes:
+    \item Find the comment \texttt{\# Task 1: Refactor calculate\_accuracy to use keyword-friendly defaults}. It is directly above the function \texttt{calculate\_accuracy(...)}.
+    \item In the function header, replace the \texttt{<your\_code>} after \texttt{correct=} with \texttt{0}.
+    \item Replace the \texttt{<your\_code>} after \texttt{total=} with \texttt{0}.
+    \item After both replacements, the full function header should become:
     \texttt{def calculate\_accuracy(correct=0, total=0):}
-    \item Notice what this change means:
-    \begin{itemize}
-        \item \texttt{correct=0} gives the parameter \texttt{correct} a default value of \texttt{0},
-        \item \texttt{total=0} gives the parameter \texttt{total} a default value of \texttt{0},
-        \item so Python can still call the function even if no argument is passed in.
-    \end{itemize}
-    \item Keep the existing calculation logic and return statement inside the function body. Do not remove the accuracy logic that is already there.
-    \item After updating the function definition, go to \texttt{setup\_application(...)}.
-    \item Find the place where \texttt{calculate\_accuracy(...)} is called.
+    \item Keep the calculation logic inside the function body. Do not change the \texttt{if total > 0} logic.
+    \item Now move to the comment \texttt{\# Task 2: Rename setup\_application to run\_classifier\_pipeline}.
+    \item Inside that wrapper function, find the call to \texttt{calculate\_accuracy(...)}.
     \item Change that call so it uses keyword arguments:
-    \texttt{correct=metrics["correct"]} and \texttt{total=metrics["total"]}.
-    \item Read the new function call slowly:
-    \begin{itemize}
-        \item the value from \texttt{metrics["correct"]} is being assigned to the parameter named \texttt{correct},
-        \item the value from \texttt{metrics["total"]} is being assigned to the parameter named \texttt{total}.
-    \end{itemize}
-    \item Quick check: \texttt{calculate\_accuracy(correct=8, total=10)} should return \texttt{80.0}.
-    \item Quick check: \texttt{calculate\_accuracy()} should not crash. Because the function now has default values, Python can call it even when no arguments are given.
+    \texttt{correct=correct} and \texttt{total=total}.
 \end{enumerate}
 \end{tcolorbox}
 
@@ -76,16 +57,17 @@ Use this exact function shape as the target:
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
 def calculate_accuracy(correct=0, total=0):
-    # <your_code>: keep the accuracy logic and return value here
+    if total > 0:
+        accuracy = (correct / total) * 100
+    else:
+        accuracy = 0.0
+
+    return accuracy
 \end{minted}
 
 \begin{tcolorbox}[title=First Unit Test for Task 1]
-If this is your first time using \texttt{unittest}, think of it as an automatic checker for your Python code. Instead of checking your function by hand every time, Python can run several checks for you and report whether your function behaves correctly.
-
-For Task 1, use the dedicated test file:
+Use the dedicated test file:
 \texttt{session5/test\_calculate\_accuracy.py}
-
-This test file checks only \texttt{calculate\_accuracy}. That is useful because you may still be working on the rest of \texttt{session5/session5\_iris\_template.py}.
 
 Run the test from the project root folder with this command:
 
@@ -93,270 +75,212 @@ Run the test from the project root folder with this command:
 python3 -m unittest session5.test_calculate_accuracy -v
 \end{minted}
 
-What each part means:
-\begin{itemize}
-    \item \texttt{python3} starts Python,
-    \item \texttt{-m unittest} runs Python's built-in testing tool,
-    \item \texttt{session5.test\_calculate\_accuracy} points to the test file,
-    \item \texttt{-v} means ``verbose'' and shows each test name clearly.
-\end{itemize}
-
-How to read the result:
-\begin{itemize}
-    \item \texttt{OK} means all tests passed,
-    \item \texttt{FAIL} means the function ran, but at least one answer was wrong,
-    \item \texttt{ERROR} usually means Python could not read or run the function yet.
-\end{itemize}
-
 For this task, the most important checks are:
 \begin{itemize}
     \item \texttt{calculate\_accuracy(correct=8, total=10)} should return \texttt{80.0},
-    \item \texttt{calculate\_accuracy()} should return \texttt{0.0} without crashing,
-    \item keyword calls and positional calls should match when the numbers are the same.
+    \item \texttt{calculate\_accuracy()} should return \texttt{0.0},
+    \item positional and keyword calls should match when the numbers are the same.
 \end{itemize}
 \end{tcolorbox}
 
-This code means:
-\begin{itemize}
-    \item the function is still named \texttt{calculate\_accuracy},
-    \item the parameter \texttt{correct} defaults to \texttt{0},
-    \item the parameter \texttt{total} defaults to \texttt{0},
-    \item and the existing logic inside the function should stay responsible for computing and returning the result.
-\end{itemize}
+\subsection{Task 2: Rename \texttt{setup\_application} to \texttt{run\_classifier\_pipeline}}
+The old name \texttt{setup\_application} is too broad for beginners because the function does more than setup. It builds the dataset, runs the prediction loop, and computes the final accuracy. A clearer name helps students understand the purpose of the function.
 
-Then, inside \texttt{setup\_application(...)}, update the function call to use keyword arguments:
+\begin{tcolorbox}[title=Task 2: Rename \texttt{setup\_application} to \texttt{run\_classifier\_pipeline}]
+Work only in \texttt{session5/session5\_iris\_template.py}.
 
-\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
-accuracy = calculate_accuracy(
-    correct=metrics["correct"],
-    total=metrics["total"],
-)
-\end{minted}
-
-Study this call carefully:
-\begin{itemize}
-    \item \texttt{correct=} tells Python exactly which parameter should receive \texttt{metrics["correct"]},
-    \item \texttt{total=} tells Python exactly which parameter should receive \texttt{metrics["total"]},
-    \item so the call is easier to read than simply writing two bare values in order.
-\end{itemize}
-
-The main advantage of this approach is that the parameter names are visible at the call site. A reader does not need to guess what each value means. Another advantage is that, when using keyword arguments, the order can be changed without changing the behavior, as long as the correct parameter names are used.
-
-For example, you can call \texttt{calculate\_accuracy(total=total, correct=correct)} and it will work just fine.
-
-
-
-
-\begin{tcolorbox}[title=Line-by-Line Debugging for Task 1]
-Set a breakpoint on the line that calls \texttt{calculate\_accuracy(...)}.
-\begin{itemize}
-    \item Inspect \texttt{metrics["correct"]} and \texttt{metrics["total"]}.
-    \item Use \textbf{Step Into} and confirm that those values arrive in the parameters \texttt{correct} and \texttt{total}.
-    \item Tell students to notice that keyword argument order can change without changing the result.
-\end{itemize}
-This is one of the simplest examples for teaching the difference between positional matching and keyword matching.
-\end{tcolorbox}
-
-
-
-
-\subsection{Task 2: Build the keyword-friendly \texttt{setup\_application} function}
-It is also possible to have many keyword arguments in a function.
-For example, in the \texttt{setup\_application} function, you can have multiple keyword arguments to control different aspects of ... 
-
-Recall that in previous session the setup application function accept 6 positional arguments, which means the order of the arguments matters. 
-
-\begin{tcolorbox}[title=Task 2: Build the keyword-friendly \texttt{setup\_application} function]
-In the template, find \texttt{setup\_application}.
-
-Replace the \texttt{<your\_code>} marker in the function header so all four parameters become optional and keyword-friendly:
-\texttt{def setup\_application(filepath=None, threshold=None, print\_each=True, use\_fit=False):}
+\begin{enumerate}
+    \item Find the comment \texttt{\# Task 2: Rename setup\_application to run\_classifier\_pipeline}. It is directly above the function definition.
+    \item Notice that the template still uses the old name \texttt{setup\_application(...)}.
+    \item Rename the function from \texttt{setup\_application(...)} to \texttt{run\_classifier\_pipeline(...)}.
+    \item In the function header, replace the \texttt{<your\_code>} after \texttt{threshold=} with \texttt{2.0}.
+    \item Replace the \texttt{<your\_code>} after \texttt{print\_each=} with \texttt{True}.
+    \item After both replacements, the full function header should become:
+    \texttt{def run\_classifier\_pipeline(threshold=2.0, print\_each=True):}
+    \item Keep the three main steps inside this function:
+    \begin{itemize}
+        \item build the dataset using \texttt{setup\_application\_list()},
+        \item run the prediction loop using \texttt{run\_prediction\_loop(...)},
+        \item compute accuracy using \texttt{calculate\_accuracy(...)}.
+    \end{itemize}
+    \item If you still see the old name anywhere else later, replace it there too.
+    \item Keep the final return line:
+    \texttt{return correct, wrong, total, y\_pred\_list, accuracy}
+\end{enumerate}
 \end{tcolorbox}
 
 Use this exact function shape as the target:
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
-def setup_application(filepath=None, threshold=None, print_each=True, use_fit=False):
-    # <your_code>: load the dataset, read the default settings, and apply the threshold rules
+def run_classifier_pipeline(threshold=2.0, print_each=True):
+    dataset = setup_application_list()
+    correct, wrong, total, y_pred_list = run_prediction_loop(
+        dataset,
+        threshold,
+        print_each,
+    )
+    accuracy = calculate_accuracy(
+        correct=correct,
+        total=total,
+    )
+    return correct, wrong, total, y_pred_list, accuracy
 \end{minted}
-
-Inside the function, the threshold logic must follow this priority order:
-\begin{enumerate}
-    \item if \texttt{use\_fit} is \texttt{True}, learn the threshold from \texttt{fit\_threshold\_from\_setosa(...)},
-    \item else if \texttt{threshold} is not \texttt{None}, use the manual threshold,
-    \item else keep the default threshold from \texttt{get\_default\_settings()}.
-\end{enumerate}
-
-If \texttt{filepath} is omitted, use \texttt{session5/iris\_data.csv} so the default run works without extra arguments.
-
-Put this logic inside the function:
-
-\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
-dataset = load_iris_data(filepath)
-settings = get_default_settings()
-
-# <your_code>: apply the threshold priority order here
-
-metrics = initialize_predictions(dataset, settings, print_each)
-accuracy = calculate_accuracy(
-    correct=metrics["correct"],
-    total=metrics["total"],
-)
-return settings, dataset, metrics, accuracy
-\end{minted}
-
-This function is the main refactoring target of Session 5. It turns several separate steps into one reusable entry point.
 
 \begin{tcolorbox}[title=Checkpoint]
-After Task 2, students should be able to explain the difference between these two cases:
+After Task 2, students should be able to explain:
 \begin{itemize}
-    \item \texttt{threshold=2.2} means ``use this manual threshold'',
-    \item \texttt{use\_fit=True} means ``ignore the manual override and learn the threshold from the dataset''.
+    \item \texttt{threshold=2.0} gives a default threshold,
+    \item \texttt{print\_each=True} means each sample is printed by default,
+    \item and \texttt{run\_classifier\_pipeline(...)} now wraps the same Session 4 steps in one reusable function.
 \end{itemize}
 \end{tcolorbox}
 
-\begin{tcolorbox}[title=Line-by-Line Debugging for Task 2]
-This is the most important debugging task in Session 5.
-\begin{itemize}
-    \item Set a breakpoint inside \texttt{setup\_application(...)} before the threshold logic.
-    \item Inspect \texttt{threshold}, \texttt{use\_fit}, and \texttt{settings["threshold"]}.
-    \item Step line by line through the \texttt{if use\_fit} and \texttt{elif threshold is not None} branches.
-    \item Ask students: ``Which branch ran, and why?''
-\end{itemize}
-This question forces students to connect the function call in \texttt{main()} with the branch behavior inside the function.
+\subsection{Task 3: Refactor \texttt{run\_prediction\_loop} to combine positional and keyword arguments}
+This is the first mixed-call example in the session. It is a good beginner step because the function has only three parameters.
+
+\begin{tcolorbox}[title=Task 3: Refactor \texttt{run\_prediction\_loop} to combine positional and keyword arguments]
+Work only in \texttt{session5/session5\_iris\_template.py}.
+
+\begin{enumerate}
+    \item Find the comment \texttt{\# Task 3: Refactor run\_prediction\_loop to combine positional and keyword arguments}. It is directly above the function \texttt{run\_prediction\_loop(...)}.
+    \item In the function header, replace the \texttt{<your\_code>} after \texttt{threshold=} with \texttt{2.0}.
+    \item Replace the \texttt{<your\_code>} after \texttt{print\_each=} with \texttt{True}.
+    \item After both replacements, the full function header should become:
+    \texttt{def run\_prediction\_loop(dataset, threshold=2.0, print\_each=True):}
+    \item Go back to \texttt{run\_classifier\_pipeline(...)}.
+    \item Change the call so it combines one positional argument with two keyword arguments:
+    \texttt{run\_prediction\_loop(dataset, threshold=threshold, print\_each=print\_each)}
+\end{enumerate}
 \end{tcolorbox}
 
-\subsection{Task 3: Add the default run in \texttt{main()}}
-\begin{tcolorbox}[title=Task 3: Add the default run in \texttt{main()}]
-In the template, find the default-run block and replace the \texttt{<your\_code>} marker by uncommenting the call.
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+def run_prediction_loop(dataset, threshold=2.0, print_each=True):
+    ...
 
-The run should use the simplest possible call:
-\texttt{setup\_application()}
+correct, wrong, total, y_pred_list = run_prediction_loop(
+    dataset,
+    threshold=threshold,
+    print_each=print_each,
+)
+\end{minted}
+
+\subsection{Task 4: Use \texttt{update\_result\_counts} with combined positional and keyword arguments}
+Now students can try the same idea on a longer function call.
+
+\begin{tcolorbox}[title=Task 4: Use \texttt{update\_result\_counts} with combined positional and keyword arguments]
+Work only in \texttt{session5/session5\_iris\_template.py}.
+
+\begin{enumerate}
+    \item Find the comment \texttt{\# Task 4: Use update\_result\_counts with combined positional and keyword arguments}. It is directly above the function \texttt{update\_result\_counts(...)}.
+    \item Read the function name carefully so you know which function is being used in this task.
+    \item Then go back to the call to \texttt{update\_result\_counts(...)} inside \texttt{run\_prediction\_loop(...)}.
+    \item Keep the first four arguments positional:
+    \texttt{correct}, \texttt{wrong}, \texttt{total}, and \texttt{y\_pred\_list}.
+    \item Change the last two arguments into keyword arguments:
+    \texttt{y\_pred=y\_pred} and \texttt{y\_true=y\_true}.
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
+correct, wrong, total, y_pred_list = update_result_counts(
+    correct,
+    wrong,
+    total,
+    y_pred_list,
+    y_pred=y_pred,
+    y_true=y_true,
+)
+\end{minted}
+
+\subsection{Task 5: Add the default run in \texttt{main()}}
+\begin{tcolorbox}[title=Task 5: Add the default run in \texttt{main()}]
+Work only in \texttt{session5/session5\_iris\_template.py}.
+
+\begin{enumerate}
+    \item Go to the \texttt{main()} function.
+    \item Find the comment \texttt{\# Task 5: Add the default run in main()}.
+    \item Uncomment the four lines in that block.
+    \item Keep the call as the simplest possible call:
+    \texttt{run\_classifier\_pipeline()}
+\end{enumerate}
 \end{tcolorbox}
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
 # <your_code>: uncomment the default run block below
 # make_print_status("Default run")
-# settings, dataset, metrics, accuracy = setup_application()
-# print_summary("Default run", settings, metrics, accuracy)
+# correct, wrong, total, y_pred_list, accuracy = run_classifier_pipeline()
+# print_summary(correct, wrong, total, y_pred_list, accuracy)
 \end{minted}
 
-This run is important because it proves that the defaults are working together:
-\begin{itemize}
-    \item default filepath,
-    \item default threshold,
-    \item default \texttt{print\_each=True},
-    \item default \texttt{use\_fit=False}.
-\end{itemize}
+\subsection{Task 6: Add the positional override run in \texttt{main()}}
+\begin{tcolorbox}[title=Task 6: Add the positional override run in \texttt{main()}]
+In the template, find the comment \texttt{\# Task 6: Add the positional override run in main()} and uncomment the block.
 
-\begin{tcolorbox}[title=Checkpoint]
-If the default run fails, students should first check the function headers. In beginner code, many default-run bugs come from forgetting to add \texttt{=None}, \texttt{=True}, or \texttt{=False} in the function definition.
-\end{tcolorbox}
-
-\subsection{Task 4: Add the positional override run in \texttt{main()}}
-\begin{tcolorbox}[title=Task 4: Add the positional override run in \texttt{main()}]
-In the template, find the positional run block and replace the \texttt{<your\_code>} placeholder by uncommenting the call.
-
-Students should use a positional call like this:
+Students should use this positional call:
 \end{tcolorbox}
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
-# <your_code>: uncomment the positional override run below
 # make_print_status("Positional override run")
-# settings, dataset, metrics, accuracy = setup_application(
-#     "session5/iris_data.csv", 1.8, False, False
-# )
-# print_summary("Positional override run", settings, metrics, accuracy)
+# correct, wrong, total, y_pred_list, accuracy = run_classifier_pipeline(1.8, False)
+# print_summary(correct, wrong, total, y_pred_list, accuracy)
 \end{minted}
 
-Explain to students that the order of positional arguments matters:
+Explain to students that the order matters:
 \begin{itemize}
-    \item first argument $\rightarrow$ \texttt{filepath}
-    \item second argument $\rightarrow$ \texttt{threshold}
-    \item third argument $\rightarrow$ \texttt{print\_each}
-    \item fourth argument $\rightarrow$ \texttt{use\_fit}
+    \item first argument $\rightarrow$ \texttt{threshold}
+    \item second argument $\rightarrow$ \texttt{print\_each}
 \end{itemize}
 
-\begin{tcolorbox}[title=Checkpoint]
-If students accidentally swap \texttt{1.8} and \texttt{False}, the run will still be syntactically valid, but the behavior will be wrong. This is exactly why positional calls become harder to read as the number of arguments grows.
-\end{tcolorbox}
+\subsection{Task 7: Add the keyword override run in \texttt{main()}}
+\begin{tcolorbox}[title=Task 7: Add the keyword override run in \texttt{main()}]
+In the template, find the comment \texttt{\# Task 7: Add the keyword override run in main()} and uncomment the block.
 
-\begin{tcolorbox}[title=Line-by-Line Debugging for Task 4]
-Set a breakpoint on the positional call in \texttt{main()} and use \textbf{Step Into}.
-\begin{itemize}
-    \item Before stepping in, read the four argument values left to right.
-    \item After stepping in, compare them with the parameter names in \texttt{setup\_application(...)}.
-    \item Inspect \texttt{filepath}, \texttt{threshold}, \texttt{print\_each}, and \texttt{use\_fit}.
-\end{itemize}
-This side-by-side comparison is one of the best debugging exercises in the whole session.
-\end{tcolorbox}
-
-\subsection{Task 5: Add the keyword override run in \texttt{main()}}
-\begin{tcolorbox}[title=Task 5: Add the keyword override run in \texttt{main()}]
-In the template, find the keyword-run block and replace the \texttt{<your\_code>} marker by uncommenting the call.
-
-Students should use a named call like this:
+Students should use this keyword call:
 \end{tcolorbox}
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
-# <your_code>: uncomment the keyword override run below
 # make_print_status("Keyword override run")
-# settings, dataset, metrics, accuracy = setup_application(
-#     threshold=2.2,
+# correct, wrong, total, y_pred_list, accuracy = run_classifier_pipeline(
+#     threshold=1.8,
 #     print_each=False,
 # )
-# print_summary("Keyword override run", settings, metrics, accuracy)
+# print_summary(correct, wrong, total, y_pred_list, accuracy)
 \end{minted}
 
-Explain to students that the order of keyword arguments does not matter as long as the parameter names are correct. For example, the following is also valid:
+The call is easier to read because the parameter names are visible.
 
-\begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
-setup_application(
-    print_each=False,
-    threshold=2.2,
-)
-\end{minted}
+\subsection{Task 8: Add the reordered keyword run in \texttt{main()}}
+\begin{tcolorbox}[title=Task 8: Add the reordered keyword run in \texttt{main()}]
+In the template, find the comment \texttt{\# Task 8: Add the reordered keyword run in main()} and uncomment the block.
 
-\begin{tcolorbox}[title=Checkpoint]
-Students should notice that the keyword override run is easier to read than the positional override run. The call itself explains the meaning of each changed value.
-\end{tcolorbox}
-
-\subsection{Task 6: Add the fit-based run in \texttt{main()}}
-\begin{tcolorbox}[title=Task 6: Add the fit-based run in \texttt{main()}]
-In the template, find the fit-based block and replace the \texttt{<your\_code>} marker by uncommenting the call.
-
-Students should use:
+Students should use this reordered keyword call:
 \end{tcolorbox}
 
 \begin{minted}[fontsize=\small, linenos, breaklines=true, frame=lines]{python}
-# <your_code>: uncomment the fit-based run below
-# make_print_status("Fit-based run")
-# settings, dataset, metrics, accuracy = setup_application(
+# make_print_status("Reordered keyword run")
+# correct, wrong, total, y_pred_list, accuracy = run_classifier_pipeline(
 #     print_each=False,
-#     use_fit=True,
+#     threshold=1.8,
 # )
-# print_summary("Fit-based run", settings, metrics, accuracy)
+# print_summary(correct, wrong, total, y_pred_list, accuracy)
 \end{minted}
 
-This run introduces a very important programming idea: one flag can change the path of the program. The data loading stays the same. The prediction loop stays the same. Only the threshold selection behavior changes.
-
-\begin{tcolorbox}[title=Checkpoint]
-After Task 6, students should compare:
+This is the final keyword-argument lesson of the session:
 \begin{itemize}
-    \item the default run threshold,
-    \item the positional override threshold,
-    \item the keyword override threshold,
-    \item and the fit-based threshold.
+    \item the order changed,
+    \item the parameter names stayed correct,
+    \item so the program still behaves the same.
 \end{itemize}
-This comparison helps students see that Session 5 is about controlling one pipeline in multiple ways.
-\end{tcolorbox}
 
-\begin{tcolorbox}[title=Common Argument Mistakes]
-Students often hit the same beginner errors in this session:
+\begin{tcolorbox}[title=Line-by-Line Debugging for Session 5]
+When students debug these runs, ask them to focus on these values:
 \begin{itemize}
-    \item \textbf{Missing required positional argument}: the function header was not updated with a default value.
-    \item \textbf{SyntaxError: positional argument follows keyword argument}: a positional value was placed after a keyword argument in the same call.
-    \item \textbf{TypeError: multiple values for argument}: the same parameter was filled once positionally and once by keyword.
-    \item \textbf{Wrong branch in \texttt{setup\_application(...)}:} students expected \texttt{threshold=} to run, but \texttt{use\_fit=True} took priority.
+    \item \texttt{dataset}
+    \item \texttt{threshold}
+    \item \texttt{print\_each}
+    \item \texttt{y\_pred}
+    \item \texttt{y\_true}
 \end{itemize}
+
+Set a breakpoint on a call in \texttt{main()}, then use \textbf{Step Into}. Students should compare the values in the call with the parameter names in \texttt{run\_classifier\_pipeline(...)} and then again inside \texttt{run\_prediction\_loop(...)}.
 \end{tcolorbox}

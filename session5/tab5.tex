@@ -3,7 +3,7 @@
 \renewcommand{\arraystretch}{0.3}
 
 \begin{longtable}{|p{0.3\linewidth}|p{0.4\linewidth}|p{0.2\linewidth}|}
-\caption{Session 5 canonical functions: what to implement, what changed from Session 4, and where fit-style threshold learning is introduced.} \\
+\caption{Session 5 canonical functions: what to implement, what stays the same from Session 4, and where positional, keyword, and mixed calls are introduced.} \\
 \hline
 \textbf{Section / Function} & \textbf{Code to put inside the function} & \textbf{Session 5 note / modification} \\
 \hline
@@ -27,84 +27,86 @@ print(f"[STATUS] {status_text}")
 \end{minted}
 & Same as Session 4. \\
 \hline
-\texttt{determine\_true\_binary\_label(sample, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-if sample[settings["label_key"]] == settings["positive_label"]:
-	return settings["positive_label"]
-return settings["negative_label"]
+\texttt{setup\_application\_list()} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+return [
+    {"id": "flower1", "petal_length": 1.4, "species": "setosa"},
+    ...
+]
 \end{minted}
-& Same as Session 4. \\
+& Same role as Session 4 and Session 6: provide the dataset for the lesson. \\
 \hline
-\texttt{evaluate\_prediction(y\_pred, y\_true)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-return y_pred == y_true
+\texttt{compute\_threshold\_prediction(sample, threshold)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+if sample["petal_length"] < threshold:
+    return POSITIVE_LABEL
+return NEGATIVE_LABEL
 \end{minted}
-& Same as Session 4. \\
+& Same prediction rule as Session 4 and Session 6. \\
 \hline
-\texttt{update\_metrics(metrics, y\_pred, y\_true)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-is_correct = evaluate_prediction(y_pred, y_true)
-if is_correct:
-	metrics["correct"] += 1
+\texttt{derive\_true\_label(sample)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+if sample["species"] == POSITIVE_LABEL:
+    return POSITIVE_LABEL
+return NEGATIVE_LABEL
+\end{minted}
+& Same idea as Session 4 and Session 6. \\
+\hline
+\texttt{update\_result\_counts(correct, wrong, total, y\_pred\_list, y\_pred, y\_true)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+if y_pred == y_true:
+    correct += 1
 else:
-	metrics["wrong"] += 1
-metrics["total"] += 1
-metrics["y_pred_list"].append(y_pred)
+    wrong += 1
+total += 1
+y_pred_list.append(y_pred)
+return correct, wrong, total, y_pred_list
 \end{minted}
-& Same as Session 4. \\
+& Same counter logic as Session 4 and Session 6. \\
 \hline
-\texttt{classify\_sample(sample, settings)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-return determine_binary_label(sample, settings)
-\end{minted}
-& Same as Session 4. \\
-\hline
-\texttt{load\_iris\_data(filepath=None)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-if filepath is None:
-	print("[WARNING] No filepath provided. Using default.")
-	filepath = "session5/iris_data.csv"
-dataset = []
-with open(filepath, "r", encoding="utf-8", newline="") as csv_file:
-	reader = csv.DictReader(csv_file)
-	for row in reader:
-		dataset.append(...)
-return dataset
-\end{minted}
-& \textbf{Refactor in S5:} To accept default argument. If no path is given, show a warning and use a default path. \\
-\hline
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\texttt{get\_default\_settings()} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-return {"threshold": 2.0, "feature_name": "petal_length", ...}
-\end{minted}
-& Same as Session 4. \\
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\hline
-\texttt{initialize\_predictions(dataset, settings, print\_each=True)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+\texttt{run\_prediction\_loop(dataset, threshold=2.0, print\_each=True)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
 for sample in dataset:
-	y_pred = classify_sample(sample, settings)
-	y_true = determine_true_binary_label(sample, settings)
-	update_metrics(metrics, y_pred, y_true)
-	if print_each:
-		print(...)
+    y_pred = compute_threshold_prediction(sample, threshold)
+    y_true = derive_true_label(sample)
+    correct, wrong, total, y_pred_list = update_result_counts(
+        correct, wrong, total, y_pred_list, y_pred=y_pred, y_true=y_true
+    )
+    if print_each:
+        print(...)
 \end{minted}
-& \textbf{New in S5:} Rather than always print, we offer optional per-sample printing control using \texttt{print\_each}. \\
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+& Same loop structure as Session 4 and Session 6, but now used to teach mixed positional+keyword calls. \\
 \hline
-\texttt{setup\_application(filepath=None, threshold=None, print\_each=True, use\_fit=False)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
-dataset = load_iris_data(filepath)
-settings = get_default_settings()
-if use_fit:
-	settings["threshold"] = fit_threshold_from_setosa(dataset, settings["threshold"])
-elif threshold is not None:
-	settings["threshold"] = threshold
-result = initialize_predictions(dataset, settings, print_each=print_each)
-return settings, dataset, result
+\texttt{calculate\_accuracy(correct=0, total=0)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+if total > 0:
+    accuracy = (correct / total) * 100
+else:
+    accuracy = 0.0
+return accuracy
 \end{minted}
-& \textbf{New in S5:} API-style orchestration + optional fit-based threshold. \\
+& \textbf{Refactor in S5:} same accuracy logic, but now with keyword-friendly defaults. \\
+\hline
+\texttt{run\_classifier\_pipeline(threshold=2.0, print\_each=True)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+dataset = setup_application_list()
+correct, wrong, total, y_pred_list = run_prediction_loop(
+    dataset, threshold=threshold, print_each=print_each
+)
+accuracy = calculate_accuracy(correct=correct, total=total)
+return correct, wrong, total, y_pred_list, accuracy
+\end{minted}
+& \textbf{New in S5:} renamed wrapper with a clearer purpose and a mixed-call example. \\
+\hline
+\texttt{print\_summary(correct, wrong, total, y\_pred\_list, accuracy)} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
+print("Correct:", correct)
+print("Wrong:", wrong)
+print("Total:", total)
+print("Accuracy (%):", round(accuracy, 2))
+print("All predictions:", y_pred_list)
+\end{minted}
+& Same summary idea as Session 4 and Session 6. \\
 \hline
 \texttt{main()} & \begin{minted}[fontsize=\small, linenos, breaklines, xleftmargin=2em]{python}
 run default call
 run positional override call
 run keyword override call
-run fit-based call (use_fit=True)
+run reordered keyword call
 \end{minted}
-& \textbf{New in S5:} demonstrates all invocation styles in one script. \\
+& \textbf{New in S5:} demonstrates the same pipeline in several calling styles. \\
 \hline
 \end{longtable}
 \end{landscape}
