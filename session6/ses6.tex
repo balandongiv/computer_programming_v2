@@ -576,22 +576,63 @@ It must be outside and after both branches so it runs no matter what.
 \end{tcolorbox}
 
 \subsection{Task 5: Implement calculate\_accuracy}
-Now, that you already familiar with migrating a function into a method, Task 5 is a straightforward implementation of the accuracy formula.
+\begin{tcolorbox}[title=Task 5: Implement calculate\_accuracy]
+This method turns the running counters into a percentage.
+It should return the classification accuracy in the familiar form ``correct out of total, multiplied by 100''.
 
-I purposedly did not provide any scaffolding for this method in the template, so that you can practice writing a method from scratch. It suffice to know that,
-the method name is
+\medskip
+\noindent
+In your template, find the comment labelled \textbf{Task 5}.
+Complete \texttt{calculate\_accuracy(self, correct, total)} so that it:
+\begin{enumerate}
+    \item Checks whether \texttt{total > 0}.
+    \item If yes, returns \texttt{(correct / total) * 100}.
+    \item If no, returns \texttt{0.0}.
+\end{enumerate}
 
-calculate\_accuracy
-and it receives two parameters: \texttt{correct} and \texttt{total}.
+\medskip
+\noindent
+\textbf{Why do we need the second case?}
+If \texttt{total == 0}, dividing by zero would cause an error.
+Returning \texttt{0.0} makes the method safe even for an empty dataset.
+\end{tcolorbox}
 
-For the logic for calculating accuracy are as follows:
+\begin{tcolorbox}[title=How to test Task 5 with a unit test]
+After you fill in \texttt{calculate\_accuracy} in \texttt{session6/session6\_iris\_template.py}, run one of these commands from the project root:
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{bash}
+python3 -m unittest session6.test_task5_calculate_accuracy
+python3 session6/test_task5_calculate_accuracy.py
+\end{minted}
+
+\noindent
+If you want to check the teacher solution in \texttt{session6/session6\_iris\_answer.py}, run:
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{bash}
+python3 -m unittest session6.test_task5_calculate_accuracy_answer
+python3 session6/test_task5_calculate_accuracy_answer.py
+\end{minted}
+
+\noindent
+If you are using VS Code and prefer the green play button:
 \begin{itemize}\setlength{\itemsep}{2pt}
-    \item If \texttt{total > 0}, return \texttt{(correct / total) * 100}.
-    \item If \texttt{total == 0} (empty dataset), return \texttt{0.0} to avoid a division-by-zero error.
+    \item open the file \texttt{session6/test\_task5\_calculate\_accuracy.py}
+    \item make sure this student test file is the active tab
+    \item click the green play button in VS Code to run it
 \end{itemize}
 
-You shall implement this in the just below the text Task 5: Implement calculate\_accuracy in the template.
+\noindent
+This unit test checks three important cases:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item \texttt{50} correct out of \texttt{50} total should return \texttt{100.0}
+    \item \texttt{40} correct out of \texttt{50} total should return \texttt{80.0}
+    \item \texttt{0} correct out of \texttt{0} total should return \texttt{0.0}
+\end{itemize}
 
+\noindent
+If the test passes, your Task 5 method is working correctly for these core examples.
+If the test fails, compare your returned value with the expected percentage in the error message.
+\end{tcolorbox}
 
 \begin{tcolorbox}[title=Checkpoint]
 Call \texttt{classifier.calculate\_accuracy(50, 50)} and confirm you get \texttt{100.0}. \\
