@@ -25,9 +25,74 @@ Use the following file for this session:
 \textbf{Do not edit files outside} \texttt{session6/}.
 \end{tcolorbox}
 
+\subsection{Motivation}
 In Sessions 4 and 5, you built an Iris classifier using \textbf{functions}.
 Your pipeline worked, but you may have noticed something repetitive: many functions needed the same configuration values (for example, the threshold, the positive label, and the negative label).
 You solved this by passing a \texttt{settings} dictionary from function to function.
+
+\subsubsection{Session 4}
+In Session 4, your program used functions, but those functions depended on several global constants defined near the top of the file, such as \texttt{THRESHOLD}, \texttt{POSITIVE\_LABEL}, and \texttt{NEGATIVE\_LABEL}.
+That means the function could work only because those names already existed somewhere else in the program.
+For a beginner, this can feel convenient at first, because the function call looks short, but the function is actually relying on information stored outside itself.
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+THRESHOLD = 2.0
+POSITIVE_LABEL = "setosa"
+NEGATIVE_LABEL = "not_setosa"
+
+def compute_threshold_prediction(sample):
+    if sample["petal_length"] < THRESHOLD:
+        return POSITIVE_LABEL
+    return NEGATIVE_LABEL
+\end{minted}
+
+\noindent
+When you read this function, you have to look somewhere else in the file to find out what \texttt{THRESHOLD} means.
+So, even though the function has only one parameter, it is still using several extra pieces of information behind the scenes.
+
+\subsubsection{Session 5}
+In Session 5, you improved the design by starting to pass configuration values as arguments.
+For example, \texttt{compute\_threshold\_prediction} now receives \texttt{threshold} directly, instead of reading the threshold from a global constant.
+This is a step forward because the function becomes more explicit: you can see what information it needs just by looking at its parameter list.
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+def compute_threshold_prediction(sample, threshold):
+    if sample["petal_length"] < threshold:
+        return POSITIVE_LABEL
+    return NEGATIVE_LABEL
+\end{minted}
+
+\noindent
+However, as programs grow, several functions may all need the same shared configuration.
+At that point, one common idea is to collect those related values into one dictionary, such as \texttt{settings}, and then pass that same dictionary into each function that needs it.
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+settings = {
+    "threshold": 2.0,
+    "positive_label": "setosa",
+    "negative_label": "not_setosa",
+}
+
+def compute_threshold_prediction(sample, settings):
+    if sample["petal_length"] < settings["threshold"]:
+        return settings["positive_label"]
+    return settings["negative_label"]
+
+def derive_true_label(sample, settings):
+    if sample["species"] == settings["positive_label"]:
+        return settings["positive_label"]
+    return settings["negative_label"]
+
+def run_prediction_loop(dataset, settings):
+    for sample in dataset:
+        y_pred = compute_threshold_prediction(sample, settings)
+        y_true = derive_true_label(sample, settings)
+\end{minted}
+
+\noindent
+Here, passing a \texttt{settings} dictionary from function to function means that the same dictionary object is first passed into \texttt{run\_prediction\_loop}, and then that function passes it again into \texttt{compute\_threshold\_prediction} and \texttt{derive\_true\_label}.
+In other words, the data keeps getting forwarded from one function call to the next so that every function can access the same configuration values.
+This is clearer than relying on hidden global values, but it also creates repetition because many functions must accept and forward the same extra argument.
 
 \medskip
 \noindent
