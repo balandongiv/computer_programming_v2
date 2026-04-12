@@ -72,7 +72,7 @@
 \definecolor{chapter}{rgb}{0.2, 0.25, 0.4}
 \definecolor{section}{rgb}{0.2, 0.45, 0.3}
 \definecolor{cover}{RGB}{0, 120, 60}
-\definecolor{background}{rgb}{1.0, 0.99, 0.95}
+\definecolor{background}{rgb}{1.0, 1.0, 1.0}
 
 \newcommand{\headlinecolor}{\normalcolor}
 
@@ -153,6 +153,16 @@
 \newcommand{\booksubtitle}{2025/2026}
 \newcommand{\subtitle}[1]{\renewcommand{\booksubtitle}{#1}}
 \newcommand{\HUGE}{\fontsize{40}{48}\selectfont}
+
+% Provide a local list-of-changes page so main.tex can compile without the
+% external changes package.
+\newcommand{\listofchanges}{%
+  \chapter*{List of Changes}%
+  \addcontentsline{toc}{chapter}{List of Changes}%
+  No tracked inline changes in this build. See the Changelog chapter for the
+  document revision history.%
+  \clearpage
+}
 
 \renewcommand{\maketitle}{%
   \begin{titlepage}
