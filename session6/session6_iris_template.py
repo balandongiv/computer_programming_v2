@@ -210,6 +210,12 @@ def main():
     # print("Positive label:", <your code here>)
     # print("Negative label:", <your code here>)
 
+    # Task 2: Implement compute_threshold_prediction
+    # Can you write the syntax by urself
+    # sample = <your code here>
+    # prediction = <your code here>
+    # print(<your code here>) # should print: setosa
+
     # Step 2: Load the dataset using the provided setup function
     dataset = setup_application_list()
 

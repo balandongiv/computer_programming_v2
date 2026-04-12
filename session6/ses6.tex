@@ -298,6 +298,8 @@ def main():
 
 \noindent
 Now execute the code:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{bash}
+python3 session6/session6_iris_template.py
 \end{minted}
 
 \noindent
@@ -310,7 +312,7 @@ Negative label: not_setosa
 \end{tcolorbox}
 
 \begin{tcolorbox}[title=Checkpoint]
-Create two classifiers with different thresholds and verify that each object remembers its own value:
+Optionally, you can create two classifiers with different thresholds and verify that each object remembers its own value:
 \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
 clf_a = IrisRuleClassifier(threshold=1.5)
 clf_b = IrisRuleClassifier(threshold=2.5)

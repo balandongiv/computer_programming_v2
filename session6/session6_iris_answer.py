@@ -205,7 +205,11 @@ def main():
     print("Positive label:", classifier.positive_label)
     print("Negative label:", classifier.negative_label)
 
-    # Step 2: Load the dataset using the provided setup function
+    # Task 2: Implement compute_threshold_prediction
+    sample = {"petal_length": 1.4, "species": "setosa", "id": "flower1"}
+    prediction = classifier.compute_threshold_prediction(sample)
+    print(prediction)  # should print: setosa
+
     dataset = setup_application_list()
 
     # Step 3: Print status messages using classifier.print_status(...)
