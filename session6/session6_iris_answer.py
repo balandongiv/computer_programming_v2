@@ -219,15 +219,16 @@ def main():
     print(
         f"Versicolor prediction: {classifier.derive_true_label(sample_versicolor)}")
 
-    # dataset = setup_application_list()
+    # If you are looking for Task 4. It only occur in the function def.ignore this line
+    dataset = setup_application_list()
 
     # # Step 3: Print status messages using classifier.print_status(...)
     # classifier.print_status("Build dataset")
     # classifier.print_status("Run prediction loop")
 
     # # Step 4: Run the prediction loop and unpack the returned tuple
-    # correct, wrong, total, y_pred_list = classifier.run_prediction_loop(
-    #     dataset)
+    correct, wrong, total, y_pred_list = classifier.run_prediction_loop(
+        dataset)
 
     # # Step 5: Calculate accuracy from the returned counters
     # accuracy = classifier.calculate_accuracy(correct, total)
