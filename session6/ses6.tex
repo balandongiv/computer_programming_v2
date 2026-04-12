@@ -95,14 +95,15 @@ In other words, the data keeps getting forwarded from one function call to the n
 This is clearer than relying on hidden global values, but it also creates repetition because many functions must accept and forward the same extra argument.
 
 \subsection{Why Refactor Now}
-Passing settings around is fine for one small pipeline, but it becomes awkward as soon as your program grows.
-The problem is not that dictionaries are bad.
-The problem is that the same shared configuration must keep getting created, passed, and remembered in many different places.
+Passing a \texttt{settings} dictionary is a useful step forward because it makes the shared configuration explicit.
+However, for a first small program, what feels simple at first can become awkward as the program grows.
+The main issue is not the dictionary itself.
+The main issue is that the same configuration must be created, passed around, and kept consistent in many places.
 
 \subsubsection{Problem 1: Many Classifiers Mean Many Dictionaries}
-Suppose you want to compare many classifiers.
+Suppose you want to compare several classifiers instead of only one.
 For example, maybe one classifier uses threshold \texttt{1.8}, another uses \texttt{2.0}, and another uses \texttt{2.2}.
-If your design depends on a \texttt{settings} dictionary, then each classifier needs its own separate dictionary.
+If your design depends on a \texttt{settings} dictionary, then each classifier needs its own dictionary.
 
 \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
 settings_a = {
@@ -126,13 +127,14 @@ settings_c = {
 
 \noindent
 This is still manageable for two or three classifiers.
-But if you want 10 classifiers with 10 thresholds, you now need 10 separate dictionaries that are almost the same.
-That creates repeated code, and repeated code is harder to maintain.
-If you later want to change one common value, you may need to edit many dictionary definitions.
+But if you want 10 classifiers with 10 thresholds, you now need 10 separate dictionaries that are almost identical.
+That means you start writing the same information again and again.
+Repeated code is harder to maintain because one small change may need to be copied into many places.
+For example, if you decide to rename one key or change one default label, you may need to edit every dictionary.
 
 \subsubsection{Problem 2: Every Function Call Must Carry the Correct Settings}
-Once you choose to store configuration in a dictionary, every function that needs that configuration must receive it.
-That means the program has to keep passing the same object from one function call to the next.
+Once you store configuration in a dictionary, every function that needs that configuration must receive it.
+So the program has to keep passing the same object from one function call to the next.
 
 \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
 def run_prediction_loop(dataset, settings):
@@ -142,15 +144,16 @@ def run_prediction_loop(dataset, settings):
 \end{minted}
 
 \noindent
-For a beginner, the important idea is this: the code must always remember which \texttt{settings} dictionary belongs to which classifier.
-If you accidentally pass \texttt{settings\_a} into one function and \texttt{settings\_b} into another, your program may mix configurations in a confusing way.
-So each function call is not only doing work; it is also responsible for carrying the right configuration object along with it.
+For a beginner, the key idea is this: the code must always remember which \texttt{settings} dictionary belongs to which classifier.
+If you accidentally pass \texttt{settings\_a} into one function and \texttt{settings\_b} into another, your program may mix two different configurations in a confusing way.
+So each function call is doing two jobs at once:
+it is running the function, and it is also carrying the correct configuration object along with it.
 
 \subsubsection{Problem 3: New Settings Create More Edits Everywhere}
 Now imagine that later you decide your classifier should also control whether each prediction is printed.
-You might add a new setting such as \texttt{"print_each": True}.
-At first, this sounds small.
-But in a function-based design, adding one new piece of shared configuration often forces you to update many function definitions and many places where those functions are called.
+You might add a new setting called \texttt{print\_each}.
+At first, this sounds like a very small change.
+But in a function-based design, one new piece of shared configuration often spreads through many parts of the program.
 
 \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
 settings = {
@@ -169,10 +172,11 @@ def run_prediction_loop(dataset, settings):
 \end{minted}
 
 \noindent
-This version still works, but the number of places that depend on \texttt{settings} keeps growing.
+This version still works, but now more parts of the program depend on \texttt{settings}.
 If several functions need the new value, then several function bodies must be updated.
-If you were not using a dictionary yet, then you would also need to change multiple function signatures, such as turning \texttt{compute\_threshold\_prediction(sample, threshold)} into something longer.
-In larger programs, this creates a chain reaction: one new setting can force edits in many definitions and many call sites.
+If you were not using a dictionary yet, then you would also need to change multiple function signatures, such as turning \texttt{compute\_threshold\_prediction(sample, threshold)} into a longer function call with more arguments.
+In a larger program, this creates a chain reaction:
+one new setting can force edits in many function definitions and many call sites.
 
 \noindent
 In Session 6 we solve this by using a \textbf{class}.
@@ -277,6 +281,33 @@ print("Positive label:", classifier.positive_label)
 \noindent
 Notice that you \textbf{do not} pass \texttt{self} when creating the object or when accessing attributes.
 Python handles \texttt{self} for you.
+
+\begin{tcolorbox}[title=How to test Task 1 right now]
+
+\noindent
+In the template, under the main, write the following code:
+
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+def main():
+    classifier = IrisRuleClassifier(threshold=2.0)
+    print("Threshold:", classifier.threshold)
+    print("Positive label:", classifier.positive_label)
+    print("Negative label:", classifier.negative_label)
+\end{minted}
+
+\noindent
+Now execute the code:
+\end{minted}
+
+\noindent
+If Task 1 is correct, you should see:
+\begin{minted}[fontsize=\small, linenos, frame=lines]{text}
+Threshold: 2.0
+Positive label: setosa
+Negative label: not_setosa
+\end{minted}
+\end{tcolorbox}
 
 \begin{tcolorbox}[title=Checkpoint]
 Create two classifiers with different thresholds and verify that each object remembers its own value:

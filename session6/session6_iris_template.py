@@ -203,13 +203,15 @@ class IrisRuleClassifier:
 
 
 def main():
-    # Task 8: Use the Class in main()
 
-    # Step 1: Load the dataset using the provided setup function
-    dataset = setup_application_list()
-
-    # Step 2: Create a classifier object with a chosen threshold
+    # Step 1a: Create a classifier object with a chosen threshold
     # classifier = IrisRuleClassifier(<your code here>)
+    # print("Threshold:", <your code here>)
+    # print("Positive label:", <your code here>)
+    # print("Negative label:", <your code here>)
+
+    # Step 2: Load the dataset using the provided setup function
+    dataset = setup_application_list()
 
     # Step 3: Print status messages using classifier.print_status(...)
     # classifier.print_status(<your code here>)
