@@ -161,23 +161,23 @@ class IrisRuleClassifier:
         Returns:
             tuple: (correct, wrong, total, y_pred_list)
         """
-        # correct = 0
-        # wrong = 0
-        # total = 0
-        # y_pred_list = []
+        correct = 0
+        wrong = 0
+        total = 0
+        y_pred_list = []
 
-        # print("\n=== Start Session 6 Prediction Loop ===")
+        print("\n=== Start Session 6 Prediction Loop ===")
 
         # for sample in dataset:
-        #     y_pred = self.compute_threshold_prediction(<your code here>)
-        #     y_true = self.derive_true_label(<your code here>)
-        #     correct, wrong, total, y_pred_list = self.update_result_counts(
-        #         correct, wrong, total, y_pred_list, y_pred, y_true
-        #     )
-        #     print(
-        #         f"id={sample['id']} | true={y_true} | pred={y_pred} | "
-        #         f"petal_length={sample['petal_length']}"
-        #     )
+        # y_pred = self.compute_threshold_prediction(<your code here>)
+        # y_true = self.derive_true_label(<your code here>)
+        # correct, wrong, total, y_pred_list = self.update_result_counts(
+        #     correct, wrong, total, y_pred_list, y_pred, y_true
+        # )
+        # print(
+        #     f"id={sample['id']} | true={y_true} | pred={y_pred} | "
+        #     f"petal_length={sample['petal_length']}"
+        # )
 
         # return correct, wrong, total, y_pred_list
         pass
@@ -217,28 +217,23 @@ def main():
     # print(<your code here>) # should print: setosa
 
     # Task 3: Implement derive_true_label
-    sample_setosa = {"species": "setosa", "petal_length": 1.4}
-    sample_versicolor = {"species": "versicolor", "petal_length": 4.7}
-    # setosa
-    print(f"Setosa prediction: {classifier.derive_true_label(sample_setosa)}")
-    # not_setosa
-    print(
-        f"Versicolor prediction: {classifier.derive_true_label(sample_versicolor)}")
+    # sample_setosa = {"species": "setosa", "petal_length": 1.4}
+    # sample_versicolor = {"species": "versicolor", "petal_length": 4.7}
+    # # setosa
+    # print(f"Setosa prediction: {classifier.derive_true_label(sample_setosa)}")
+    # # not_setosa
+    # print(
+    #     f"Versicolor prediction: {classifier.derive_true_label(sample_versicolor)}")
 
-    # Step xx: Load the dataset using the provided setup function
+    # Task 6: Implement run_prediction_loop
     dataset = setup_application_list()
-
-    # Step xx: Print status messages using classifier.print_status(...)
-    # classifier.print_status(<your code here>)
-    # classifier.print_status(<your code here>)
-
-    # Step xx: Run the prediction loop and unpack the returned tuple
     # correct, wrong, total, y_pred_list = classifier.run_prediction_loop(<your code here>)
 
-    # Step xx: Calculate accuracy from the returned counters
-    # accuracy = classifier.calculate_accuracy(<your code here>)
+    # Step 5: Calculate accuracy from the returned counters
+    # >> Just uncomment the code below, as you have already implemented calculate_accuracy in Task 5.
+    # accuracy = classifier.calculate_accuracy(correct,<your code here>)
 
-    # Step 6: Print a final status message and the summary
+    # Step 7: Print a final status message and the summary
     # classifier.print_status(<your code here>)
     # classifier.print_summary(<your code here>)
     pass

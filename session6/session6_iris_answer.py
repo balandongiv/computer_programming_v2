@@ -223,19 +223,19 @@ def main():
     dataset = setup_application_list()
 
     # # Step 3: Print status messages using classifier.print_status(...)
-    # classifier.print_status("Build dataset")
-    # classifier.print_status("Run prediction loop")
+    classifier.print_status("Build dataset")
+    classifier.print_status("Run prediction loop")
 
     # # Step 4: Run the prediction loop and unpack the returned tuple
     correct, wrong, total, y_pred_list = classifier.run_prediction_loop(
         dataset)
 
     # # Step 5: Calculate accuracy from the returned counters
-    # accuracy = classifier.calculate_accuracy(correct, total)
+    accuracy = classifier.calculate_accuracy(correct, total)
 
     # # Step 6: Print a final status message and the summary
-    # classifier.print_status("Print summary")
-    # classifier.print_summary(correct, wrong, total, y_pred_list, accuracy)
+    classifier.print_status("Print summary")
+    classifier.print_summary(correct, wrong, total, y_pred_list, accuracy)
 
 
 if __name__ == "__main__":
