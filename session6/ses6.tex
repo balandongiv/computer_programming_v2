@@ -94,15 +94,85 @@ Here, passing a \texttt{settings} dictionary from function to function means tha
 In other words, the data keeps getting forwarded from one function call to the next so that every function can access the same configuration values.
 This is clearer than relying on hidden global values, but it also creates repetition because many functions must accept and forward the same extra argument.
 
-\medskip
+\subsection{Why Refactor Now}
+Passing settings around is fine for one small pipeline, but it becomes awkward as soon as your program grows.
+The problem is not that dictionaries are bad.
+The problem is that the same shared configuration must keep getting created, passed, and remembered in many different places.
+
+\subsubsection{Problem 1: Many Classifiers Mean Many Dictionaries}
+Suppose you want to compare many classifiers.
+For example, maybe one classifier uses threshold \texttt{1.8}, another uses \texttt{2.0}, and another uses \texttt{2.2}.
+If your design depends on a \texttt{settings} dictionary, then each classifier needs its own separate dictionary.
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+settings_a = {
+    "threshold": 1.8,
+    "positive_label": "setosa",
+    "negative_label": "not_setosa",
+}
+
+settings_b = {
+    "threshold": 2.0,
+    "positive_label": "setosa",
+    "negative_label": "not_setosa",
+}
+
+settings_c = {
+    "threshold": 2.2,
+    "positive_label": "setosa",
+    "negative_label": "not_setosa",
+}
+\end{minted}
+
 \noindent
-\textbf{Why refactor now?}
-Passing settings around is fine for one small pipeline, but it becomes awkward as soon as your program grows:
-\begin{itemize}\setlength{\itemsep}{2pt}
-    \item If you want 10 classifiers with 10 thresholds, you need 10 separate \texttt{settings} dictionaries.
-    \item Every function call must include the correct \texttt{settings} reference.
-    \item Adding a new setting forces you to update many function signatures and many call sites.
-\end{itemize}
+This is still manageable for two or three classifiers.
+But if you want 10 classifiers with 10 thresholds, you now need 10 separate dictionaries that are almost the same.
+That creates repeated code, and repeated code is harder to maintain.
+If you later want to change one common value, you may need to edit many dictionary definitions.
+
+\subsubsection{Problem 2: Every Function Call Must Carry the Correct Settings}
+Once you choose to store configuration in a dictionary, every function that needs that configuration must receive it.
+That means the program has to keep passing the same object from one function call to the next.
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+def run_prediction_loop(dataset, settings):
+    for sample in dataset:
+        y_pred = compute_threshold_prediction(sample, settings)
+        y_true = derive_true_label(sample, settings)
+\end{minted}
+
+\noindent
+For a beginner, the important idea is this: the code must always remember which \texttt{settings} dictionary belongs to which classifier.
+If you accidentally pass \texttt{settings\_a} into one function and \texttt{settings\_b} into another, your program may mix configurations in a confusing way.
+So each function call is not only doing work; it is also responsible for carrying the right configuration object along with it.
+
+\subsubsection{Problem 3: New Settings Create More Edits Everywhere}
+Now imagine that later you decide your classifier should also control whether each prediction is printed.
+You might add a new setting such as \texttt{"print_each": True}.
+At first, this sounds small.
+But in a function-based design, adding one new piece of shared configuration often forces you to update many function definitions and many places where those functions are called.
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{python}
+settings = {
+    "threshold": 2.0,
+    "positive_label": "setosa",
+    "negative_label": "not_setosa",
+    "print_each": True,
+}
+
+def run_prediction_loop(dataset, settings):
+    for sample in dataset:
+        y_pred = compute_threshold_prediction(sample, settings)
+        y_true = derive_true_label(sample, settings)
+        if settings["print_each"]:
+            print(sample["id"], y_pred)
+\end{minted}
+
+\noindent
+This version still works, but the number of places that depend on \texttt{settings} keeps growing.
+If several functions need the new value, then several function bodies must be updated.
+If you were not using a dictionary yet, then you would also need to change multiple function signatures, such as turning \texttt{compute\_threshold\_prediction(sample, threshold)} into something longer.
+In larger programs, this creates a chain reaction: one new setting can force edits in many definitions and many call sites.
 
 \noindent
 In Session 6 we solve this by using a \textbf{class}.
