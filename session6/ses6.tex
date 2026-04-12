@@ -520,6 +520,34 @@ Complete \texttt{update\_result\_counts(self, correct, wrong, total, y\_pred\_li
 \end{enumerate}
 \end{tcolorbox}
 
+\begin{tcolorbox}[title=How to test Task 4 with a unit test]
+After you fill in \texttt{update\_result\_counts} in \texttt{session6/session6\_iris\_template.py}, run one of these commands from the project root:
+
+\begin{minted}[fontsize=\small, linenos, frame=lines]{bash}
+python3 -m unittest session6.test_task4_update_result_counts
+python3 session6/test_task4_update_result_counts.py
+\end{minted}
+
+\noindent
+This unit test checks two important cases:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item a correct prediction, where \texttt{correct} should increase
+    \item a wrong prediction, where \texttt{wrong} should increase
+\end{itemize}
+
+\noindent
+In both cases, the test also checks that:
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item \texttt{total} increases by 1
+    \item \texttt{y\_pred} is appended to \texttt{y\_pred\_list}
+    \item the method returns the updated tuple in the correct order
+\end{itemize}
+
+\noindent
+If the test passes, your Task 4 method is working correctly for these core examples.
+If the test fails, read the error message carefully and compare your returned values with what the test expected.
+\end{tcolorbox}
+
 \noindent
 The return tuple lets the caller unpack the updated values cleanly:
 
