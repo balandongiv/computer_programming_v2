@@ -210,22 +210,31 @@ def main():
     prediction = classifier.compute_threshold_prediction(sample)
     print(prediction)  # should print: setosa
 
-    dataset = setup_application_list()
+    # Task 3: Implement derive_true_label
+    sample_setosa = {"species": "setosa", "petal_length": 1.4}
+    sample_versicolor = {"species": "versicolor", "petal_length": 4.7}
+    # setosa
+    print(f"Setosa prediction: {classifier.derive_true_label(sample_setosa)}")
+    # not_setosa
+    print(
+        f"Versicolor prediction: {classifier.derive_true_label(sample_versicolor)}")
 
-    # Step 3: Print status messages using classifier.print_status(...)
-    classifier.print_status("Build dataset")
-    classifier.print_status("Run prediction loop")
+    # dataset = setup_application_list()
 
-    # Step 4: Run the prediction loop and unpack the returned tuple
-    correct, wrong, total, y_pred_list = classifier.run_prediction_loop(
-        dataset)
+    # # Step 3: Print status messages using classifier.print_status(...)
+    # classifier.print_status("Build dataset")
+    # classifier.print_status("Run prediction loop")
 
-    # Step 5: Calculate accuracy from the returned counters
-    accuracy = classifier.calculate_accuracy(correct, total)
+    # # Step 4: Run the prediction loop and unpack the returned tuple
+    # correct, wrong, total, y_pred_list = classifier.run_prediction_loop(
+    #     dataset)
 
-    # Step 6: Print a final status message and the summary
-    classifier.print_status("Print summary")
-    classifier.print_summary(correct, wrong, total, y_pred_list, accuracy)
+    # # Step 5: Calculate accuracy from the returned counters
+    # accuracy = classifier.calculate_accuracy(correct, total)
+
+    # # Step 6: Print a final status message and the summary
+    # classifier.print_status("Print summary")
+    # classifier.print_summary(correct, wrong, total, y_pred_list, accuracy)
 
 
 if __name__ == "__main__":

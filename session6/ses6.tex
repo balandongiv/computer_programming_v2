@@ -460,7 +460,8 @@ It does \textit{not} update any counters. It \textit{only} returns a string.
 
 \medskip
 \noindent
-In your template, find the comment labelled \textbf{Task 3}.
+In your template, find the comment labelled \textbf{Task 3: Implement derive\_true\_label}.
+
 Complete \texttt{derive\_true\_label(self, sample)} so that:
 \begin{itemize}\setlength{\itemsep}{2pt}
     \item if \texttt{sample["species"] == self.positive\_label}, return \texttt{self.positive\_label}
@@ -472,11 +473,16 @@ Complete \texttt{derive\_true\_label(self, sample)} so that:
 For example:
 
 \begin{minted}[fontsize=\small, linenos, frame=lines]{python}
-sample_setosa     = {"species": "setosa",     "petal_length": 1.4}
-sample_versicolor = {"species": "versicolor", "petal_length": 4.7}
 
-print(classifier.derive_true_label(sample_setosa))      # setosa
-print(classifier.derive_true_label(sample_versicolor))  # not_setosa
+    sample_setosa = {"species": "setosa", "petal_length": 1.4}
+    sample_versicolor = {"species": "versicolor", "petal_length": 4.7}
+    # setosa
+    print(f"Setosa prediction: {classifier.derive_true_label(sample_setosa)}")
+    # not_setosa
+    print(
+        f"Versicolor prediction: {classifier.derive_true_label(sample_versicolor)}")
+
+
 \end{minted}
 
 \begin{tcolorbox}[title=Checkpoint]

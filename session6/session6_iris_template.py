@@ -9,6 +9,9 @@ How to run:
 """
 
 
+from asyncio import Task
+
+
 def setup_application_list():
     """Return the dataset as a list of flower dictionaries.
 
@@ -100,9 +103,6 @@ class IrisRuleClassifier:
         Returns:
             str: self.positive_label if species matches, else self.negative_label.
         """
-        # If sample["species"] == self.positive_label:
-        #     return self.positive_label
-        # Otherwise return self.negative_label
         pass
 
     # Task 4: Implement update_result_counts
@@ -216,17 +216,26 @@ def main():
     # prediction = <your code here>
     # print(<your code here>) # should print: setosa
 
-    # Step 2: Load the dataset using the provided setup function
+    # Task 3: Implement derive_true_label
+    sample_setosa = {"species": "setosa", "petal_length": 1.4}
+    sample_versicolor = {"species": "versicolor", "petal_length": 4.7}
+    # setosa
+    print(f"Setosa prediction: {classifier.derive_true_label(sample_setosa)}")
+    # not_setosa
+    print(
+        f"Versicolor prediction: {classifier.derive_true_label(sample_versicolor)}")
+
+    # Step xx: Load the dataset using the provided setup function
     dataset = setup_application_list()
 
-    # Step 3: Print status messages using classifier.print_status(...)
+    # Step xx: Print status messages using classifier.print_status(...)
     # classifier.print_status(<your code here>)
     # classifier.print_status(<your code here>)
 
-    # Step 4: Run the prediction loop and unpack the returned tuple
+    # Step xx: Run the prediction loop and unpack the returned tuple
     # correct, wrong, total, y_pred_list = classifier.run_prediction_loop(<your code here>)
 
-    # Step 5: Calculate accuracy from the returned counters
+    # Step xx: Calculate accuracy from the returned counters
     # accuracy = classifier.calculate_accuracy(<your code here>)
 
     # Step 6: Print a final status message and the summary
