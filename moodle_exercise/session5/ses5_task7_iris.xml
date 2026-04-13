@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="coderunner">
+    <name>
+      <text>Session 5 Task 7 Iris</text>
+    </name>
+
+    <questiontext format="html">
+      <text><![CDATA[
+<p dir="ltr" style="text-align: left;">Uncomment the keyword override block in <code>main()</code>.</p><p>This task checks only the keyword call with <code>threshold=1.8</code> and <code>print_each=False</code>.</p>
+      ]]></text>
+    </questiontext>
+
+    <generalfeedback format="html">
+      <text><![CDATA[
+<p>Common mistakes for Task 7:</p><ul><li>Leaving the block commented out</li><li>Misspelling the keyword names</li><li>Using the positional call instead of the keyword version</li></ul>
+      ]]></text>
+    </generalfeedback>
+
+    <defaultgrade>1</defaultgrade>
+    <penalty>0</penalty>
+    <hidden>0</hidden>
+    <idnumber></idnumber>
+    <coderunnertype>python3</coderunnertype>
+    <prototypetype>0</prototypetype>
+    <allornothing>0</allornothing>
+    <penaltyregime>10, 20, ...</penaltyregime>
+    <precheck>0</precheck>
+    <hidecheck>0</hidecheck>
+    <showsource>0</showsource>
+    <answerboxlines>85</answerboxlines>
+    <answerboxcolumns>100</answerboxcolumns>
+    <answerpreload><![CDATA[def main():
+    """Run the Session 5 experiments."""
+
+    # Task 7: Add the keyword override run in main()
+    # <your_code>: uncomment the keyword override run below
+    # make_print_status("Keyword override run")
+    # correct, wrong, total, y_pred_list, accuracy = run_classifier_pipeline(
+    #     threshold=1.8,
+    #     print_each=False,
+    # )
+    # print_summary(correct, wrong, total, y_pred_list, accuracy)]]></answerpreload>
+    <globalextra></globalextra>
+    <useace></useace>
+    <resultcolumns></resultcolumns>
+    <template><![CDATA[import contextlib
+import io
+import json
+import re
+
+student_code = """{{ STUDENT_ANSWER | e('py') }}"""
+rows = [["Check", "Expected", "Got", "Comment", "Mark", "iscorrect"]]
+total_awarded = 0.0
+
+def compact(value):
+    text = str(value)
+    if len(text) > 240:
+        return text[:237] + "..."
+    return text
+
+def cleaned_lines(text):
+    return [line.rstrip() for line in text.splitlines() if line.strip()]
+
+def add_result(label, expected, got, comment, awarded, mark, iscorrect):
+    global total_awarded
+    total_awarded += awarded
+    rows.append([label, compact(expected), compact(got), comment, f"{awarded:.1f}/{mark:.1f}", iscorrect])
+
+def require_callable(namespace, name):
+    obj = namespace.get(name)
+    if not callable(obj):
+        raise NameError(f"Function '{name}' is missing or not callable.")
+    return obj
+
+def sanitize(code):
+    code = re.sub(r"def\s+setup_application\(", "def run_classifier_pipeline(", code)
+    code = code.replace("setup_application(", "run_classifier_pipeline(")
+    code = re.sub(r"correct\s*=\s*<\s*your_code\s*>", "correct=0", code)
+    code = re.sub(r"total\s*=\s*<\s*your_code\s*>", "total=0", code)
+    code = re.sub(r"threshold\s*=\s*<\s*your_code\s*>", "threshold=2.0", code)
+    code = re.sub(r"print_each\s*=\s*<\s*your_code\s*>", "print_each=True", code)
+    return code
+
+def load_namespace():
+    hidden_support = """
+def make_print_status(status_text):
+    pass
+
+def run_classifier_pipeline(*args, **kwargs):
+    return 7, 0, 7, ["setosa"], 100.0
+
+def print_summary(*args, **kwargs):
+    pass
+"""
+    code = hidden_support + "\n" + sanitize(student_code)
+    compiled = compile(code, "<student>", "exec")
+    namespace = {"__name__": "student_submission"}
+    with contextlib.redirect_stdout(io.StringIO()):
+        exec(compiled, namespace)
+    return namespace
+
+DEFAULT_GRADE = 1.0
+
+try:
+    namespace = load_namespace()
+    status = []
+    pipeline_calls = []
+    namespace["make_print_status"] = lambda text: status.append(text)
+    namespace["run_classifier_pipeline"] = lambda *args, **kwargs: (pipeline_calls.append((args, kwargs)) or (7, 0, 7, ["setosa"], 100.0))
+    namespace["print_summary"] = lambda *args: None
+    require_callable(namespace, "main")()
+    success = ("Keyword override run" in status) and any(args == () and kwargs == {"threshold": 1.8, "print_each": False} for args, kwargs in pipeline_calls)
+    add_result("Task 7", "main() calls run_classifier_pipeline(threshold=1.8, print_each=False)", {"status": status, "pipeline_calls": pipeline_calls}, "The keyword override block should use the named parameters exactly as shown.", 1.0 if success else 0.0, 1.0, 1 if success else 0)
+except Exception as exc:
+    add_result("Task 7", "Keyword override block works", f"{type(exc).__name__}: {exc}", "The code could not be imported or run for Task 7.", 0.0, 1.0, 0)
+
+print(json.dumps({
+    "fraction": total_awarded / DEFAULT_GRADE,
+    "testresults": rows,
+}))
+]]></template>
+    <iscombinatortemplate>1</iscombinatortemplate>
+    <allowmultiplestdins></allowmultiplestdins>
+    <answer><![CDATA["""Session 5: Positional and keyword arguments with the iris classifier.
+
+This session keeps the same classifier idea from Session 4.
+The new goal is to control the same pipeline with default values,
+positional arguments, and keyword arguments.
+"""
+
+POSITIVE_LABEL = "setosa"
+NEGATIVE_LABEL = "not_setosa"
+
+
+def make_print_status(status_text):
+    """Print a small status message."""
+    print(f"[STATUS] {status_text}")
+
+
+def setup_application_list():
+    """Return the dataset as a list of flower dictionaries.
+
+    This helper is provided for you. Do not modify it.
+    """
+    return [
+        {"id": "flower1", "petal_length": 1.4, "species": "setosa"},
+        {"id": "flower2", "petal_length": 1.5, "species": "setosa"},
+        {"id": "flower3", "petal_length": 1.3, "species": "setosa"},
+        {"id": "flower4", "petal_length": 4.5, "species": "versicolor"},
+        {"id": "flower5", "petal_length": 4.7, "species": "versicolor"},
+        {"id": "flower6", "petal_length": 5.1, "species": "virginica"},
+        {"id": "flower7", "petal_length": 6.0, "species": "virginica"},
+    ]
+
+
+# Task 1: Refactor calculate_accuracy to use keyword-friendly defaults
+def calculate_accuracy(correct=0, total=0):
+    """Calculate the accuracy percentage."""
+    if total > 0:
+        accuracy = (correct / total) * 100
+    else:
+        accuracy = 0.0
+
+    return accuracy
+
+
+def compute_threshold_prediction(sample, threshold):
+    """Predict the label for one flower sample using the threshold rule."""
+    if sample["petal_length"] < threshold:
+        return POSITIVE_LABEL
+    return NEGATIVE_LABEL
+
+
+def derive_true_label(sample):
+    """Convert the real species into the lesson label."""
+    if sample["species"] == POSITIVE_LABEL:
+        return POSITIVE_LABEL
+    return NEGATIVE_LABEL
+
+
+# Task 2: Rename setup_application to run_classifier_pipeline
+def run_classifier_pipeline(threshold=2.0, print_each=True):
+    """Run the full classifier pipeline and compute accuracy."""
+    dataset = setup_application_list()
+    correct, wrong, total, y_pred_list = run_prediction_loop(
+        dataset,
+        threshold=threshold,
+        print_each=print_each,
+    )
+    accuracy = calculate_accuracy(
+        correct=correct,
+        total=total,
+    )
+    return correct, wrong, total, y_pred_list, accuracy
+
+
+# Task 3: Refactor run_prediction_loop to combine positional and keyword arguments
+def run_prediction_loop(dataset, threshold=2.0, print_each=True):
+    """Run the prediction loop with the chosen threshold."""
+    correct = 0
+    wrong = 0
+    total = 0
+    y_pred_list = []
+
+    print("\n=== Start Session 5 Prediction Loop ===")
+
+    for sample in dataset:
+        y_pred = compute_threshold_prediction(sample, threshold)
+        y_true = derive_true_label(sample)
+        correct, wrong, total, y_pred_list = update_result_counts(
+            correct,
+            wrong,
+            total,
+            y_pred_list,
+            y_pred=y_pred,
+            y_true=y_true,
+        )
+
+        if print_each:
+            print(
+                f"id={sample['id']} | true={y_true} | pred={y_pred} | "
+                f"petal_length={sample['petal_length']}"
+            )
+
+    return correct, wrong, total, y_pred_list
+
+
+# Task 4: Use update_result_counts with combined positional and keyword arguments
+def update_result_counts(correct, wrong, total, y_pred_list, y_pred, y_true):
+    """Update the counters and prediction list for one sample."""
+    if y_pred == y_true:
+        correct += 1
+    else:
+        wrong += 1
+
+    total += 1
+    y_pred_list.append(y_pred)
+
+    return correct, wrong, total, y_pred_list
+
+
+def print_summary(correct, wrong, total, y_pred_list, accuracy):
+    """Print the final results after the loop is finished."""
+    print("\n=== Session 5 Summary ===")
+    print("Correct:", correct)
+    print("Wrong:", wrong)
+    print("Total:", total)
+    print("Accuracy (%):", round(accuracy, 2))
+    print("All predictions:", y_pred_list)
+
+
+def main():
+    """Run the Session 5 experiments."""
+
+    # Task 5: Add the default run in main()
+    make_print_status("Default run")
+    correct, wrong, total, y_pred_list, accuracy = run_classifier_pipeline()
+    print_summary(correct, wrong, total, y_pred_list, accuracy)
+
+    # Task 6: Add the positional override run in main()
+    make_print_status("Positional override run")
+    correct, wrong, total, y_pred_list, accuracy = run_classifier_pipeline(1.8, False)
+    print_summary(correct, wrong, total, y_pred_list, accuracy)
+
+    # Task 7: Add the keyword override run in main()
+    make_print_status("Keyword override run")
+    correct, wrong, total, y_pred_list, accuracy = run_classifier_pipeline(
+        threshold=1.8,
+        print_each=False,
+    )
+    print_summary(correct, wrong, total, y_pred_list, accuracy)
+
+    # Task 8: Add the reordered keyword run in main()
+    make_print_status("Reordered keyword run")
+    correct, wrong, total, y_pred_list, accuracy = run_classifier_pipeline(
+        print_each=False,
+        threshold=1.8,
+    )
+    print_summary(correct, wrong, total, y_pred_list, accuracy)
+
+
+if __name__ == "__main__":
+    main()
+]]></answer>
+    <validateonsave>1</validateonsave>
+    <testsplitterre></testsplitterre>
+    <language></language>
+    <acelang></acelang>
+    <sandbox></sandbox>
+    <grader>TemplateGrader</grader>
+    <cputimelimitsecs></cputimelimitsecs>
+    <memlimitmb></memlimitmb>
+    <sandboxparams></sandboxparams>
+    <templateparams></templateparams>
+    <hoisttemplateparams>1</hoisttemplateparams>
+    <templateparamslang>None</templateparamslang>
+    <templateparamsevalpertry>0</templateparamsevalpertry>
+    <templateparamsevald>{}</templateparamsevald>
+    <twigall>0</twigall>
+    <uiplugin></uiplugin>
+    <uiparameters></uiparameters>
+    <attachments>0</attachments>
+    <attachmentsrequired>0</attachmentsrequired>
+    <maxfilesize>10240</maxfilesize>
+    <filenamesregex></filenamesregex>
+    <filenamesexplain></filenamesexplain>
+    <displayfeedback>1</displayfeedback>
+    <giveupallowed>0</giveupallowed>
+    <prototypeextra></prototypeextra>
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="0" mark="0.0000000">
+        <testcode><text>Run the Session 5 task grader.</text></testcode>
+        <stdin><text></text></stdin>
+        <expected><text></text></expected>
+        <extra><text></text></extra>
+        <display><text>SHOW</text></display>
+      </testcase>
+    </testcases>
+    <tags>
+      <tag>
+        <text>session5</text>
+      </tag>
+      <tag>
+        <text>submission</text>
+      </tag>
+      <tag>
+        <text>ses5_task7_iris</text>
+      </tag>
+      <tag>
+        <text>keyword-override</text>
+      </tag>
+    </tags>
+  </question>
+</quiz>

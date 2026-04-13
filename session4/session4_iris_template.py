@@ -1,5 +1,5 @@
 """Session 4: Move Session 3 code into functions.
-
+rpb
 This version keeps the same rule from Session 3.
 The goal is to help a beginner see where each part came from.
 We keep the code simple and close to the original step-by-step style.
